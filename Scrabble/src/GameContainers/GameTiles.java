@@ -1,5 +1,8 @@
+package GameContainers;
 import java.util.ArrayList;
 import java.util.List;
+
+import GameObjects.Tile;
 
 public class GameTiles {
 
@@ -16,6 +19,4 @@ public class GameTiles {
 	private void remove(Tile tile) {
 		this.tiles.remove(tile);
 	}
-	
-	
 }
