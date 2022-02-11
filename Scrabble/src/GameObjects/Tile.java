@@ -9,4 +9,9 @@ public class Tile {
 		this.letter = letter;
 		this.points = points;
 	}
+
+	public int getPoints() {
+	
+		return this.points;
+	}
 }
