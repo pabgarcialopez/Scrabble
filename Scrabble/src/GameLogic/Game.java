@@ -14,7 +14,7 @@ public class Game {
 	private GamePlayers players;
 	private Scanner scanner;
 	private int currentTurn;
-	private GameTiles tiles;	
+	private GameTiles tiles;
 	private static String tilesFile = "tiles.txt";
 	private static String boardFile = "board.txt";
 	private Board board;
