@@ -19,6 +19,7 @@ public class Controller {
 		while(!this.game.gameIsFinished()) {
 			
 			
+			
 		}
 		
 	}

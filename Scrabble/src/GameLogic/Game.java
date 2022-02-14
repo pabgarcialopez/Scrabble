@@ -1,5 +1,10 @@
 package GameLogic;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -7,6 +12,7 @@ import GameContainers.GamePlayers;
 import GameContainers.GameTiles;
 import GameObjects.Board;
 import GameObjects.Player;
+import GameObjects.Tile;
 
 public class Game {
 	
@@ -16,9 +22,11 @@ public class Game {
 	private int currentTurn;
 	private GameTiles tiles;
 	private static String tilesFile = "tiles.txt";
-	private static String boardFile = "board.txt";
+	private static String boxesFile = "boxes.txt";
+	private static String wordsFile = "words.txt";
 	private Board board;
 	private Random rdm;
+	private List<String> wordsList;
 	
 	public Game(Scanner scanner) {
 		this.gameIsFinished = false;
@@ -27,9 +35,11 @@ public class Game {
 		this.tiles = new GameTiles();
 		this.tiles.loadTiles(tilesFile);
 		this.board = new Board();
-		this.board.loadBoard(boardFile);
+		this.board.loadBoard(boxesFile);
 		this.rdm = new Random();
 		this.currentTurn =  this.decideFirstTurn();
+		this.wordsList = new ArrayList<String>();
+		this.loadWordList(wordsFile);
 	}
 	
 	public boolean gameIsFinished() {
@@ -95,5 +105,19 @@ public class Game {
 	
 	private void nextTurn() {
 		this.currentTurn = (this.currentTurn + 1) % this.getNumPlayers();
+	}
+	
+	private void loadWordList(String file) {
+		
+		try(BufferedReader buffer = new BufferedReader(new FileReader(file))) {
+			String linea = null;
+			while((linea = buffer.readLine()) != null) {
+				linea = linea.trim();
+				this.wordsList.add(linea);
+			}
+		}
+		catch (IOException ioe) {
+			throw new IllegalArgumentException("The file of words is not valid", ioe);
+		}
 	}
 }

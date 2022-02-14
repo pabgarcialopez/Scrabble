@@ -44,10 +44,10 @@ public class Board {
 			}					
 		}
 		catch (IOException ioe) {
-			throw new IllegalArgumentException("The file of tiles is not valid", ioe);
+			throw new IllegalArgumentException("The file of board is not valid", ioe);
 		}
 		catch (NumberFormatException nfe) {
-			throw new IllegalArgumentException("The file of tiles is not valid", nfe);
+			throw new IllegalArgumentException("The file of board is not valid", nfe);
 		}
 	}
 }
