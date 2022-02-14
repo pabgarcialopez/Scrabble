@@ -1,16 +1,19 @@
 package GameObjects;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import SpecialEffects.SpecialEffects;
+
 public class Board {
-	
-	private static final int boardSize = 15; // Lado del tablero.
 	
 	private List<List<Box>> board;
 	
-	Board() {
-		this.board = new ArrayList<List<Box>>(boardSize);
+	public Board() {
+		this.board = new ArrayList<List<Box>>();
 	}
 	
 	public int getBoardSize() {
@@ -22,5 +25,29 @@ public class Board {
 		return numBoxes*numBoxes;
 	}
 	
-
+	public void loadBoard(String file) {
+		try(BufferedReader buffer = new BufferedReader(new FileReader(file))) {
+			
+			int xSize, ySize;
+			String linea = buffer.readLine();
+			String[] size = linea.trim().split(" ");
+			xSize = Integer.parseInt(size[0]);
+			ySize = Integer.parseInt(size[1]);
+			for (int i = 0; i < xSize; ++i) {
+				List<Box> fila = new ArrayList<Box>();
+				for(int j = 0; j < ySize; ++i) {
+					linea = buffer.readLine();
+					linea = linea.trim();
+					fila.add(new Box(i, j, SpecialEffects.stringToSpecialEffect(linea)));
+				}
+				this.board.add(fila);
+			}					
+		}
+		catch (IOException ioe) {
+			throw new IllegalArgumentException("The file of tiles is not valid", ioe);
+		}
+		catch (NumberFormatException nfe) {
+			throw new IllegalArgumentException("The file of tiles is not valid", nfe);
+		}
+	}
 }

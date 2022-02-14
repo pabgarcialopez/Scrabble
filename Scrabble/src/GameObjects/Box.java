@@ -9,7 +9,6 @@ public class Box {
 	private int y;
 	private SpecialEffects specialEffect;
 	private boolean specialEffectAlreadyDone;
-	private boolean pointsAlreadyGivenInTurn;
 	
 	Box(int x, int y, SpecialEffects specialEffect) {
 		this.x = x;
@@ -17,7 +16,6 @@ public class Box {
 		this.specialEffect = specialEffect;
 		this.tile = null;
 		this.specialEffectAlreadyDone = false;
-		this.pointsAlreadyGivenInTurn = false;
 	}
 	
 	private void assignTile(Tile tile) {
@@ -37,10 +35,6 @@ public class Box {
 		}
 		else points = this.tile.getPoints();
 		
-		if(this.pointsAlreadyGivenInTurn) return 0;
-		else {
-			this.pointsAlreadyGivenInTurn = true;
-			return points;
-		}
+		return points;
 	}	
 }

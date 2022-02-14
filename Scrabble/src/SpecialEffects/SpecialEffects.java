@@ -12,4 +12,17 @@ public enum SpecialEffects {
 		
 		return 1;
 	}
+	
+	public static SpecialEffects stringToSpecialEffect(String specialEffect) {
+		
+		if (specialEffect.equals(DOUBLE_LETTER.name())) return DOUBLE_LETTER;
+		
+		if (specialEffect.equals(TRIPLE_LETTER.name())) return TRIPLE_LETTER;
+		
+		if (specialEffect.equals(DOUBLE_WORD.name())) return DOUBLE_WORD;
+		
+		if (specialEffect.equals(TRIPLE_WORD.name())) return TRIPLE_WORD;
+		
+		return null;
+	}
 }
