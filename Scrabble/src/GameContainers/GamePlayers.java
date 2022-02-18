@@ -36,7 +36,7 @@ public class GamePlayers {
 		
 		int i = 0;
 		while(namesAreDifferent && i < players.size()) {
-			if(players.get(i).getName().equals(name))
+			if(players.get(i).getName().equalsIgnoreCase(name))
 				namesAreDifferent = false;
 			
 			++i;
@@ -56,11 +56,20 @@ public class GamePlayers {
 				game.removeTile(tile);
 			}
 			
-			else break;
+			else break; // Si tile == null, significa que no quedan en el saco de fichas y no hay que continuar el bucle.
 		}
 	}
 
 	public String getPlayerStatus(int i) {
 		return players.get(i).getStatus();
+	}
+
+	public String getPlayerName(int i) {
+		return players.get(i).getName();
+	}
+
+	public void incrementPassingTurn(int i) {
+		
+		
 	}
 }

@@ -20,7 +20,8 @@ public class Box {
 	
 	private void assignTile(Tile tile) {
 		
-		if (this.tile != null)  throw new IllegalArgumentException("The box is already occupied!");
+		if (this.tile != null) 
+			throw new IllegalArgumentException("The box is already occupied!");
 		
 		this.tile = tile;
 	}

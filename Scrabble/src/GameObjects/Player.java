@@ -31,15 +31,25 @@ public class Player {
 
 	public String getStatus() {
 		StringBuilder buffer = new StringBuilder();
+		
+		// Nombre del jugador
 		buffer.append("Turno de ").append(this.name).append(":")
 			  .append(StringUtils.LINE_SEPARATOR);
+		
+		// Puntos del jugador
+		buffer.append("Puntos totales: ").append(totalPoints).append(StringUtils.LINE_SEPARATOR);
 	
-		buffer.append("Fichas:").append(StringUtils.LINE_SEPARATOR);
+		// Fichas del jugador
+		buffer.append("Fichas (letra y puntos asociados a ella):").append(StringUtils.LINE_SEPARATOR);
 		for(int i = 0; i < tiles.size(); i++) {
 			buffer.append(tiles.get(i));
 			if(i != tiles.size() - 1)
 				buffer.append(" || ");
 		}
+		
+		buffer.append(StringUtils.LINE_SEPARATOR);
+		
+		
 		
 		return buffer.toString();
 	}

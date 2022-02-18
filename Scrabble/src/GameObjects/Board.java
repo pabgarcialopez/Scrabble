@@ -35,7 +35,7 @@ public class Board {
 			ySize = Integer.parseInt(size[1]);
 			for (int i = 0; i < xSize; ++i) {
 				List<Box> fila = new ArrayList<Box>();
-				for(int j = 0; j < ySize; ++i) {
+				for(int j = 0; j < ySize; ++j) {
 					linea = buffer.readLine();
 					linea = linea.trim();
 					fila.add(new Box(i, j, SpecialEffects.stringToSpecialEffect(linea)));

@@ -19,7 +19,8 @@ public class Controller {
 		
 		while(!game.gameIsFinished()) {
 			
-			game.showStatus();
+			game.showStatus(); // Imprimimos estado del jugador y tablero.
+			game.play();
 			
 		}
 		
