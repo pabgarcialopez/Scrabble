@@ -13,37 +13,46 @@ import GameContainers.GameTiles;
 import GameObjects.Board;
 import GameObjects.Player;
 import GameObjects.Tile;
+import GameView.GamePrinter;
 
 public class Game {
 	
-	private boolean gameIsFinished;
-	private GamePlayers players;
 	private Scanner scanner;
+	private GamePlayers players;
 	private int currentTurn;
+	private int numConsecutivePasses;
 	private GameTiles tiles;
-	private static String tilesFile = "tiles.txt";
-	private static String boxesFile = "boxes.txt";
-	private static String wordsFile = "words.txt";
+	private static final String tilesFile = "tiles.txt";
+	private static final String boxesFile = "boxes.txt";
+	private static final String wordsFile = "words.txt";
 	private Board board;
-	private Random rdm;
+	private Random random;
 	private List<String> wordsList;
+	private GamePrinter printer;
 	
 	public Game(Scanner scanner) {
-		this.gameIsFinished = false;
 		this.scanner = scanner;
 		this.players = addPlayers(selectNumPlayers());
 		this.tiles = new GameTiles();
 		this.tiles.loadTiles(tilesFile);
 		this.board = new Board();
 		this.board.loadBoard(boxesFile);
-		this.rdm = new Random();
-		this.currentTurn =  this.decideFirstTurn();
 		this.wordsList = new ArrayList<String>();
 		this.loadWordList(wordsFile);
+		this.random = new Random();
+		this.currentTurn =  this.decideFirstTurn();
+		this.numConsecutivePasses = 0;
+		this.printer = new GamePrinter(this);
+		
+		// Inicializamos las fichas de los jugadores.
+		this.initializePlayerTiles();
 	}
 	
 	public boolean gameIsFinished() {
-		return gameIsFinished;
+		if(this.numConsecutivePasses == this.getNumPlayers()*2)
+			return true;
+		
+		return false;
 	}
 	
 	private GamePlayers addPlayers(int numPlayers) {
@@ -85,18 +94,21 @@ public class Game {
 		
 		String[] lettersObtained = new String[this.getNumPlayers()];
 		for(int i = 0; i < this.getNumPlayers(); ++i) {
-			lettersObtained[i] = this.tiles.getLetter((int) (this.getRandomDouble() * this.tiles.getNumTiles()));
+			lettersObtained[i] = this.getRandomTile().getLetter();
 		}
 		
 		int turn = 0;
 		for(int i = 1; i < this.getNumPlayers(); ++i)
-			if (lettersObtained[i].compareTo(lettersObtained[turn]) < 0) turn = i;
+			if (lettersObtained[i].compareTo(lettersObtained[turn]) < 0) 
+				turn = i;
+		
+		// TODO: Imprimir las letras sacadas.
 		
 		return turn;		
 	}
 	
 	private Double getRandomDouble() {
-		return this.rdm.nextDouble();
+		return this.random.nextDouble();
 	}
 	
 	private int getNumPlayers() {
@@ -119,5 +131,31 @@ public class Game {
 		catch (IOException ioe) {
 			throw new IllegalArgumentException("The file of words is not valid", ioe);
 		}
+	}
+	
+	public Tile getRandomTile() {
+		if(tiles.getNumTiles() == 0)
+			return null;
+		
+		return 
+			tiles.getTile((int) (this.getRandomDouble() * this.tiles.getNumTiles()));
+	}
+	
+	public void removeTile(Tile tile) {
+		tiles.remove(tile);
+	}
+	
+	public void initializePlayerTiles() {
+		for(int i = 0; i < this.players.getNumPlayers(); i++) {
+			players.drawTiles(this, i);
+		}
+	}
+
+	public void showStatus() {
+		printer.showStatus(currentTurn);
+	}
+	
+	public String getCurrentPlayerStatus() {
+		return players.getPlayerStatus(currentTurn);
 	}
 }

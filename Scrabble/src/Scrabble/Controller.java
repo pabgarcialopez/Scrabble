@@ -5,6 +5,7 @@ import java.util.Scanner;
 import GameContainers.GamePlayers;
 import GameLogic.Game;
 import GameObjects.Player;
+import GameView.GamePrinter;
 
 public class Controller {
 	
@@ -16,9 +17,9 @@ public class Controller {
 	
 	public void run() {
 		
-		while(!this.game.gameIsFinished()) {
+		while(!game.gameIsFinished()) {
 			
-			
+			game.showStatus();
 			
 		}
 		

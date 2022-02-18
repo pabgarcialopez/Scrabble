@@ -19,7 +19,7 @@ public class GameTiles {
 		this.tiles.add(tile);
 	}
 	
-	private void remove(Tile tile) {
+	public void remove(Tile tile) {
 		this.tiles.remove(tile);
 	}
 	
@@ -42,11 +42,13 @@ public class GameTiles {
 		}
 	}
 	
-	public String getLetter(int i) {
-		return this.tiles.get(i).getLetter();
-	}
 	
 	public int getNumTiles() {
 		return this.tiles.size();
+	}
+
+	public Tile getTile(int i) {
+		 
+		return tiles.get(i);
 	}
 }

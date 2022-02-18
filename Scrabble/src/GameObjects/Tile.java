@@ -19,4 +19,9 @@ public class Tile {
 		
 		return letter;
 	}
+	
+	@Override
+	public String toString() {
+		return this.letter + ": " + this.points;
+	}
 }
