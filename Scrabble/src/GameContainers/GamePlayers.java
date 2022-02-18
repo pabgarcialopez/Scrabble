@@ -67,9 +67,4 @@ public class GamePlayers {
 	public String getPlayerName(int i) {
 		return players.get(i).getName();
 	}
-
-	public void incrementPassingTurn(int i) {
-		
-		
-	}
 }
