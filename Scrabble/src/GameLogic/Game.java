@@ -263,7 +263,7 @@ public class Game {
 			}
 		}
 		catch (IOException ioe) {
-			throw new IllegalArgumentException("El archivo de palabras no es valido.", ioe);
+			throw new IllegalArgumentException("Error al leer el fichero words.txt", ioe);
 		}
 	}
 	

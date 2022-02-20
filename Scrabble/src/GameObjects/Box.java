@@ -21,7 +21,7 @@ public class Box {
 	private void assignTile(Tile tile) {
 		
 		if (this.tile != null) 
-			throw new IllegalArgumentException("The box is already occupied!");
+			throw new IllegalArgumentException("Esta casilla ya esta ocupada!");
 		
 		this.tile = tile;
 	}

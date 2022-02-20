@@ -37,10 +37,10 @@ public class GameTiles {
 			
 		}
 		catch (IOException ioe) {
-			throw new IllegalArgumentException("El fichero de casillas no es valido", ioe);
+			throw new IllegalArgumentException("Error al leer el fichero tiles.txt", ioe);
 		}
 		catch (NumberFormatException nfe) {
-			throw new IllegalArgumentException("El fichero de casillas no es valido", nfe);
+			throw new IllegalArgumentException("Error al leer el fichero tiles.txt", nfe);
 		}
 	}
 	
