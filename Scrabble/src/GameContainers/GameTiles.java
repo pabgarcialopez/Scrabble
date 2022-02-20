@@ -15,7 +15,7 @@ public class GameTiles {
 		this.tiles = new ArrayList<Tile>();
 	}
 	
-	private void add(Tile tile) {
+	private void add(Tile tile) { // Prueba para ver si los commits funcionan desde Mac
 		this.tiles.add(tile);
 	}
 	
