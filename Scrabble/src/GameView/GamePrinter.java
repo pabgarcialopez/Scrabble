@@ -46,6 +46,8 @@ public class GamePrinter {
 			  .append("2. Pasar turno.").append(StringUtils.LINE_SEPARATOR)
 			  .append("3. Cambiar ficha.").append(StringUtils.LINE_SEPARATOR);
 		
+		System.out.println(buffer);
+		
 	}
 
 }

@@ -79,23 +79,24 @@ public class Game {
 				usedWords.add(arguments[0]);
 				Collections.sort(usedWords); // Para encontrar las palabras mas rapido.
 				
+				this.numConsecutivePassedTurns = 0;
 				break;
 			}
 			
 			// Jugador pasa de turno.
 			case 2: {
-				nextTurn();
-				// Es facil aniadir incrementar numConsecutivePassingTurns pero no se
-				// como comprobar que los turnos pasados han sido consecutivos.
 					
+				++this.numConsecutivePassedTurns;
 				break;
 			}
 			
 			case 3: {
-				// Todavia por implementar (cambiar ficha)
+				
 				break;
 			}
 		}
+		
+		nextTurn();
 	}
 	
 	private boolean validArguments(String[] arguments) {
@@ -176,6 +177,8 @@ public class Game {
 			System.out.println("Elige opcion: ");
 			election = scanner.nextInt();
 		}
+		
+		scanner.nextLine();
 		
 		return election;
 	}
