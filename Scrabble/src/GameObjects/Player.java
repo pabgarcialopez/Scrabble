@@ -54,4 +54,47 @@ public class Player {
 		return buffer.toString();
 	}
 
+	public Tile getTile(int tile) {
+		
+		return this.tiles.get(tile);
+	}
+
+	public void removeTile(int tile) {
+
+		this.tiles.remove(tile);		
+	}
+
+	public boolean hasLetter(String letter) {
+		
+		for(int i = 0; i < this.tiles.size(); ++i)
+			if(this.tiles.get(i).getLetter().equalsIgnoreCase(letter))
+				return true;
+		
+		return false;
+	}
+
+	public Tile getTile(String letter) {
+		
+		for(int i = 0; i < this.tiles.size(); ++i)
+			if(this.tiles.get(i).getLetter().equalsIgnoreCase(letter))
+				return this.tiles.get(i);
+		
+		return null;
+	}
+
+	public void removeTile(Tile tile) {
+
+		this.tiles.remove(tile);
+	}
+
+	public int numberOfTilesOf(String letter) {
+		
+		int numberOfTiles = 0;
+		for (int i = 0; i < this.tiles.size(); ++i)
+			if (this.tiles.get(i).getLetter().equalsIgnoreCase(letter)) 
+				++numberOfTiles;
+		
+		return numberOfTiles;
+	}
+
 }

@@ -2,7 +2,6 @@ package GameContainers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import GameLogic.Game;
 import GameObjects.Player;
@@ -66,5 +65,42 @@ public class GamePlayers {
 
 	public String getPlayerName(int i) {
 		return players.get(i).getName();
+	}
+
+	public int getNumPlayerTiles(int i) {
+		
+		return this.players.get(i).getNumTiles();
+		
+	}
+
+	public Tile getPlayerTile(int player, int tile) {
+		
+		return this.players.get(player).getTile(tile);
+	}
+
+	public void removePlayerTile(int player, int tile) {
+
+		this.players.get(player).removeTile(tile);		
+	}
+
+	public boolean playerHasLetter(int player, String letter) {
+		
+		
+		return this.players.get(player).hasLetter(letter);
+	}
+
+	public Tile getPlayerTile(int player, String letter) {
+		
+		return this.players.get(player).getTile(letter);
+	}
+
+	public void removePlayerTile(int player, Tile tile) {
+
+		this.players.get(player).removeTile(tile);		
+	}
+
+	public int numberOfTilesOf(int player, String letter) {
+		
+		return this.players.get(player).numberOfTilesOf(letter);
 	}
 }

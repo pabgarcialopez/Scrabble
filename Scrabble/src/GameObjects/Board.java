@@ -38,7 +38,7 @@ public class Board {
 				for(int j = 0; j < ySize; ++j) {
 					linea = buffer.readLine();
 					linea = linea.trim();
-					fila.add(new Box(i, j, SpecialEffects.stringToSpecialEffect(linea)));
+					fila.add(new Box(SpecialEffects.stringToSpecialEffect(linea)));
 				}
 				this.board.add(fila);
 			}					
@@ -49,5 +49,15 @@ public class Board {
 		catch (NumberFormatException nfe) {
 			throw new IllegalArgumentException("Error al leer el archivo board.txt", nfe);
 		}
+	}
+
+	public Tile getTile(int i, int posY) {
+		
+		return this.board.get(i).get(posY).getTile();
+	}
+
+	public void assignTile(Tile tile, int posX, int posY) {
+
+		this.board.get(posX).get(posY).assignTile(tile);
 	}
 }

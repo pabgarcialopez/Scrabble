@@ -5,7 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -14,6 +16,7 @@ import GameContainers.GameTiles;
 import GameObjects.Board;
 import GameObjects.Player;
 import GameObjects.Tile;
+import GameUtils.StringUtils;
 import GameView.GamePrinter;
 
 public class Game {
@@ -28,6 +31,7 @@ public class Game {
 	
 	private int currentTurn;
 	private int numConsecutivePassedTurns;
+	private int numTurnsWithoutTiles;
 	
 	private GameTiles tiles;
 	private Board board;
@@ -39,6 +43,7 @@ public class Game {
 		this.scanner = scanner;
 		this.printer = new GamePrinter(this);
 		this.players = addPlayers(selectNumPlayers());
+		System.out.print(StringUtils.LINE_SEPARATOR);
 		this.tiles = new GameTiles();
 		this.tiles.loadTiles(tilesFile);
 		this.board = new Board();
@@ -49,12 +54,15 @@ public class Game {
 		this.currentTurn =  this.decideFirstTurn();
 		this.usedWords = new ArrayList<String>();
 		this.numConsecutivePassedTurns = 0;
+		this.numTurnsWithoutTiles = 0;
 		
 		// Inicializamos las fichas de los jugadores.
 		this.initializePlayerTiles();
 	}
 	
-	public void play() {
+	
+	//Devuelve true si se ha jugado el turn y false en caso contrario.
+	public boolean play() {
 		
 		int election = electionMenu();
 		
@@ -69,17 +77,21 @@ public class Game {
 				// arguments[2] es la coordenada x (fila); arguments[3] es la coordenada y (columna).
 				String[] arguments = arg.trim().split(" ");
 				
-				while(!validArguments(arguments)) {
-					System.out.println("Argumentos no validos.");
-					arg = askArguments();
-					arguments = arg.trim().split(" ");
+				if(!validArguments(arguments)) {
+					System.out.println("Argumentos no validos." + StringUtils.LINE_SEPARATOR);
+					return false;
 				}
-				
+
 				// Poner ahora la palabra en el tablero etc. (usedWords)
 				usedWords.add(arguments[0]);
 				Collections.sort(usedWords); // Para encontrar las palabras mas rapido.
 				
+				this.assignTiles(arguments);
+				
+				this.players.drawTiles(this, this.currentTurn);
+				
 				this.numConsecutivePassedTurns = 0;
+				
 				break;
 			}
 			
@@ -87,16 +99,30 @@ public class Game {
 			case 2: {
 					
 				++this.numConsecutivePassedTurns;
+				
 				break;
 			}
 			
 			case 3: {
 				
+				int randomPlayerTile = (int) (this.getRandomDouble() * this.players.getNumPlayerTiles(this.currentTurn));
+				this.tiles.add(this.players.getPlayerTile(this.currentTurn, randomPlayerTile));
+				
+				this.players.removePlayerTile(this.currentTurn, randomPlayerTile);
+				
+				this.players.drawTiles(this, this.currentTurn);
+				
+				++this.numConsecutivePassedTurns;
+				
 				break;
 			}
 		}
 		
+		if (this.getRemainingTiles() == 0) ++this.numTurnsWithoutTiles;
+		
 		nextTurn();
+		
+		return true;
 	}
 	
 	private boolean validArguments(String[] arguments) {
@@ -104,32 +130,83 @@ public class Game {
 		if(arguments.length != 4) 
 			return false;
 		
-		else if(!wordExists(arguments[0], words))
+		if(!wordExists(arguments[0], words))
 			return false;
 		
-		else if(wordExists(arguments[0], usedWords))
+		if(wordExists(arguments[0], usedWords))
 			return false;
 		
-		else if(arguments[1] != "V" || arguments[1] != "H")
+		if(!arguments[1].equals("V") && !arguments[1].equals("H"))
 			return false;
 		
-		else if (Integer.parseInt(arguments[2]) < 0 || Integer.parseInt(arguments[2]) > board.getBoardSize() ||
-				 Integer.parseInt(arguments[3]) < 0 || Integer.parseInt(arguments[3]) > board.getBoardSize()) {
+		if (arguments[0].length() > 15)
 			return false;
+		
+		int posX = Integer.parseInt(arguments[2]), posY = Integer.parseInt(arguments[3]);
+		
+		if(posX < 0 || posX > board.getBoardSize() || posY < 0 || posY > board.getBoardSize())
+			return false;
+		
+		Map<String, Integer> numberOfEachLetterNeeded = new HashMap<String, Integer>();
+		for (int i = 0; i < arguments[0].length(); ++i) {
+			String letter = "";
+			letter += arguments[0].charAt(i);
+			if (numberOfEachLetterNeeded.containsKey(letter)) numberOfEachLetterNeeded.put(letter, numberOfEachLetterNeeded.get(letter) + 1);
+			else numberOfEachLetterNeeded.put(letter, 1);
 		}
 		
-		// Aqui vemos que la palabra quepa en el tablero verticalmente
-		else if(arguments[1] == "V") {
-			if(Integer.parseInt(arguments[2]) - arguments[0].length() < 0 ||
-			   Integer.parseInt(arguments[2]) + arguments[0].length() > board.getBoardSize())
-				return false;
+		
+		
+		if(arguments[1].equals("V")) {
+			
+			for (int i = 0; i < arguments[0].length(); ++i) {
+				
+				if (i + posX > board.getBoardSize())
+					return false;
+				
+				String letter = "";
+				letter += arguments[0].charAt(i);
+				
+				if ((!this.players.playerHasLetter(this.currentTurn, letter) || this.board.getTile(i + posX, posY) != null)
+					&& (this.board.getTile(i + posX, posY) == null || !this.board.getTile(i + posX, posY).getLetter().equalsIgnoreCase(letter)))
+					return false;
+				
+				if (this.board.getTile(i + posX, posY) != null)
+					numberOfEachLetterNeeded.put(letter, numberOfEachLetterNeeded.get(letter) - 1);
+			}
+			
+			for (String letter : numberOfEachLetterNeeded.keySet()) {
+				
+				if (numberOfEachLetterNeeded.get(letter) > 0 
+						&& this.players.numberOfTilesOf(this.currentTurn, letter) < numberOfEachLetterNeeded.get(letter))
+					return false;
+			}
 		}
 		
-		// Aqui vemos que la palabra quepa en el tablero horizontalmente
-		else if(arguments[1] == "H") {
-			if(Integer.parseInt(arguments[3]) - arguments[0].length() < 0 ||
-			   Integer.parseInt(arguments[3]) + arguments[0].length() > board.getBoardSize())
-				return false;
+		if(arguments[1].equals("H")) {
+			
+			for (int i = 0; i < arguments[0].length(); ++i) {
+				
+				if (i + posY > board.getBoardSize())
+					return false;
+				
+				String letter = "";
+				letter += arguments[0].charAt(i);
+				
+				if ((!this.players.playerHasLetter(this.currentTurn, letter) || this.board.getTile(posX, i + posY) != null)
+						&& (this.board.getTile(posX, i + posY) == null || !this.board.getTile(posX, i + posY).getLetter().equalsIgnoreCase(letter)))
+						return false;
+					
+					if (this.board.getTile(posX, i + posY) != null)
+						numberOfEachLetterNeeded.put(letter, numberOfEachLetterNeeded.get(letter) - 1);
+				}
+				
+				for (String letter : numberOfEachLetterNeeded.keySet()) {
+					
+					if (numberOfEachLetterNeeded.get(letter) > 0 
+							&& this.players.numberOfTilesOf(this.currentTurn, letter) < numberOfEachLetterNeeded.get(letter))
+						return false;
+				}
 		}
 		
 		return true;
@@ -140,6 +217,8 @@ public class Game {
 		String arguments;
 		System.out.print("Introduce palabra, direccion (V/H) y posicion en el tablero: ");
 		arguments = scanner.nextLine();
+		
+		System.out.print(StringUtils.LINE_SEPARATOR);
 		
 		return arguments;
 	}
@@ -184,8 +263,11 @@ public class Game {
 	}
 
 	public boolean gameIsFinished() {
+		
 		if(this.numConsecutivePassedTurns == this.getNumPlayers()*2)
 			return true;
+		
+		if (this.numTurnsWithoutTiles == this.getNumPlayers()) return true;
 		
 		return false;
 	}
@@ -295,5 +377,51 @@ public class Game {
 	public String getCurrentPlayerStatus() {
 		return players.getPlayerStatus(currentTurn);
 	}
+	
+	public void assignTiles(String[] arguments) {
+		
+		int posX = Integer.parseInt(arguments[2]), posY = Integer.parseInt(arguments[3]);
+		
+		if(arguments[1].equals("V")) {
+			
+			for (int i = 0; i < arguments[0].length(); ++i) {
+				
+				String letter = "";
+				letter += arguments[0].charAt(i);
+				
+				Tile tile = this.players.getPlayerTile(this.currentTurn, letter);
+				
+				try {
+					this.board.assignTile(tile, i + posX, posY);
+					this.players.removePlayerTile(this.currentTurn, tile);
+				}
+				catch (IllegalArgumentException iae) {};
+			}
+		}
+		
+		if(arguments[1].equals("H")) {
+			
+			for (int i = 0; i < arguments[0].length(); ++i) {
+				
+				String letter = "";
+				letter += arguments[0].charAt(i);
+				
+				Tile tile = this.players.getPlayerTile(this.currentTurn, letter);
+				
+				try {
+					this.board.assignTile(tile, posX, i + posY);
+					this.players.removePlayerTile(this.currentTurn, tile);
+				}
+				catch (IllegalArgumentException iae) {};				
+			}
+		}
+	}
 
+	public int getRemainingTiles() {
+		return this.tiles.getNumTiles();
+	}
+
+	public void showEndMessage() {
+		this.printer.endMessage();
+	}
 }

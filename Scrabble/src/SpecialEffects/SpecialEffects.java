@@ -2,7 +2,7 @@ package SpecialEffects;
 
 public enum SpecialEffects {
 
-	DOUBLE_LETTER, TRIPLE_LETTER, DOUBLE_WORD, TRIPLE_WORD;
+	DOUBLE_LETTER, TRIPLE_LETTER, DOUBLE_WORD, TRIPLE_WORD, CENTRE;
 	
 	public int getLetterPointsMultiplier() {
 		
@@ -22,6 +22,8 @@ public enum SpecialEffects {
 		if (specialEffect.equals(DOUBLE_WORD.name())) return DOUBLE_WORD;
 		
 		if (specialEffect.equals(TRIPLE_WORD.name())) return TRIPLE_WORD;
+		
+		if (specialEffect.equals(CENTRE.name())) return CENTRE;
 		
 		return null;
 	}

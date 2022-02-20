@@ -1,7 +1,5 @@
 package Scrabble;
 
-import java.util.Scanner;
-
 import GameUtils.StringUtils;
 
 public class Main {

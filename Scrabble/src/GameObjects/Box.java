@@ -5,20 +5,16 @@ import SpecialEffects.SpecialEffects;
 public class Box {
 
 	private Tile tile;
-	private int x;
-	private int y;
 	private SpecialEffects specialEffect;
 	private boolean specialEffectAlreadyDone;
 	
-	Box(int x, int y, SpecialEffects specialEffect) {
-		this.x = x;
-		this.y = y;
+	Box(SpecialEffects specialEffect) {
 		this.specialEffect = specialEffect;
 		this.tile = null;
 		this.specialEffectAlreadyDone = false;
 	}
 	
-	private void assignTile(Tile tile) {
+	public void assignTile(Tile tile) {
 		
 		if (this.tile != null) 
 			throw new IllegalArgumentException("Esta casilla ya esta ocupada!");
@@ -37,5 +33,10 @@ public class Box {
 		else points = this.tile.getPoints();
 		
 		return points;
+	}
+
+	public Tile getTile() {
+		
+		return this.tile;
 	}	
 }

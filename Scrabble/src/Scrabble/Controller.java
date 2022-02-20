@@ -2,10 +2,7 @@ package Scrabble;
 
 import java.util.Scanner;
 
-import GameContainers.GamePlayers;
 import GameLogic.Game;
-import GameObjects.Player;
-import GameView.GamePrinter;
 
 public class Controller {
 	
@@ -20,9 +17,10 @@ public class Controller {
 		while(!game.gameIsFinished()) {
 			
 			game.showStatus(); // Imprimimos estado del jugador y tablero.
-			game.play();
-			
+			while(!game.play());
 		}
+		
+		game.showEndMessage();
 		
 	}
 }

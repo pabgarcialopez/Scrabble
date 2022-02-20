@@ -7,6 +7,7 @@ import GameUtils.StringUtils;
 public class GamePrinter {
 	
 	private Game game;
+	
 	public GamePrinter(Game game) {
 		this.game = game;
 	}
@@ -14,6 +15,9 @@ public class GamePrinter {
 	public void showStatus(int currentTurn) {
 		
 		StringBuilder buffer = new StringBuilder();
+		
+		buffer.append("Fichas restantes para robar: ").append(game.getRemainingTiles())
+		.append(StringUtils.DOUBLE_LINE_SEPARATOR);
 		
 		// Imprimos informacion del jugador
 		buffer.append(game.getCurrentPlayerStatus());
@@ -48,6 +52,10 @@ public class GamePrinter {
 		
 		System.out.println(buffer);
 		
+	}
+	
+	public void endMessage() {
+		System.out.println("Se acabó el juego");
 	}
 
 }
