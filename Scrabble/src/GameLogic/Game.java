@@ -139,7 +139,7 @@ public class Game {
 		if(!arguments[1].equals("V") && !arguments[1].equals("H"))
 			return false;
 		
-		if (arguments[0].length() > 15)
+		if (arguments[0].length() > board.getBoardSize())
 			return false;
 		
 		int posX = Integer.parseInt(arguments[2]), posY = Integer.parseInt(arguments[3]);
@@ -154,8 +154,6 @@ public class Game {
 			if (numberOfEachLetterNeeded.containsKey(letter)) numberOfEachLetterNeeded.put(letter, numberOfEachLetterNeeded.get(letter) + 1);
 			else numberOfEachLetterNeeded.put(letter, 1);
 		}
-		
-		
 		
 		if(arguments[1].equals("V")) {
 			
@@ -183,7 +181,7 @@ public class Game {
 			}
 		}
 		
-		if(arguments[1].equals("H")) {
+		else {
 			
 			for (int i = 0; i < arguments[0].length(); ++i) {
 				
@@ -234,9 +232,9 @@ public class Game {
 		while(initial < end) {
 			int half = (initial + end - 1) / 2;
 			if(word.compareTo(listOfWords.get(half)) < 0)
-				end = half + 1;
+				end = half;
 			else if(word.compareTo(listOfWords.get(half)) > 0)
-				initial = half;
+				initial = half + 1;
 			else {
 				found = true;
 				initial = end; // Para salir del bucle.
@@ -248,12 +246,12 @@ public class Game {
 
 	private int electionMenu() {
 		printer.electionMenu();
-		System.out.println("Elige opcion:");
+		System.out.print("Elige opcion:");
 		int election = scanner.nextInt();
 		
 		while(election < 1 || election > 3) {
 			System.out.println("Opcion no valida.");
-			System.out.println("Elige opcion: ");
+			System.out.print("Elige opcion: ");
 			election = scanner.nextInt();
 		}
 		
