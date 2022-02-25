@@ -34,6 +34,18 @@ public class Box {
 		
 		return points;
 	}
+	
+	@Override
+	public String toString() {
+		if(tile == null)
+			return " ";
+		
+		return tile.getLetter();
+	}
+
+	public SpecialEffects getSpecialEffect() {
+		return specialEffect;
+	}
 
 	public Tile getTile() {
 		

@@ -14,6 +14,7 @@ import java.util.Scanner;
 import GameContainers.GamePlayers;
 import GameContainers.GameTiles;
 import GameObjects.Board;
+import GameObjects.Box;
 import GameObjects.Player;
 import GameObjects.Tile;
 import GameUtils.StringUtils;
@@ -63,8 +64,9 @@ public class Game {
 	}
 	
 	
-	//Devuelve true si se ha jugado el turno y false en caso contrario.
 	public boolean play() {
+		
+		// Devuelve true si se ha jugado el turno y false en caso contrario.
 		
 		int election = electionMenu();
 		
@@ -78,6 +80,7 @@ public class Game {
 				// arguments[0] es la palabra; arguments[1] es la direccion;
 				// arguments[2] es la coordenada x (fila); arguments[3] es la coordenada y (columna).
 				String[] arguments = arg.trim().split(" ");
+				arguments[0] = arguments[0].toLowerCase();
 				
 				try {
 					validArguments(arguments);
@@ -99,27 +102,44 @@ public class Game {
 			// Jugador pasa de turno.
 			case 2: {
 					
-				++this.numConsecutivePassedTurns;
-				
+				++numConsecutivePassedTurns;
 				break;
 			}
 			
+			// Cambiar ficha aleatoria por otra.
 			case 3: {
 				
-				int randomPlayerTile = (int) (this.getRandomDouble() * this.players.getNumPlayerTiles(this.currentTurn));
-				this.tiles.add(this.players.getPlayerTile(this.currentTurn, randomPlayerTile));
+				try {
+					if(tiles.getSize() <= 0)
+						throw new IllegalArgumentException("El saco no tiene ninguna ficha.");
 				
-				this.players.removePlayerTile(this.currentTurn, randomPlayerTile);
+					
+					int randomPlayerTile = (int) (getRandomDouble() * players.getNumPlayerTiles(this.currentTurn));
+					
+					// Aniadimos la ficha al saco original
+					tiles.add(players.getPlayerTile(currentTurn, randomPlayerTile));
+					
+					// Quitamos la ficha al jugador
+					players.removePlayerTile(currentTurn, randomPlayerTile);
+					
+					// Le damos una ficha al jugador aleatoria
+					players.drawTiles(this, currentTurn);
+					
+					++numConsecutivePassedTurns;
+				}
 				
-				this.players.drawTiles(this, this.currentTurn);
-				
-				++this.numConsecutivePassedTurns;
+				catch(IllegalArgumentException iae) {
+					System.out.println(iae.getMessage());
+					
+					return false;
+				}
 				
 				break;
 			}
 		}
 		
-		if (this.getRemainingTiles() == 0) ++this.numTurnsWithoutTiles;
+		if (this.getRemainingTiles() == 0) 
+			++numTurnsWithoutTiles;
 		
 		nextTurn();
 		
@@ -137,23 +157,24 @@ public class Game {
 		if(wordExists(arguments[0], usedWords))
 			throw new IllegalArgumentException("La palabra introducida ya se encuentra en el tablero.");
 		
-		if(!arguments[1].equals("V") && !arguments[1].equals("H"))
+		if(!arguments[1].equalsIgnoreCase("V") && !arguments[1].equalsIgnoreCase("H"))
 			throw new IllegalArgumentException("El argumento de la direccion no es válido.");
 		
 		if (arguments[0].length() > board.getBoardSize())
 			throw new IllegalArgumentException("La palabra introducida es demasiado larga para entrar en el tablero.");
 		
 		int posX, posY;
+		
 		try {
 			posX = Integer.parseInt(arguments[2]);
 			posY = Integer.parseInt(arguments[3]);
 		}
 		catch (NumberFormatException nfe) {
-			throw new IllegalArgumentException("Las coordenadas deben ser numeros.");
+			throw new IllegalArgumentException("Las coordenadas de la palabra deben ser numeros.");
 		}
 		
 		if(posX < 0 || posX > board.getBoardSize() || posY < 0 || posY > board.getBoardSize())
-			throw new IllegalArgumentException("La posición en la que se quiere colocar la palabra no es válida");
+			throw new IllegalArgumentException("La posición en la que se quiere colocar la palabra no es válida.");
 		
 		Map<String, Integer> numberOfEachLetterNeeded = new HashMap<String, Integer>();
 		for (int i = 0; i < arguments[0].length(); ++i) {
@@ -165,7 +186,7 @@ public class Game {
 		
 		boolean centre = false;
 		
-		if(arguments[1].equals("V")) {
+		if(arguments[1].equalsIgnoreCase("V")) {
 			
 			for (int i = 0; i < arguments[0].length(); ++i) {
 				
@@ -179,7 +200,7 @@ public class Game {
 				
 				if ((!this.players.playerHasLetter(this.currentTurn, letter) || this.board.getTile(i + posX, posY) != null)
 					&& (this.board.getTile(i + posX, posY) == null || !this.board.getTile(i + posX, posY).getLetter().equalsIgnoreCase(letter)))
-					throw new IllegalArgumentException("La palabra no se puede colocar en la posición indicada");
+					throw new IllegalArgumentException("La palabra no se puede colocar en la posición indicada.");
 				
 				if (this.board.getTile(i + posX, posY) != null)
 					numberOfEachLetterNeeded.put(letter, numberOfEachLetterNeeded.get(letter) - 1);
@@ -205,8 +226,8 @@ public class Game {
 				String letter = "";
 				letter += arguments[0].charAt(i);
 				
-				if ((!this.players.playerHasLetter(this.currentTurn, letter) || this.board.getTile(posX, i + posY) != null)
-						&& (this.board.getTile(posX, i + posY) == null || !this.board.getTile(posX, i + posY).getLetter().equalsIgnoreCase(letter)))
+				if ((!players.playerHasLetter(currentTurn, letter) || board.getTile(posX, i + posY) != null)
+						&& (board.getTile(posX, i + posY) == null || !board.getTile(posX, i + posY).getLetter().equalsIgnoreCase(letter)))
 					throw new IllegalArgumentException("La palabra no se puede colocar en la posición indicada");
 					
 					if (this.board.getTile(posX, i + posY) != null)
@@ -214,7 +235,6 @@ public class Game {
 				}
 				
 				for (String letter : numberOfEachLetterNeeded.keySet()) {
-					
 					if (numberOfEachLetterNeeded.get(letter) > 0 
 							&& this.players.numberOfTilesOf(this.currentTurn, letter) < numberOfEachLetterNeeded.get(letter))
 						throw new IllegalArgumentException("No tienes las letras necesarias para colocar la palabra.");
@@ -223,7 +243,7 @@ public class Game {
 		
 		if (this.getRemainingTiles() == (this.numTotalTilesInGame - GamePlayers.NUM_TILES * this.getNumPlayers())
 				&& !centre)
-			throw new IllegalArgumentException("La primera palabra introducida en el tablero debe pasar por la casilla central.");
+			throw new IllegalArgumentException("La primera palabra introducida en el tablero debe situarse en la casilla central.");
 	}
 
 	private String askArguments() {
@@ -237,10 +257,9 @@ public class Game {
 		return arguments;
 	}
 
-	// Busqueda binaria (listOfWords sirve tanto para la lista de todas las palabras
-	// como para la lista de palabras ya usadas.
 	private boolean wordExists(String word, List<String> listOfWords) {
 		
+		// Busqueda binaria (listOfWords sirve tanto para la lista de todas las palabras como para la lista de palabras ya usadas.
 		int initial = 0;
 		int end = listOfWords.size();
 		boolean found = false;
@@ -261,8 +280,8 @@ public class Game {
 	}
 
 	private int electionMenu() {
-		printer.electionMenu();
-		System.out.print("Elige opcion:");
+		printer.showElectionMenu();
+		System.out.print("Elige opcion: ");
 		int election = scanner.nextInt();
 		
 		while(election < 1 || election > 3) {
@@ -334,8 +353,7 @@ public class Game {
 			if (lettersObtained[i].compareTo(lettersObtained[turn]) < 0) 
 				turn = i;
 		
-		// TODO: Imprimir las letras sacadas.
-		printer.decideFirstTurn(lettersObtained, players, turn);
+		printer.showFirstTurn(lettersObtained, players, turn);
 		
 		return turn;		
 	}
@@ -384,12 +402,16 @@ public class Game {
 		}
 	}
 
-	public void showStatus() {
-		printer.showStatus(currentTurn);
+	public void printStatus() {
+		printer.showStatus(players.getPlayerStatus(currentTurn));
 	}
 	
-	public String getCurrentPlayerStatus() {
-		return players.getPlayerStatus(currentTurn);
+	public void printBoard() {
+		printer.showBoard();
+	}
+
+	public void printEndMessage() {
+		this.printer.showEndMessage();
 	}
 	
 	public void assignTiles(String[] arguments) {
@@ -434,10 +456,6 @@ public class Game {
 	public int getRemainingTiles() {
 		return this.tiles.getNumTiles();
 	}
-
-	public void showEndMessage() {
-		this.printer.endMessage();
-	}
 	
 	private int getPoints(String[] arguments) {
 		
@@ -457,4 +475,18 @@ public class Game {
 		
 		return points;
 	}
+
+	public int getBoardSize() {
+		return board.getBoardSize();
+	}
+
+	public Box getBoxAt(int i, int j) {
+		return board.getBoxAt(i,j);
+	}
+
+
+	public boolean isCentre(int i, int j) {
+		return board.isCentre(i, j);
+	}
+
 }

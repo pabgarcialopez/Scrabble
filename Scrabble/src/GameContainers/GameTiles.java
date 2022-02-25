@@ -53,4 +53,8 @@ public class GameTiles {
 		 
 		return tiles.get(i);
 	}
+
+	public int getSize() {
+		return tiles.size();
+	}
 }

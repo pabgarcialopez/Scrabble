@@ -53,20 +53,24 @@ public class Board {
 
 	public Tile getTile(int i, int posY) {
 		
-		return this.board.get(i).get(posY).getTile();
+		return board.get(i).get(posY).getTile();
 	}
 
 	public void assignTile(Tile tile, int posX, int posY) {
 
-		this.board.get(posX).get(posY).assignTile(tile);
+		board.get(posX).get(posY).assignTile(tile);
 	}
 
 	public int getPoints(int posX, int posY) {
 		
-		return this.board.get(posX).get(posY).getPoints();
+		return board.get(posX).get(posY).getPoints();
 	}
 
 	public boolean isCentre(int posX, int posY) {
-		return this.board.get(posX).get(posY).isCentre();
+		return board.get(posX).get(posY).isCentre();
+	}
+
+	public Box getBoxAt(int i, int j) {
+		return board.get(i).get(j);
 	}
 }

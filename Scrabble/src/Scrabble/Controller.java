@@ -16,11 +16,12 @@ public class Controller {
 		
 		while(!game.gameIsFinished()) {
 			
-			game.showStatus(); // Imprimimos estado del jugador y tablero.
+			game.printStatus(); // Imprimimos estado del jugador.
+			game.printBoard(); // Imprimimos el tablero.
 			while(!game.play());
 		}
 		
-		game.showEndMessage();
+		game.printEndMessage();
 		
 	}
 }
