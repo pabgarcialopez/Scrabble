@@ -9,7 +9,7 @@ import GameObjects.Tile;
 
 public class GamePlayers {
 	
-	private static final int NUM_TILES = 7;
+	public static final int NUM_TILES = 7;
 	
 	private List <Player> players;
 	
@@ -102,5 +102,9 @@ public class GamePlayers {
 	public int numberOfTilesOf(int player, String letter) {
 		
 		return this.players.get(player).numberOfTilesOf(letter);
+	}
+	
+	public void givePoints(int player, int points) {
+		this.players.get(player).givePoints(points);
 	}
 }

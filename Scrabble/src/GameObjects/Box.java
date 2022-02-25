@@ -22,11 +22,11 @@ public class Box {
 		this.tile = tile;
 	}
 	
-	private int givePoints() {
+	public int getPoints() {
 		
 		int points;
 		
-		if(!this.specialEffectAlreadyDone) {
+		if(!this.specialEffectAlreadyDone && this.specialEffect != null) {
 			this.specialEffectAlreadyDone = true;
 			points = this.tile.getPoints() * this.specialEffect.getLetterPointsMultiplier();
 		}
@@ -38,5 +38,10 @@ public class Box {
 	public Tile getTile() {
 		
 		return this.tile;
+	}
+
+	public boolean isCentre() {
+		
+		return SpecialEffects.CENTRE.equals(this.specialEffect);
 	}	
 }

@@ -97,4 +97,8 @@ public class Player {
 		return numberOfTiles;
 	}
 
+	public void givePoints(int points) {
+		this.totalPoints += points;
+	}
+
 }

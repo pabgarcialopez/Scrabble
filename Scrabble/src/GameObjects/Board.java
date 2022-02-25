@@ -60,4 +60,13 @@ public class Board {
 
 		this.board.get(posX).get(posY).assignTile(tile);
 	}
+
+	public int getPoints(int posX, int posY) {
+		
+		return this.board.get(posX).get(posY).getPoints();
+	}
+
+	public boolean isCentre(int posX, int posY) {
+		return this.board.get(posX).get(posY).isCentre();
+	}
 }

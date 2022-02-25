@@ -32,6 +32,7 @@ public class Game {
 	private int currentTurn;
 	private int numConsecutivePassedTurns;
 	private int numTurnsWithoutTiles;
+	private int numTotalTilesInGame;
 	
 	private GameTiles tiles;
 	private Board board;
@@ -46,6 +47,7 @@ public class Game {
 		System.out.print(StringUtils.LINE_SEPARATOR);
 		this.tiles = new GameTiles();
 		this.tiles.loadTiles(tilesFile);
+		this.numTotalTilesInGame = this.getRemainingTiles();
 		this.board = new Board();
 		this.board.loadBoard(boxesFile);
 		this.words = new ArrayList<String>();
@@ -54,14 +56,14 @@ public class Game {
 		this.currentTurn =  this.decideFirstTurn();
 		this.usedWords = new ArrayList<String>();
 		this.numConsecutivePassedTurns = 0;
-		this.numTurnsWithoutTiles = 0;
+		this.numTurnsWithoutTiles = -1;
 		
 		// Inicializamos las fichas de los jugadores.
 		this.initializePlayerTiles();
 	}
 	
 	
-	//Devuelve true si se ha jugado el turn y false en caso contrario.
+	//Devuelve true si se ha jugado el turno y false en caso contrario.
 	public boolean play() {
 		
 		int election = electionMenu();
@@ -70,27 +72,26 @@ public class Game {
 			
 			// Jugador pone palabra
 			case 1: {
-				// Hacer este caso diferente si se quiere encadenar palabra????
+
 				String arg = askArguments();
 				
 				// arguments[0] es la palabra; arguments[1] es la direccion;
 				// arguments[2] es la coordenada x (fila); arguments[3] es la coordenada y (columna).
 				String[] arguments = arg.trim().split(" ");
 				
-				if(!validArguments(arguments)) {
-					System.out.println("Argumentos no validos." + StringUtils.LINE_SEPARATOR);
+				try {
+					validArguments(arguments);
+					usedWords.add(arguments[0]);
+					Collections.sort(usedWords);
+					this.assignTiles(arguments);
+					this.players.givePoints(this.currentTurn, this.getPoints(arguments));
+					this.players.drawTiles(this, this.currentTurn);
+					this.numConsecutivePassedTurns = 0;
+				}
+				catch (IllegalArgumentException iae) {
+					System.out.println("Argumentos no validos. " + iae.getMessage() + StringUtils.LINE_SEPARATOR);
 					return false;
 				}
-
-				// Poner ahora la palabra en el tablero etc. (usedWords)
-				usedWords.add(arguments[0]);
-				Collections.sort(usedWords); // Para encontrar las palabras mas rapido.
-				
-				this.assignTiles(arguments);
-				
-				this.players.drawTiles(this, this.currentTurn);
-				
-				this.numConsecutivePassedTurns = 0;
 				
 				break;
 			}
@@ -125,27 +126,34 @@ public class Game {
 		return true;
 	}
 	
-	private boolean validArguments(String[] arguments) {
+	private void validArguments(String[] arguments) {
 		
 		if(arguments.length != 4) 
-			return false;
+			throw new IllegalArgumentException("El número de argumentos introducidos no es correcto.");
 		
 		if(!wordExists(arguments[0], words))
-			return false;
+			throw new IllegalArgumentException("La palabra introducida no existe.");
 		
 		if(wordExists(arguments[0], usedWords))
-			return false;
+			throw new IllegalArgumentException("La palabra introducida ya se encuentra en el tablero.");
 		
 		if(!arguments[1].equals("V") && !arguments[1].equals("H"))
-			return false;
+			throw new IllegalArgumentException("El argumento de la direccion no es válido.");
 		
 		if (arguments[0].length() > board.getBoardSize())
-			return false;
+			throw new IllegalArgumentException("La palabra introducida es demasiado larga para entrar en el tablero.");
 		
-		int posX = Integer.parseInt(arguments[2]), posY = Integer.parseInt(arguments[3]);
+		int posX, posY;
+		try {
+			posX = Integer.parseInt(arguments[2]);
+			posY = Integer.parseInt(arguments[3]);
+		}
+		catch (NumberFormatException nfe) {
+			throw new IllegalArgumentException("Las coordenadas deben ser numeros.");
+		}
 		
 		if(posX < 0 || posX > board.getBoardSize() || posY < 0 || posY > board.getBoardSize())
-			return false;
+			throw new IllegalArgumentException("La posición en la que se quiere colocar la palabra no es válida");
 		
 		Map<String, Integer> numberOfEachLetterNeeded = new HashMap<String, Integer>();
 		for (int i = 0; i < arguments[0].length(); ++i) {
@@ -155,19 +163,23 @@ public class Game {
 			else numberOfEachLetterNeeded.put(letter, 1);
 		}
 		
+		boolean centre = false;
+		
 		if(arguments[1].equals("V")) {
 			
 			for (int i = 0; i < arguments[0].length(); ++i) {
 				
 				if (i + posX > board.getBoardSize())
-					return false;
+					throw new IllegalArgumentException("La palabra introducida se sale del tablero.");
+				
+				if (this.board.isCentre(posX + i, posY)) centre = true;
 				
 				String letter = "";
 				letter += arguments[0].charAt(i);
 				
 				if ((!this.players.playerHasLetter(this.currentTurn, letter) || this.board.getTile(i + posX, posY) != null)
 					&& (this.board.getTile(i + posX, posY) == null || !this.board.getTile(i + posX, posY).getLetter().equalsIgnoreCase(letter)))
-					return false;
+					throw new IllegalArgumentException("La palabra no se puede colocar en la posición indicada");
 				
 				if (this.board.getTile(i + posX, posY) != null)
 					numberOfEachLetterNeeded.put(letter, numberOfEachLetterNeeded.get(letter) - 1);
@@ -177,7 +189,7 @@ public class Game {
 				
 				if (numberOfEachLetterNeeded.get(letter) > 0 
 						&& this.players.numberOfTilesOf(this.currentTurn, letter) < numberOfEachLetterNeeded.get(letter))
-					return false;
+					throw new IllegalArgumentException("No tienes las letras necesarias para colocar la palabra.");
 			}
 		}
 		
@@ -186,14 +198,16 @@ public class Game {
 			for (int i = 0; i < arguments[0].length(); ++i) {
 				
 				if (i + posY > board.getBoardSize())
-					return false;
+					throw new IllegalArgumentException("La palabra introducida se sale del tablero.");
+				
+				if (this.board.isCentre(posX, posY + i)) centre = true;
 				
 				String letter = "";
 				letter += arguments[0].charAt(i);
 				
 				if ((!this.players.playerHasLetter(this.currentTurn, letter) || this.board.getTile(posX, i + posY) != null)
 						&& (this.board.getTile(posX, i + posY) == null || !this.board.getTile(posX, i + posY).getLetter().equalsIgnoreCase(letter)))
-						return false;
+					throw new IllegalArgumentException("La palabra no se puede colocar en la posición indicada");
 					
 					if (this.board.getTile(posX, i + posY) != null)
 						numberOfEachLetterNeeded.put(letter, numberOfEachLetterNeeded.get(letter) - 1);
@@ -203,11 +217,13 @@ public class Game {
 					
 					if (numberOfEachLetterNeeded.get(letter) > 0 
 							&& this.players.numberOfTilesOf(this.currentTurn, letter) < numberOfEachLetterNeeded.get(letter))
-						return false;
+						throw new IllegalArgumentException("No tienes las letras necesarias para colocar la palabra.");
 				}
 		}
 		
-		return true;
+		if (this.getRemainingTiles() == (this.numTotalTilesInGame - GamePlayers.NUM_TILES * this.getNumPlayers())
+				&& !centre)
+			throw new IllegalArgumentException("La primera palabra introducida en el tablero debe pasar por la casilla central.");
 	}
 
 	private String askArguments() {
@@ -421,5 +437,24 @@ public class Game {
 
 	public void showEndMessage() {
 		this.printer.endMessage();
+	}
+	
+	private int getPoints(String[] arguments) {
+		
+		int points = 0;
+		int posX = Integer.parseInt(arguments[2]), posY = Integer.parseInt(arguments[3]);
+		
+		if (arguments[1].equals("V")) {
+			for (int i = 0; i < arguments[0].length(); ++i) {
+				points += this.board.getPoints(posX + i, posY);
+			}
+		}
+		else {
+			for (int i = 0; i < arguments[0].length(); ++i) {
+				points += this.board.getPoints(posX, posY + i);
+			}
+		}
+		
+		return points;
 	}
 }
