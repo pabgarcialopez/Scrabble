@@ -9,6 +9,13 @@ import SpecialEffects.SpecialEffects;
 
 public class GamePrinter {
 	
+	private static final String CENTRE_SYMBOL = "*";
+	private static final String DOUBLE_LETTER_SYMBOL = "•";
+	private static final String DOUBLE_WORD_SYMBOL = "░";
+	private static final String TRIPLE_LETTER_SYMBOL = "▒";
+	private static final String TRIPLE_WORD_SYMBOL = "█";
+	
+	
 	private Game game;
 	public GamePrinter(Game game) {
 		this.game = game;
@@ -47,7 +54,6 @@ public class GamePrinter {
 		
 	}
 
-	@SuppressWarnings("unlikely-arg-type")
 	public void showBoard() {
 		
 		System.out.print("   "); // Espacio de indentacion
@@ -81,20 +87,18 @@ public class GamePrinter {
 					SpecialEffects speEff = box.getSpecialEffect();
 					
 					if(SpecialEffects.CENTRE.equals(speEff))
-						boxContent = "*";
+						boxContent = CENTRE_SYMBOL;
 					else if(SpecialEffects.DOUBLE_LETTER.equals(speEff))
-						boxContent = "#";
+						boxContent = DOUBLE_LETTER_SYMBOL;
 					else if(SpecialEffects.DOUBLE_WORD.equals(speEff))
-						boxContent = "$";
+						boxContent = DOUBLE_WORD_SYMBOL;
 					else if(SpecialEffects.TRIPLE_LETTER.equals(speEff))
-						boxContent = "&";
+						boxContent = TRIPLE_LETTER_SYMBOL;
 					else if(SpecialEffects.TRIPLE_WORD.equals(speEff))
-						boxContent = "%";
+						boxContent = TRIPLE_WORD_SYMBOL;
 				}
 				
 				System.out.print("|" + " " + boxContent + " ");
-				//if(game.isCentre(i,j) && boxContent.equals(" ")) System.out.print("|" + " " + "*" + " ");
-				//else System.out.print("|" + " " + boxContent + " ");
 			}
 				
 			System.out.print("|" + StringUtils.LINE_SEPARATOR);
@@ -105,7 +109,13 @@ public class GamePrinter {
 			System.out.print("----");
 		
 		System.out.print(StringUtils.LINE_SEPARATOR);
-		System.out.print("Double Letter: # || Double Word: $ || Triple Letter: & || Triple Word: %" + StringUtils.LINE_SEPARATOR);
+		
+		System.out.print("Doble letra: " + DOUBLE_LETTER_SYMBOL + " || " +
+				         "Doble palabra: " + DOUBLE_WORD_SYMBOL + " || " +
+				         "Triple letra: " + TRIPLE_LETTER_SYMBOL + " || " + 
+				         "Triple palabra: " + TRIPLE_WORD_SYMBOL + 
+				         StringUtils.LINE_SEPARATOR);
+		
 		System.out.print(StringUtils.DOUBLE_LINE_SEPARATOR);
 	}
 
