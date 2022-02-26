@@ -37,7 +37,12 @@ public class GamePrinter {
 				  .append(lettersObtained[i]).append(StringUtils.LINE_SEPARATOR);
 		}
 		
-		buffer.append("Empieza ").append(players.getPlayerName(turn)).append(StringUtils.LINE_SEPARATOR);
+		buffer.append(StringUtils.LINE_SEPARATOR).append("El orden de juego es: ");
+		
+		for(int i = 0; i < players.getNumPlayers(); i++)
+			buffer.append(players.getPlayerName((i + turn) % players.getNumPlayers()) + " ");
+		
+		buffer.append(StringUtils.LINE_SEPARATOR);
 		
 		System.out.println(buffer);
 	}
@@ -116,13 +121,20 @@ public class GamePrinter {
 				         "Triple palabra: " + TRIPLE_WORD_SYMBOL + 
 				         StringUtils.LINE_SEPARATOR);
 		
-		System.out.print(StringUtils.DOUBLE_LINE_SEPARATOR);
+		System.out.print(StringUtils.LINE_SEPARATOR);
 	}
 
 
 
 	public void showEndMessage() {
 		System.out.println("Gracias por jugar!");
+	}
+
+
+
+	public void showInitializingMessage() {
+		
+		System.out.print(StringUtils.LINE_SEPARATOR + "Inicializando juego..." + StringUtils.DOUBLE_LINE_SEPARATOR);
 	}
 	
 

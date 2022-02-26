@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -45,7 +46,7 @@ public class Game {
 		this.scanner = scanner;
 		this.printer = new GamePrinter(this);
 		this.players = addPlayers(selectNumPlayers());
-		System.out.print(StringUtils.LINE_SEPARATOR);
+		this.printer.showInitializingMessage();
 		this.tiles = new GameTiles();
 		this.tiles.loadTiles(tilesFile);
 		this.numTotalTilesInGame = this.getRemainingTiles();
@@ -77,19 +78,24 @@ public class Game {
 
 				String arg = askArguments();
 				
+				
+				
 				// arguments[0] es la palabra; arguments[1] es la direccion;
 				// arguments[2] es la coordenada x (fila); arguments[3] es la coordenada y (columna).
 				String[] arguments = arg.trim().split(" ");
 				arguments[0] = arguments[0].toLowerCase();
 				
+				if("exit".equals(arguments[0]))
+					return false;
+				
 				try {
-					validArguments(arguments);
+					validateArguments(arguments);
 					usedWords.add(arguments[0]);
 					Collections.sort(usedWords);
-					this.assignTiles(arguments);
-					this.players.givePoints(this.currentTurn, this.getPoints(arguments));
-					this.players.drawTiles(this, this.currentTurn);
-					this.numConsecutivePassedTurns = 0;
+					assignTiles(arguments);
+					players.givePoints(currentTurn, getPoints(arguments));
+					players.drawTiles(this, currentTurn);
+					numConsecutivePassedTurns = 0;
 				}
 				catch (IllegalArgumentException iae) {
 					System.out.println("Argumentos no validos. " + iae.getMessage() + StringUtils.LINE_SEPARATOR);
@@ -113,7 +119,6 @@ public class Game {
 					if(tiles.getSize() <= 0)
 						throw new IllegalArgumentException("El saco no tiene ninguna ficha.");
 				
-					
 					int randomPlayerTile = (int) (getRandomDouble() * players.getNumPlayerTiles(this.currentTurn));
 					
 					// Aniadimos la ficha al saco original
@@ -146,15 +151,17 @@ public class Game {
 		return true;
 	}
 	
-	private void validArguments(String[] arguments) {
+	
+	private void validateArguments(String[] arguments) {
 		
 		if(arguments.length != 4) 
 			throw new IllegalArgumentException("El número de argumentos introducidos no es correcto.");
 		
-		if(!wordExists(arguments[0], words))
+		// binarySearch devuelve un valor negativo si y solo si el elemento no se encuentra.
+		if(Collections.binarySearch(words, arguments[0]) < 0)
 			throw new IllegalArgumentException("La palabra introducida no existe.");
 		
-		if(wordExists(arguments[0], usedWords))
+		if(Collections.binarySearch(usedWords, arguments[0]) >= 0)
 			throw new IllegalArgumentException("La palabra introducida ya se encuentra en el tablero.");
 		
 		if(!arguments[1].equalsIgnoreCase("V") && !arguments[1].equalsIgnoreCase("H"))
@@ -249,7 +256,7 @@ public class Game {
 	private String askArguments() {
 		
 		String arguments;
-		System.out.print("Introduce palabra, direccion (V/H) y posicion en el tablero: ");
+		System.out.print("Introduce palabra (\"exit\" -> opciones), direccion (V/H) y posicion en el tablero: ");
 		arguments = scanner.nextLine();
 		
 		System.out.print(StringUtils.LINE_SEPARATOR);
@@ -257,9 +264,10 @@ public class Game {
 		return arguments;
 	}
 
+	/*
 	private boolean wordExists(String word, List<String> listOfWords) {
 		
-		// Busqueda binaria (listOfWords sirve tanto para la lista de todas las palabras como para la lista de palabras ya usadas.
+		//Busqueda binaria (listOfWords sirve tanto para la lista de todas las palabras como para la lista de palabras ya usadas.
 		int initial = 0;
 		int end = listOfWords.size();
 		boolean found = false;
@@ -278,6 +286,7 @@ public class Game {
 		
 		return found;
 	}
+	*/
 
 	private int electionMenu() {
 		printer.showElectionMenu();
