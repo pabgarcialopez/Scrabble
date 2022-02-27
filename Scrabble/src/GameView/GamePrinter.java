@@ -39,8 +39,11 @@ public class GamePrinter {
 		
 		buffer.append(StringUtils.LINE_SEPARATOR).append("El orden de juego es: ");
 		
-		for(int i = 0; i < players.getNumPlayers(); i++)
-			buffer.append(players.getPlayerName((i + turn) % players.getNumPlayers()) + " ");
+		for(int i = 0; i < players.getNumPlayers(); i++) {
+			buffer.append(players.getPlayerName((i + turn) % players.getNumPlayers()));
+			if(i != players.getNumPlayers() - 1) buffer.append(" -> ");
+		}
+			
 		
 		buffer.append(StringUtils.LINE_SEPARATOR);
 		

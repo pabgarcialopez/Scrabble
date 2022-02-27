@@ -256,7 +256,7 @@ public class Game {
 	private String askArguments() {
 		
 		String arguments;
-		System.out.print("Introduce palabra (\"exit\" -> opciones), direccion (V/H) y posicion en el tablero: ");
+		System.out.print("Introduce palabra (\"exit\" -> opciones),\ndireccion (V/H) y posicion en el tablero: ");
 		arguments = scanner.nextLine();
 		
 		System.out.print(StringUtils.LINE_SEPARATOR);
