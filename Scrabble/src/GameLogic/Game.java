@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -180,7 +179,7 @@ public class Game {
 			throw new IllegalArgumentException("Las coordenadas de la palabra deben ser numeros.");
 		}
 		
-		if(posX < 0 || posX > board.getBoardSize() || posY < 0 || posY > board.getBoardSize())
+		if(posX < 0 || posX > board.getBoardSize() - 1 || posY < 0 || posY > board.getBoardSize() - 1)
 			throw new IllegalArgumentException("La posición en la que se quiere colocar la palabra no es válida.");
 		
 		Map<String, Integer> numberOfEachLetterNeeded = new HashMap<String, Integer>();
@@ -197,7 +196,7 @@ public class Game {
 			
 			for (int i = 0; i < arguments[0].length(); ++i) {
 				
-				if (i + posX > board.getBoardSize())
+				if (i + posX > board.getBoardSize() - 1)
 					throw new IllegalArgumentException("La palabra introducida se sale del tablero.");
 				
 				if (this.board.isCentre(posX + i, posY)) centre = true;
@@ -225,7 +224,7 @@ public class Game {
 			
 			for (int i = 0; i < arguments[0].length(); ++i) {
 				
-				if (i + posY > board.getBoardSize())
+				if (i + posY > board.getBoardSize() - 1)
 					throw new IllegalArgumentException("La palabra introducida se sale del tablero.");
 				
 				if (this.board.isCentre(posX, posY + i)) centre = true;
