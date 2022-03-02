@@ -73,4 +73,9 @@ public class Board {
 	public Box getBoxAt(int i, int j) {
 		return board.get(i).get(j);
 	}
+
+	public int getWordMultiplier(int posX, int posY) {
+		
+		return this.board.get(posX).get(posY).getWordMultiplier();
+	}
 }

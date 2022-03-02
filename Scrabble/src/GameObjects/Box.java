@@ -24,13 +24,13 @@ public class Box {
 	
 	public int getPoints() {
 		
-		int points;
+		int points = this.tile.getPoints();
 		
 		if(!this.specialEffectAlreadyDone && this.specialEffect != null) {
-			this.specialEffectAlreadyDone = true;
-			points = this.tile.getPoints() * this.specialEffect.getLetterPointsMultiplier();
+			int letterMultiplier = this.specialEffect.getLetterPointsMultiplier();
+			if (letterMultiplier != 1) this.specialEffectAlreadyDone = true;
+			points *= letterMultiplier;
 		}
-		else points = this.tile.getPoints();
 		
 		return points;
 	}
@@ -55,5 +55,17 @@ public class Box {
 	public boolean isCentre() {
 		
 		return SpecialEffects.CENTRE.equals(this.specialEffect);
+	}
+
+	public int getWordMultiplier() {
+		
+		int wordMultiplier = 1;
+		
+		if (!this.specialEffectAlreadyDone && this.specialEffect != null) {
+			wordMultiplier = this.specialEffect.getWordPointsMultiplier();
+			if (wordMultiplier != 1) this.specialEffectAlreadyDone = true;
+		}
+		
+		return wordMultiplier;
 	}	
 }

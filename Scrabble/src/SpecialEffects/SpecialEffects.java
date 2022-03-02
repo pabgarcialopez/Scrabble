@@ -27,4 +27,13 @@ public enum SpecialEffects {
 		
 		return null;
 	}
+	
+	public int getWordPointsMultiplier() {
+		
+		if (DOUBLE_WORD.equals(this)) return 2;
+		
+		if(TRIPLE_WORD.equals(this)) return 3;
+		
+		return 1;
+	}
 }
