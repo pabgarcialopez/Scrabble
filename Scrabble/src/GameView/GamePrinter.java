@@ -23,8 +23,8 @@ public class GamePrinter {
 	
 	
 
-	public void showStatus(String status) {
-		System.out.println(status);
+	public void showStatus() {
+		System.out.println(this.game.getStatus());
 	}
 
 	// Funcion para mostrar como ha sido la decision de quien empieza a jugar
@@ -48,18 +48,6 @@ public class GamePrinter {
 		buffer.append(StringUtils.LINE_SEPARATOR);
 		
 		System.out.println(buffer);
-	}
-
-	public void showElectionMenu() {
-		StringBuilder buffer = new StringBuilder();
-		
-		buffer.append("Opciones de juego:").append(StringUtils.LINE_SEPARATOR)
-			  .append("1. Colocar palabra.").append(StringUtils.LINE_SEPARATOR)
-			  .append("2. Pasar turno.").append(StringUtils.LINE_SEPARATOR)
-			  .append("3. Cambiar ficha.").append(StringUtils.LINE_SEPARATOR);
-		
-		System.out.println(buffer);
-		
 	}
 
 	public void showBoard() {
@@ -132,13 +120,5 @@ public class GamePrinter {
 	public void showEndMessage() {
 		System.out.println("Gracias por jugar!");
 	}
-
-
-
-	public void showInitializingMessage() {
-		
-		System.out.print(StringUtils.LINE_SEPARATOR + "Inicializando juego..." + StringUtils.DOUBLE_LINE_SEPARATOR);
-	}
-	
 
 }

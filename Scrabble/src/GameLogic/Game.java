@@ -6,24 +6,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Scanner;
 
 import GameContainers.GamePlayers;
 import GameContainers.GameTiles;
 import GameObjects.Board;
 import GameObjects.Box;
-import GameObjects.Player;
 import GameObjects.Tile;
-import GameUtils.StringUtils;
-import GameView.GamePrinter;
+import exceptions.CommandExecuteException;
 
 public class Game {
 	
-	private Scanner scanner;
 	private GamePlayers players;
 	private Random random;
 	
@@ -36,18 +31,15 @@ public class Game {
 	private int numTurnsWithoutTiles;
 	
 	private boolean wordsInBoard;
+	private boolean gameFinished;
 	
 	private GameTiles tiles;
 	private Board board;
 	private List<String> words;
 	private List<String> usedWords;
-	private GamePrinter printer;
 	
-	public Game(Scanner scanner) {
-		this.scanner = scanner;
-		this.printer = new GamePrinter(this);
-		this.players = addPlayers(selectNumPlayers());
-		this.printer.showInitializingMessage();
+	public Game(GamePlayers players) {
+		this.players = players;
 		this.tiles = new GameTiles();
 		this.tiles.loadTiles(tilesFile);
 		this.board = new Board();
@@ -55,86 +47,32 @@ public class Game {
 		this.words = new ArrayList<String>();
 		this.loadWordList(wordsFile);
 		this.random = new Random();
-		this.currentTurn =  this.decideFirstTurn();
+		this.currentTurn = 0;
 		this.usedWords = new ArrayList<String>();
 		this.numConsecutivePassedTurns = 0;
 		this.numTurnsWithoutTiles = -1;
 		this.initializePlayerTiles();
 		this.wordsInBoard = false;
+		this.gameFinished = false;
 	}
 
 	public boolean gameIsFinished() {
-		
-		if(this.numConsecutivePassedTurns == this.getNumPlayers()*2)
-			return true;
-		
-		if (this.numTurnsWithoutTiles == this.getNumPlayers()) return true;
-		
-		return false;
+
+		return this.gameFinished;
 	}
-	
-	private GamePlayers addPlayers(int numPlayers) {
-		
-		GamePlayers players = new GamePlayers();
-		while(players.getNumPlayers() < numPlayers) {
-			try {
-				System.out.print("Nombre del jugador " + (players.getNumPlayers() + 1) + ": ");
-				players.addPlayer(new Player(this.scanner.nextLine()));
-			}
-			
-			catch(IllegalArgumentException iae) {
-				System.out.println(iae.getMessage());
-			}
-		}
-		
-		return players;
-	}
-	
-	private int selectNumPlayers() {
-		
-		int numPlayers = 0;
-		boolean done = false;
-		System.out.print("Selecciona el numero de jugadores (2-4): ");
-		
-		while (!done) {
-			try {
-				numPlayers = scanner.nextInt();
-				
-				if (numPlayers < 2 || numPlayers > 4) {
-					System.out.println("El numero de jugadores debe estar entre 2 y 4.");
-					System.out.print("Selecciona el numero de jugadores (2-4): ");
-				}
-				else done = true;
-				
-			}
-			catch (InputMismatchException ime) {
-				System.out.println ("La entrada debe ser un número!");
-				System.out.print("Selecciona el numero de jugadores (2-4): ");
-				scanner.nextLine();
-			}
-		}
-		
-		// Para que la entrada sea correcta.
-		scanner.nextLine();  
-		
-		return numPlayers;
-	}
-	
-	private int decideFirstTurn() {
+
+	public String[] decideFirstTurn() {
 		
 		String[] lettersObtained = new String[this.getNumPlayers()];
 		
 		for(int i = 0; i < this.getNumPlayers(); ++i) 
 			lettersObtained[i] = this.getRandomTile().getLetter();
-		
-		int turn = 0;
+	
 		for(int i = 1; i < this.getNumPlayers(); ++i)
-			if (lettersObtained[i].compareTo(lettersObtained[turn]) < 0) 
-				turn = i;
+			if (lettersObtained[i].compareTo(lettersObtained[this.currentTurn]) < 0) 
+				this.currentTurn = i;
 		
-		printer.showFirstTurn(lettersObtained, players, turn);
-		
-		return turn;		
+		return lettersObtained;
 	}
 	
 	private Double getRandomDouble() {
@@ -180,25 +118,15 @@ public class Game {
 			players.drawTiles(this, i);
 		}
 	}
-
-	public void printStatus() {
-		printer.showStatus(players.getPlayerStatus(currentTurn));
+	
+	public String getStatus() {
+		return players.getPlayerStatus(currentTurn);
 	}
 	
-	public void printBoard() {
-		printer.showBoard();
-	}
-
-	public void printEndMessage() {
-		this.printer.showEndMessage();
-	}
-	
-	public void assignTiles(String[] arguments) {
+	public void assignTiles(String word, int posX, int posY, String direction) {
 		
-		int posX = Integer.parseInt(arguments[2]), posY = Integer.parseInt(arguments[3]);
-		
-		if(arguments[1].equals("V")) assignTilesVertical(arguments[0], posX, posY);
-		else assignTilesHorizontal (arguments[0], posX, posY);
+		if("V".equals(direction)) assignTilesVertical(word, posX, posY);
+		else assignTilesHorizontal (word, posX, posY);
 	}
 	
 	private void assignTilesVertical(String word, int posX, int posY) {
@@ -233,13 +161,11 @@ public class Game {
 		return this.tiles.getNumTiles();
 	}
 	
-	private int getPoints(String[] arguments) {
+	private int getPoints(String word, int posX, int posY, String direction) {
 		
-		int posX = Integer.parseInt(arguments[2]), posY = Integer.parseInt(arguments[3]);
+		int points = getLettersPoints(word, posX, posY, direction);		
 		
-		int points = getLettersPoints(arguments[0], posX, posY, arguments[1]);		
-		
-		points = pointsAfterWordMultiplier(arguments[0], posX, posY, arguments[1], points);
+		points = pointsAfterWordMultiplier(word, posX, posY, direction, points);
 		
 		return points;
 	}
@@ -291,111 +217,39 @@ public class Game {
 		return board.isCentre(i, j);
 	}
 	
-	public boolean play() {
-		
-		// Devuelve true si se ha jugado el turno y false en caso contrario.
-		
-		int election = electionMenu();
-		
-		switch(election) {
-			
-			// Jugador pone palabra
-			case 1: {
-				if (!writeAWord()) return false;
-				break;
-			}
-			
-			// Jugador pasa de turno.
-			case 2: {
-				passTurn();
-				break;
-			}
-			
-			// Cambiar ficha aleatoria por otra.
-			case 3: {
-				if (!swapTile()) return false;
-				break;
-			}
-		}
+	public void update() {
 		
 		if (this.getRemainingTiles() == 0) 
 			++numTurnsWithoutTiles;
 		
 		nextTurn();
 		
-		return true;
+		if(this.numConsecutivePassedTurns == this.getNumPlayers()*2)
+			this.gameFinished = true;
+		
+		if (this.numTurnsWithoutTiles == this.getNumPlayers())
+			this.gameFinished = true;
 	}
+
 	
-	private int electionMenu() {
-		printer.showElectionMenu();
-		boolean done = false;
-		int election = 0;
+	public boolean writeAWord(String word, int posX, int posY, String direction) {
 		
-		while(!done) {
-			try  {
-				System.out.print("Elige opcion: ");
-				election = scanner.nextInt();
-				
-				if (0 < election && election < 4) done = true;
-				else System.out.println("Opcion no valida.");
-			}
-			catch (InputMismatchException ime) {
-				System.out.println("Opcion no valida.");
-				scanner.nextLine();
-			}
-		}
-		
-		scanner.nextLine();
-		
-		return election;
-	}
-	
-	private boolean writeAWord() {
-		
-		String arg = askArguments();
-		
-		// arguments[0] es la palabra; arguments[1] es la direccion;
-		// arguments[2] es la coordenada x (fila); arguments[3] es la coordenada y (columna).
-		String[] arguments = arg.trim().split(" ");
-		arguments[0] = arguments[0].toLowerCase();
-		
-		if("exit".equals(arguments[0]))
-			return false;
-		
-		try {
-			checkArguments(arguments);
-			usedWords.add(arguments[0]);
-			Collections.sort(usedWords);
-			assignTiles(arguments);
-			this.wordsInBoard = true;
-			players.givePoints(currentTurn, getPoints(arguments));
-			players.drawTiles(this, currentTurn);
-			numConsecutivePassedTurns = 0;
-		}
-		catch (IllegalArgumentException iae) {
-			System.out.println("Argumentos no validos. " + iae.getMessage() + StringUtils.LINE_SEPARATOR);
-			return false;
-		}
+		usedWords.add(word);
+		Collections.sort(usedWords);
+		assignTiles(word, posX, posY, direction);
+		this.wordsInBoard = true;
+		players.givePoints(currentTurn, getPoints(word, posX, posY, direction));
+		players.drawTiles(this, currentTurn);
+		numConsecutivePassedTurns = 0;
 		
 		return true;
 	}
 	
-	private String askArguments() {
-		
-		String arguments;
-		System.out.print("Introduce palabra (\"exit\" -> opciones),\ndireccion (V/H) y posicion en el tablero: ");
-		arguments = scanner.nextLine();
-		
-		System.out.print(StringUtils.LINE_SEPARATOR);
-		
-		return arguments;
-	}
-	
-	private void passTurn() {
+	public void passTurn() {
 		++this.numConsecutivePassedTurns;
 	}
 	
-	private boolean swapTile() {
+	public boolean swapTile() {
 		
 		if(tiles.getSize() <= 0) {
 			System.out.println("No hay fichas para robar.");
@@ -420,75 +274,52 @@ public class Game {
 	
 	
 
-	private void checkArguments(String[] arguments) {
+	public void checkArguments(String word, int posX, int posY, String direction) throws CommandExecuteException {
 		
-		checkArgumentsLength(arguments);
+		checkWordExists(word);
 		
-		checkWordExists(arguments[0]);
+		checkWordNotUsed(word);
 		
-		checkWordNotUsed(arguments[0]);
+		checkDirection(direction);
 		
-		checkDirection(arguments[1]);
-		
-		checkWordLength(arguments[0]);
-		
-		
-		int posX = checkPos(arguments[2]), posY = checkPos(arguments[3]);
+		checkWordLength(word);
 		
 		checkPosInRange(posX, posY);
 		
-		Map<String, Integer> lettersNeeded = getLettersNeeded(arguments[0]);
+		Map<String, Integer> lettersNeeded = getLettersNeeded(word);
 		
-		checkWordInPosAndDirection(arguments[0], posX, posY, arguments[1], lettersNeeded);
+		checkWordInPosAndDirection(word, posX, posY, direction, lettersNeeded);
 		
 		checkEnoughLetters(lettersNeeded);
 		
-		if (!this.wordsInBoard) checkWordInCentre(arguments[0], posX, posY, arguments[1]);
-		else checkWordNextToOther(arguments[0], posX, posY, arguments[1]);
+		if (!this.wordsInBoard) checkWordInCentre(word, posX, posY, direction);
+		else checkWordNextToOther(word, posX, posY, direction);
 		
 	}
 	
-	private void checkArgumentsLength(String[] arguments) {
-		if(arguments.length != 4) 
-			throw new IllegalArgumentException("El número de argumentos introducidos no es correcto.");
-	}
-	
-	private void checkWordExists(String word) {
+	private void checkWordExists(String word) throws CommandExecuteException {
 		if(Collections.binarySearch(words, word) < 0)
-			throw new IllegalArgumentException("La palabra introducida no existe.");
+			throw new CommandExecuteException("La palabra introducida no existe.");
 	}
 	
-	private void checkWordNotUsed(String word) {
+	private void checkWordNotUsed(String word) throws CommandExecuteException {
 		if(Collections.binarySearch(usedWords, word) >= 0)
-			throw new IllegalArgumentException("La palabra introducida ya se encuentra en el tablero.");
+			throw new CommandExecuteException("La palabra introducida ya se encuentra en el tablero.");
 	}
 	
-	private void checkDirection(String direction) {
+	private void checkDirection(String direction) throws CommandExecuteException {
 		if(!"V".equalsIgnoreCase(direction) && !"H".equalsIgnoreCase(direction))
-			throw new IllegalArgumentException("El argumento de la direccion no es válido.");
+			throw new CommandExecuteException("El argumento de la direccion no es válido.");
 	}
 	
-	private void checkWordLength(String word) {
+	private void checkWordLength(String word) throws CommandExecuteException {
 		if (word.length() > board.getBoardSize())
-			throw new IllegalArgumentException("La palabra introducida es demasiado larga para entrar en el tablero.");
+			throw new CommandExecuteException("La palabra introducida es demasiado larga para entrar en el tablero.");
 	}
 	
-	private int checkPos(String pos) {
-		int posInt;
-		
-		try {
-			posInt = Integer.parseInt(pos);
-		}
-		catch(NumberFormatException nfe) {
-			throw new IllegalArgumentException("Las coordenadas deben ser numeros.");
-		}
-		
-		return posInt;
-	}
-	
-	private void checkPosInRange(int posX, int posY) {
+	private void checkPosInRange(int posX, int posY) throws CommandExecuteException {
 		if(posX < 0 || posX > board.getBoardSize() - 1 || posY < 0 || posY > board.getBoardSize() - 1)
-			throw new IllegalArgumentException("La palabra se sale del tablero.");
+			throw new CommandExecuteException("La palabra se sale del tablero.");
 	}
 	
 	private Map<String, Integer> getLettersNeeded(String word) {
@@ -504,96 +335,107 @@ public class Game {
 		return lettersNeeded;
 	}
 	
-	private void checkLetterInPos(String letter, int posX, int posY, Map<String, Integer> lettersNeeded) {
+	private void checkLetterInPos(String letter, int posX, int posY, Map<String, Integer> lettersNeeded) throws CommandExecuteException {
 		
 		checkPosInRange(posX, posY);
 		
 		if (!this.players.playerHasLetter(this.currentTurn, letter) && this.board.getTile(posX, posY) == null)
-				throw new IllegalArgumentException("No tienes la letra \"" + letter + "\" y no se encuentra en la casilla indicada.");
+				throw new CommandExecuteException("No tienes la letra \"" + letter + "\" y no se encuentra en la casilla indicada.");
 		
 		if (this.board.getTile(posX, posY) != null && !this.board.getTile(posX, posY).getLetter().equalsIgnoreCase(letter))
-			throw new IllegalArgumentException(String.format("En la casilla (%s,%s) está la letra %s que no coincide con tu palabra.", posX, posY, this.board.getTile(posX, posY).getLetter()));
+			throw new CommandExecuteException(String.format("En la casilla (%s,%s) está la letra %s que no coincide con tu palabra.", posX, posY, this.board.getTile(posX, posY).getLetter()));
 		
 		if (this.board.getTile(posX, posY) != null)
 			lettersNeeded.put(letter, lettersNeeded.get(letter) - 1);
 	}
 	
-	private void checkWordInPosAndDirection(String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded) {
+	private void checkWordInPosAndDirection(String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded) throws CommandExecuteException {
 		
 		if ("V".equals(direction)) checkWordInPosVertical(word, posX, posY, lettersNeeded);
 		else checkWordInPosHorizontal(word, posX, posY, lettersNeeded);
 	}
 	
-	private void checkWordInPosVertical(String word, int posX, int posY, Map<String, Integer> lettersNeeded) {
+	private void checkWordInPosVertical(String word, int posX, int posY, Map<String, Integer> lettersNeeded) throws CommandExecuteException {
 		
 		for (int i = 0; i < word.length(); ++i) {
 			checkLetterInPos(String.valueOf(word.charAt(i)), posX + i, posY, lettersNeeded);
 		}
 	}
 	
-	private void checkWordInPosHorizontal(String word, int posX, int posY, Map<String, Integer> lettersNeeded) {
+	private void checkWordInPosHorizontal(String word, int posX, int posY, Map<String, Integer> lettersNeeded) throws CommandExecuteException {
 		
 		for (int i = 0; i < word.length(); ++i) {
 			checkLetterInPos(String.valueOf(word.charAt(i)), posX, posY + i, lettersNeeded);
 		}
 	}
 	
-	private void checkEnoughLetters(Map<String, Integer> lettersNeeded) {
+	private void checkEnoughLetters(Map<String, Integer> lettersNeeded) throws CommandExecuteException {
 		
 		for (String letter : lettersNeeded.keySet()) {
 			if (lettersNeeded.get(letter) > 0 
 					&& this.players.numberOfTilesOf(this.currentTurn, letter) < lettersNeeded.get(letter))
-				throw new IllegalArgumentException("No tienes suficientes letras para colocar la palabra.");
+				throw new CommandExecuteException("No tienes suficientes letras para colocar la palabra.");
 		}
 	}
 	
-	private void checkWordInCentre(String word, int posX, int posY, String direction) {
+	private void checkWordInCentre(String word, int posX, int posY, String direction) throws CommandExecuteException {
 		
 		if ("V".equals(direction)) checkWordInCentreVertical(word, posX, posY);
 		else checkWordInCentreHorizontal(word, posX, posY);
 	}
 	
-	private void checkWordInCentreVertical(String word, int posX, int posY) {
+	private void checkWordInCentreVertical(String word, int posX, int posY) throws CommandExecuteException {
 
 		for (int i = 0; i < word.length(); ++i) {
 			if (this.board.isCentre(posX + i, posY)) return;
 		}
 		
-		throw new IllegalArgumentException("La primera palabra introducida en el tablero debe situarse en la casilla central.");
+		throw new CommandExecuteException("La primera palabra introducida en el tablero debe situarse en la casilla central.");
 	}
 	
-	private void checkWordInCentreHorizontal(String word, int posX, int posY) {
+	private void checkWordInCentreHorizontal(String word, int posX, int posY) throws CommandExecuteException {
 
 		for (int i = 0; i < word.length(); ++i) {
 			if (this.board.isCentre(posX, posY + i)) return;
 		}
 		
-		throw new IllegalArgumentException("La primera palabra introducida en el tablero debe situarse en la casilla central.");
+		throw new CommandExecuteException("La primera palabra introducida en el tablero debe situarse en la casilla central.");
 	}
 	
-	private void checkWordNextToOther(String word, int posX, int posY, String direction) {
+	private void checkWordNextToOther(String word, int posX, int posY, String direction) throws CommandExecuteException {
 		
 		if ("V".equals(direction)) checkWordNextToOtherVertical(word, posX, posY);
 		else checkWordNextToOtherHorizontal(word, posX, posY);
 	}
 	
-	private void checkWordNextToOtherVertical(String word, int posX, int posY) {
+	private void checkWordNextToOtherVertical(String word, int posX, int posY) throws CommandExecuteException {
 		
 		for (int i = 0; i < word.length(); ++i) {
 			if (this.board.getTile(i + posX, posY) != null) return;
 		}
 		
-		throw new IllegalArgumentException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
+		throw new CommandExecuteException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
 	}
 	
-	private void checkWordNextToOtherHorizontal(String word, int posX, int posY) {
+	private void checkWordNextToOtherHorizontal(String word, int posX, int posY) throws CommandExecuteException {
 		
 		for (int i = 0; i < word.length(); ++i) {
 			if (this.board.getTile(posX, i + posY) != null) return;
 		}
 		
-		throw new IllegalArgumentException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
+		throw new CommandExecuteException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
+	}
+
+	public GamePlayers getPlayers() {
+		return this.players;
 	}
 	
+	public int getCurrentTurn() {
+		return this.currentTurn;
+	}
+
+	public void userExits() {
+		this.gameFinished = true;
+	}
 
 }
