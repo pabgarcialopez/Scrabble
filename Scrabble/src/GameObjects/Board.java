@@ -51,9 +51,9 @@ public class Board {
 		}
 	}
 
-	public Tile getTile(int i, int posY) {
+	public Tile getTile(int posX, int posY) {
 		
-		return board.get(i).get(posY).getTile();
+		return board.get(posX).get(posY).getTile();
 	}
 
 	public void assignTile(Tile tile, int posX, int posY) {

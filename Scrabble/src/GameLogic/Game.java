@@ -444,6 +444,7 @@ public class Game {
 		checkEnoughLetters(lettersNeeded);
 		
 		if (!this.wordsInBoard) checkWordInCentre(arguments[0], posX, posY, arguments[1]);
+		else checkWordNextToOther(arguments[0], posX, posY, arguments[1]);
 		
 	}
 	
@@ -511,7 +512,7 @@ public class Game {
 				throw new IllegalArgumentException("No tienes la letra \"" + letter + "\" y no se encuentra en la casilla indicada.");
 		
 		if (this.board.getTile(posX, posY) != null && !this.board.getTile(posX, posY).getLetter().equalsIgnoreCase(letter))
-			throw new IllegalArgumentException(String.format("En la casilla %s %s está la letra %s que no coincide con tu palabra.", posX, posY, this.board.getTile(posX, posY).getLetter()));
+			throw new IllegalArgumentException(String.format("En la casilla (%s,%s) está la letra %s que no coincide con tu palabra.", posX, posY, this.board.getTile(posX, posY).getLetter()));
 		
 		if (this.board.getTile(posX, posY) != null)
 			lettersNeeded.put(letter, lettersNeeded.get(letter) - 1);
@@ -568,6 +569,30 @@ public class Game {
 		}
 		
 		throw new IllegalArgumentException("La primera palabra introducida en el tablero debe situarse en la casilla central.");
+	}
+	
+	private void checkWordNextToOther(String word, int posX, int posY, String direction) {
+		
+		if ("V".equals(direction)) checkWordNextToOtherVertical(word, posX, posY);
+		else checkWordNextToOtherHorizontal(word, posX, posY);
+	}
+	
+	private void checkWordNextToOtherVertical(String word, int posX, int posY) {
+		
+		for (int i = 0; i < word.length(); ++i) {
+			if (this.board.getTile(i + posX, posY) != null) return;
+		}
+		
+		throw new IllegalArgumentException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
+	}
+	
+	private void checkWordNextToOtherHorizontal(String word, int posX, int posY) {
+		
+		for (int i = 0; i < word.length(); ++i) {
+			if (this.board.getTile(posX, i + posY) != null) return;
+		}
+		
+		throw new IllegalArgumentException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
 	}
 	
 
