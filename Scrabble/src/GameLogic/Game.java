@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -91,15 +92,26 @@ public class Game {
 	
 	private int selectNumPlayers() {
 		
-		int numPlayers;
+		int numPlayers = 0;
+		boolean done = false;
 		System.out.print("Selecciona el numero de jugadores (2-4): ");
 		
-		numPlayers = scanner.nextInt();
-		
-		while(numPlayers < 2 || numPlayers > 4) {
-			System.out.println("El numero de jugadores debe estar entre 2 y 4.");
-			System.out.print("Selecciona el numero de jugadores (2-4): ");
-			numPlayers = scanner.nextInt();
+		while (!done) {
+			try {
+				numPlayers = scanner.nextInt();
+				
+				if (numPlayers < 2 || numPlayers > 4) {
+					System.out.println("El numero de jugadores debe estar entre 2 y 4.");
+					System.out.print("Selecciona el numero de jugadores (2-4): ");
+				}
+				else done = true;
+				
+			}
+			catch (InputMismatchException ime) {
+				System.out.println ("La entrada debe ser un número!");
+				System.out.print("Selecciona el numero de jugadores (2-4): ");
+				scanner.nextLine();
+			}
 		}
 		
 		// Para que la entrada sea correcta.
@@ -316,13 +328,21 @@ public class Game {
 	
 	private int electionMenu() {
 		printer.showElectionMenu();
-		System.out.print("Elige opcion: ");
-		int election = scanner.nextInt();
+		boolean done = false;
+		int election = 0;
 		
-		while(election < 1 || election > 3) {
-			System.out.println("Opcion no valida.");
-			System.out.print("Elige opcion: ");
-			election = scanner.nextInt();
+		while(!done) {
+			try  {
+				System.out.print("Elige opcion: ");
+				election = scanner.nextInt();
+				
+				if (0 < election && election < 4) done = true;
+				else System.out.println("Opcion no valida.");
+			}
+			catch (InputMismatchException ime) {
+				System.out.println("Opcion no valida.");
+				scanner.nextLine();
+			}
 		}
 		
 		scanner.nextLine();
