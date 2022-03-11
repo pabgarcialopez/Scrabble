@@ -1,8 +1,8 @@
 package command;
 
-import GameLogic.Game;
 import exceptions.CommandExecuteException;
 import exceptions.CommandParseException;
+import gameLogic.Game;
 
 public class WriteWordCommand extends Command {
 

@@ -1,8 +1,8 @@
-package Scrabble;
+package scrabble;
 
 import java.util.Scanner;
 
-import GameUtils.StringUtils;
+import gameUtils.StringUtils;
 
 public class Main {
 

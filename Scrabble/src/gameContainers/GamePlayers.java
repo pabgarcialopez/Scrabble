@@ -1,11 +1,11 @@
-package GameContainers;
+package gameContainers;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import GameLogic.Game;
-import GameObjects.Player;
-import GameObjects.Tile;
+import gameLogic.Game;
+import gameObjects.Player;
+import gameObjects.Tile;
 
 public class GamePlayers {
 	

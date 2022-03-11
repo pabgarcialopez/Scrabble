@@ -1,11 +1,10 @@
-package GameView;
+package gameView;
 
-import GameObjects.Box;
-
-import GameContainers.GamePlayers;
-import GameLogic.Game;
-import GameUtils.StringUtils;
-import SpecialEffects.SpecialEffects;
+import gameContainers.GamePlayers;
+import gameLogic.Game;
+import gameObjects.Box;
+import gameUtils.StringUtils;
+import specialEffects.SpecialEffects;
 
 public class GamePrinter {
 	

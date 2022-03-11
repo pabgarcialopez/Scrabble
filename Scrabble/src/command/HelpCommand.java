@@ -1,7 +1,7 @@
 package command;
 
-import GameLogic.Game;
-import GameUtils.StringUtils;
+import gameLogic.Game;
+import gameUtils.StringUtils;
 
 public class HelpCommand extends Command {
 

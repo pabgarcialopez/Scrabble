@@ -1,4 +1,4 @@
-package GameLogic;
+package gameLogic;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import GameContainers.GamePlayers;
-import GameContainers.GameTiles;
-import GameObjects.Board;
-import GameObjects.Box;
-import GameObjects.Tile;
 import exceptions.CommandExecuteException;
+import gameContainers.GamePlayers;
+import gameContainers.GameTiles;
+import gameObjects.Board;
+import gameObjects.Box;
+import gameObjects.Tile;
 
 public class Game {
 	
@@ -125,7 +125,7 @@ public class Game {
 	
 	public void assignTiles(String word, int posX, int posY, String direction) {
 		
-		if("V".equals(direction)) assignTilesVertical(word, posX, posY);
+		if("V".equalsIgnoreCase(direction)) assignTilesVertical(word, posX, posY);
 		else assignTilesHorizontal (word, posX, posY);
 	}
 	
@@ -174,7 +174,7 @@ public class Game {
 		
 		int points = 0;
 		
-		if ("V".equals(direction)) {
+		if ("V".equalsIgnoreCase(direction)) {
 			for (int i = 0; i < word.length(); ++i) {
 				points += this.board.getPoints(posX + i, posY);
 			}
@@ -190,7 +190,7 @@ public class Game {
 	
 	private int pointsAfterWordMultiplier(String word, int posX, int posY, String direction, int points) {
 		
-		if ("V".equals(direction)) {
+		if ("V".equalsIgnoreCase(direction)) {
 			for (int i = 0; i < word.length(); ++i) {
 				points *= this.board.getWordMultiplier(posX + i, posY);
 			}
@@ -339,11 +339,11 @@ public class Game {
 		
 		checkPosInRange(posX, posY);
 		
-		if (!this.players.playerHasLetter(this.currentTurn, letter) && this.board.getTile(posX, posY) == null)
-				throw new CommandExecuteException("No tienes la letra \"" + letter + "\" y no se encuentra en la casilla indicada.");
-		
 		if (this.board.getTile(posX, posY) != null && !this.board.getTile(posX, posY).getLetter().equalsIgnoreCase(letter))
 			throw new CommandExecuteException(String.format("En la casilla (%s,%s) está la letra %s que no coincide con tu palabra.", posX, posY, this.board.getTile(posX, posY).getLetter()));
+		
+		if (this.board.getTile(posX, posY) == null && !this.players.playerHasLetter(this.currentTurn, letter))
+			throw new CommandExecuteException("No tienes la letra \"" + letter + "\" y no se encuentra en la casilla indicada.");
 		
 		if (this.board.getTile(posX, posY) != null)
 			lettersNeeded.put(letter, lettersNeeded.get(letter) - 1);
@@ -351,7 +351,7 @@ public class Game {
 	
 	private void checkWordInPosAndDirection(String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded) throws CommandExecuteException {
 		
-		if ("V".equals(direction)) checkWordInPosVertical(word, posX, posY, lettersNeeded);
+		if ("V".equalsIgnoreCase(direction)) checkWordInPosVertical(word, posX, posY, lettersNeeded);
 		else checkWordInPosHorizontal(word, posX, posY, lettersNeeded);
 	}
 	
@@ -380,7 +380,7 @@ public class Game {
 	
 	private void checkWordInCentre(String word, int posX, int posY, String direction) throws CommandExecuteException {
 		
-		if ("V".equals(direction)) checkWordInCentreVertical(word, posX, posY);
+		if ("V".equalsIgnoreCase(direction)) checkWordInCentreVertical(word, posX, posY);
 		else checkWordInCentreHorizontal(word, posX, posY);
 	}
 	
@@ -404,7 +404,7 @@ public class Game {
 	
 	private void checkWordNextToOther(String word, int posX, int posY, String direction) throws CommandExecuteException {
 		
-		if ("V".equals(direction)) checkWordNextToOtherVertical(word, posX, posY);
+		if ("V".equalsIgnoreCase(direction)) checkWordNextToOtherVertical(word, posX, posY);
 		else checkWordNextToOtherHorizontal(word, posX, posY);
 	}
 	

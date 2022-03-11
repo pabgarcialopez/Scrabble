@@ -1,7 +1,7 @@
 package command;
 
-import GameLogic.Game;
 import exceptions.*;
+import gameLogic.Game;
 
 public abstract class Command {
 	private static final String UNKNOWN_COMMAND_MSG = "Comando desconocido";

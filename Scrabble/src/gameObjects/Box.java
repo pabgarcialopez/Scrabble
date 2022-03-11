@@ -1,6 +1,6 @@
-package GameObjects;
+package gameObjects;
 
-import SpecialEffects.SpecialEffects;
+import specialEffects.SpecialEffects;
 
 public class Box {
 

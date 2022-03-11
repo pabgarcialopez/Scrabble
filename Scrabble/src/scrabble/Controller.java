@@ -1,14 +1,14 @@
-package Scrabble;
+package scrabble;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import GameContainers.GamePlayers;
-import GameLogic.Game;
-import GameObjects.Player;
-import GameView.GamePrinter;
 import command.Command;
 import exceptions.GameException;
+import gameContainers.GamePlayers;
+import gameLogic.Game;
+import gameObjects.Player;
+import gameView.GamePrinter;
 
 public class Controller {
 	

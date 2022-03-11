@@ -1,4 +1,4 @@
-package SpecialEffects;
+package specialEffects;
 
 public enum SpecialEffects {
 

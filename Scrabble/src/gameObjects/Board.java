@@ -1,4 +1,4 @@
-package GameObjects;
+package gameObjects;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import SpecialEffects.SpecialEffects;
+import specialEffects.SpecialEffects;
 
 public class Board {
 	
@@ -70,8 +70,8 @@ public class Board {
 		return board.get(posX).get(posY).isCentre();
 	}
 
-	public Box getBoxAt(int i, int j) {
-		return board.get(i).get(j);
+	public Box getBoxAt(int posX, int posY) {
+		return board.get(posX).get(posY);
 	}
 
 	public int getWordMultiplier(int posX, int posY) {

@@ -1,6 +1,6 @@
 package command;
 
-import GameLogic.Game;
+import gameLogic.Game;
 
 public class SwapTileCommand extends Command {
 	

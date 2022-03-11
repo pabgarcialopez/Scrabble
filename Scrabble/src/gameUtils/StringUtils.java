@@ -1,4 +1,4 @@
-package GameUtils;
+package gameUtils;
 
 public class StringUtils {
 	

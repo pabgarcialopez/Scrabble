@@ -1,9 +1,9 @@
-package GameObjects;
+package gameObjects;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import GameUtils.StringUtils;
+import gameUtils.StringUtils;
 
 public class Player {
 	
