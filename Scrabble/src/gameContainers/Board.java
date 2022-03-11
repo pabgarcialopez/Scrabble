@@ -1,4 +1,4 @@
-package gameObjects;
+package gameContainers;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import specialEffects.SpecialEffects;
+import gameObjects.Box;
+import gameObjects.SpecialEffects;
+import gameObjects.Tile;
 
 public class Board {
 	

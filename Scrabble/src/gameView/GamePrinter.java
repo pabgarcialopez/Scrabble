@@ -3,8 +3,8 @@ package gameView;
 import gameContainers.GamePlayers;
 import gameLogic.Game;
 import gameObjects.Box;
+import gameObjects.SpecialEffects;
 import gameUtils.StringUtils;
-import specialEffects.SpecialEffects;
 
 public class GamePrinter {
 	

@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.Random;
 
 import exceptions.CommandExecuteException;
+import gameContainers.Board;
 import gameContainers.GamePlayers;
 import gameContainers.GameTiles;
-import gameObjects.Board;
 import gameObjects.Box;
 import gameObjects.Tile;
 

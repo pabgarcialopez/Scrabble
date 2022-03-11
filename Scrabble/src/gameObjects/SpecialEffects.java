@@ -1,4 +1,4 @@
-package specialEffects;
+package gameObjects;
 
 public enum SpecialEffects {
 

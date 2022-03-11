@@ -1,14 +1,12 @@
 package gameObjects;
 
-import specialEffects.SpecialEffects;
-
 public class Box {
 
 	private Tile tile;
 	private SpecialEffects specialEffect;
 	private boolean specialEffectAlreadyDone;
 	
-	Box(SpecialEffects specialEffect) {
+	public Box(SpecialEffects specialEffect) {
 		this.specialEffect = specialEffect;
 		this.tile = null;
 		this.specialEffectAlreadyDone = false;
