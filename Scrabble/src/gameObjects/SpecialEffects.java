@@ -8,7 +8,7 @@ public enum SpecialEffects {
 		
 		if (DOUBLE_LETTER.equals(this)) return 2;
 		
-		if(TRIPLE_LETTER.equals(this)) return 3;
+		if (TRIPLE_LETTER.equals(this)) return 3;
 		
 		return 1;
 	}
