@@ -5,9 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import exceptions.CommandExecuteException;
@@ -38,6 +36,8 @@ public class Game {
 	private List<String> words;
 	private List<String> usedWords;
 	
+	private WordChecker wordChecker;
+	
 	public Game(GamePlayers players) {
 		this.players = players;
 		this.tiles = new GameTiles();
@@ -54,6 +54,7 @@ public class Game {
 		this.initializePlayerTiles();
 		this.wordsInBoard = false;
 		this.gameFinished = false;
+		this.wordChecker = new WordChecker(this);
 	}
 
 	public boolean gameIsFinished() {
@@ -272,158 +273,8 @@ public class Game {
 		return true;
 	}
 	
-	
-
 	public void checkArguments(String word, int posX, int posY, String direction) throws CommandExecuteException {
-		
-		checkWordExists(word);
-		
-		checkWordNotUsed(word);
-		
-		checkDirection(direction);
-		
-		checkWordLength(word);
-		
-		checkPosInRange(posX, posY);
-		
-		Map<String, Integer> lettersNeeded = getLettersNeeded(word);
-		
-		checkWordInPosAndDirection(word, posX, posY, direction, lettersNeeded);
-		
-		checkEnoughLetters(lettersNeeded);
-		
-		if (!this.wordsInBoard) checkWordInCentre(word, posX, posY, direction);
-		else checkWordNextToOther(word, posX, posY, direction);
-		
-	}
-	
-	private void checkWordExists(String word) throws CommandExecuteException {
-		if(Collections.binarySearch(words, word) < 0)
-			throw new CommandExecuteException("La palabra introducida no existe.");
-	}
-	
-	private void checkWordNotUsed(String word) throws CommandExecuteException {
-		if(Collections.binarySearch(usedWords, word) >= 0)
-			throw new CommandExecuteException("La palabra introducida ya se encuentra en el tablero.");
-	}
-	
-	private void checkDirection(String direction) throws CommandExecuteException {
-		if(!"V".equalsIgnoreCase(direction) && !"H".equalsIgnoreCase(direction))
-			throw new CommandExecuteException("El argumento de la direccion no es válido.");
-	}
-	
-	private void checkWordLength(String word) throws CommandExecuteException {
-		if (word.length() > board.getBoardSize())
-			throw new CommandExecuteException("La palabra introducida es demasiado larga para entrar en el tablero.");
-	}
-	
-	private void checkPosInRange(int posX, int posY) throws CommandExecuteException {
-		if(posX < 0 || posX > board.getBoardSize() - 1 || posY < 0 || posY > board.getBoardSize() - 1)
-			throw new CommandExecuteException("La palabra se sale del tablero.");
-	}
-	
-	private Map<String, Integer> getLettersNeeded(String word) {
-		
-		Map<String, Integer> lettersNeeded = new HashMap<String, Integer>();
-		for (int i = 0; i < word.length(); ++i) {
-			String letter = "";
-			letter += word.charAt(i);
-			if (lettersNeeded.containsKey(letter)) lettersNeeded.put(letter, lettersNeeded.get(letter) + 1);
-			else lettersNeeded.put(letter, 1);
-		}
-		
-		return lettersNeeded;
-	}
-	
-	private void checkLetterInPos(String letter, int posX, int posY, Map<String, Integer> lettersNeeded) throws CommandExecuteException {
-		
-		checkPosInRange(posX, posY);
-		
-		if (this.board.getTile(posX, posY) != null && !this.board.getTile(posX, posY).getLetter().equalsIgnoreCase(letter))
-			throw new CommandExecuteException(String.format("En la casilla (%s,%s) está la letra %s que no coincide con tu palabra.", posX, posY, this.board.getTile(posX, posY).getLetter()));
-		
-		if (this.board.getTile(posX, posY) == null && !this.players.playerHasLetter(this.currentTurn, letter))
-			throw new CommandExecuteException("No tienes la letra \"" + letter + "\" y no se encuentra en la casilla indicada.");
-		
-		if (this.board.getTile(posX, posY) != null)
-			lettersNeeded.put(letter, lettersNeeded.get(letter) - 1);
-	}
-	
-	private void checkWordInPosAndDirection(String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded) throws CommandExecuteException {
-		
-		if ("V".equalsIgnoreCase(direction)) checkWordInPosVertical(word, posX, posY, lettersNeeded);
-		else checkWordInPosHorizontal(word, posX, posY, lettersNeeded);
-	}
-	
-	private void checkWordInPosVertical(String word, int posX, int posY, Map<String, Integer> lettersNeeded) throws CommandExecuteException {
-		
-		for (int i = 0; i < word.length(); ++i) {
-			checkLetterInPos(String.valueOf(word.charAt(i)), posX + i, posY, lettersNeeded);
-		}
-	}
-	
-	private void checkWordInPosHorizontal(String word, int posX, int posY, Map<String, Integer> lettersNeeded) throws CommandExecuteException {
-		
-		for (int i = 0; i < word.length(); ++i) {
-			checkLetterInPos(String.valueOf(word.charAt(i)), posX, posY + i, lettersNeeded);
-		}
-	}
-	
-	private void checkEnoughLetters(Map<String, Integer> lettersNeeded) throws CommandExecuteException {
-		
-		for (String letter : lettersNeeded.keySet()) {
-			if (lettersNeeded.get(letter) > 0 
-					&& this.players.numberOfTilesOf(this.currentTurn, letter) < lettersNeeded.get(letter))
-				throw new CommandExecuteException("No tienes suficientes letras para colocar la palabra.");
-		}
-	}
-	
-	private void checkWordInCentre(String word, int posX, int posY, String direction) throws CommandExecuteException {
-		
-		if ("V".equalsIgnoreCase(direction)) checkWordInCentreVertical(word, posX, posY);
-		else checkWordInCentreHorizontal(word, posX, posY);
-	}
-	
-	private void checkWordInCentreVertical(String word, int posX, int posY) throws CommandExecuteException {
-
-		for (int i = 0; i < word.length(); ++i) {
-			if (this.board.isCentre(posX + i, posY)) return;
-		}
-		
-		throw new CommandExecuteException("La primera palabra introducida en el tablero debe situarse en la casilla central.");
-	}
-	
-	private void checkWordInCentreHorizontal(String word, int posX, int posY) throws CommandExecuteException {
-
-		for (int i = 0; i < word.length(); ++i) {
-			if (this.board.isCentre(posX, posY + i)) return;
-		}
-		
-		throw new CommandExecuteException("La primera palabra introducida en el tablero debe situarse en la casilla central.");
-	}
-	
-	private void checkWordNextToOther(String word, int posX, int posY, String direction) throws CommandExecuteException {
-		
-		if ("V".equalsIgnoreCase(direction)) checkWordNextToOtherVertical(word, posX, posY);
-		else checkWordNextToOtherHorizontal(word, posX, posY);
-	}
-	
-	private void checkWordNextToOtherVertical(String word, int posX, int posY) throws CommandExecuteException {
-		
-		for (int i = 0; i < word.length(); ++i) {
-			if (this.board.getTile(i + posX, posY) != null) return;
-		}
-		
-		throw new CommandExecuteException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
-	}
-	
-	private void checkWordNextToOtherHorizontal(String word, int posX, int posY) throws CommandExecuteException {
-		
-		for (int i = 0; i < word.length(); ++i) {
-			if (this.board.getTile(posX, i + posY) != null) return;
-		}
-		
-		throw new CommandExecuteException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
+		this.wordChecker.checkArguments(word, posX, posY, direction);
 	}
 
 	public GamePlayers getPlayers() {
@@ -436,6 +287,26 @@ public class Game {
 
 	public void userExits() {
 		this.gameFinished = true;
+	}
+
+	public boolean getWordsInBoard() {
+		
+		return this.wordsInBoard;
+	}
+
+	public List<String> getWordsList() {
+		
+		return this.words;
+	}
+
+	public List<String> getUsedWords() {
+		
+		return this.usedWords;
+	}
+
+	public Board getBoard() {
+		
+		return this.board;
 	}
 
 }
