@@ -26,6 +26,8 @@ public final class WordChecker {
 		
 		checkPosInRange(posX, posY);
 		
+		checkWordUnion(word, posX, posY, direction);
+		
 		Map<String, Integer> lettersNeeded = getLettersNeeded(word);
 		
 		checkWordInPosAndDirection(word, posX, posY, direction, lettersNeeded);
@@ -164,5 +166,26 @@ public final class WordChecker {
 		}
 		
 		throw new CommandExecuteException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
+	}
+	
+	private void checkWordUnion(String word, int posX, int posY, String direction) throws CommandExecuteException {
+		
+		if ("V".equalsIgnoreCase(direction)) checkWordUnionVertical(word, posX, posY);
+		else checkWordUnionHorizontal(word, posX, posY);
+	}
+	
+	private void checkWordUnionVertical(String word, int posX, int posY) throws CommandExecuteException {
+		
+		if((posX != 0 && game.getBoard().getTile(posX - 1, posY) != null) 
+				|| (posX != game.getBoardSize() - 1 && game.getBoard().getTile(posX + 1, posY) != null))
+			throw new CommandExecuteException("La palabra introducida debe ser la que se forma en total en el tablero");
+	}
+	
+	private void checkWordUnionHorizontal(String word, int posX, int posY) throws CommandExecuteException {
+		
+		if((posY != 0 && game.getBoard().getTile(posX, posY - 1) != null) 
+				|| (posY != game.getBoardSize() - 1 && game.getBoard().getTile(posX, posY + 1) != null))
+			throw new CommandExecuteException("La palabra introducida debe ser la que se forma en total en el tablero");
+	
 	}
 }
