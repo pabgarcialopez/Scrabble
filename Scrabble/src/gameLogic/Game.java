@@ -164,43 +164,23 @@ public class Game {
 	
 	private int getPoints(String word, int posX, int posY, String direction) {
 		
-		int points = getLettersPoints(word, posX, posY, direction);		
-		
-		points = pointsAfterWordMultiplier(word, posX, posY, direction, points);
-		
-		return points;
-	}
-	
-	private int getLettersPoints(String word, int posX, int posY, String direction) {
-		
 		int points = 0;
+		int wordMultiplier = 1;
 		
 		if ("V".equalsIgnoreCase(direction)) {
 			for (int i = 0; i < word.length(); ++i) {
 				points += this.board.getPoints(posX + i, posY);
+				wordMultiplier *= this.board.getWordMultiplier(posX + i, posY);
 			}
 		}
 		else {
 			for (int i = 0; i < word.length(); ++i) {
 				points += this.board.getPoints(posX, posY + i);
+				wordMultiplier *= this.board.getWordMultiplier(posX, posY + i);
 			}
 		}
 		
-		return points;
-	}
-	
-	private int pointsAfterWordMultiplier(String word, int posX, int posY, String direction, int points) {
-		
-		if ("V".equalsIgnoreCase(direction)) {
-			for (int i = 0; i < word.length(); ++i) {
-				points *= this.board.getWordMultiplier(posX + i, posY);
-			}
-		}
-		else {
-			for (int i = 0; i < word.length(); ++i) {
-				points *= this.board.getWordMultiplier(posX, posY + i);
-			}
-		}
+		points *= wordMultiplier;
 		
 		return points;
 	}
@@ -211,11 +191,6 @@ public class Game {
 
 	public Box getBoxAt(int i, int j) {
 		return board.getBoxAt(i,j);
-	}
-
-
-	public boolean isCentre(int i, int j) {
-		return board.isCentre(i, j);
 	}
 	
 	public void update() {
