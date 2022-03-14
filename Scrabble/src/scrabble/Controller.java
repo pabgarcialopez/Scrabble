@@ -51,7 +51,7 @@ public class Controller {
 			this.game = new Game(createPlayers());
 		
 		else {
-			// Cargar.
+			
 		}
 		
 	}
