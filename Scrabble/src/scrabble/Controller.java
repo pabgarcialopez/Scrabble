@@ -22,10 +22,40 @@ public class Controller {
 	
 	Controller(Scanner scanner) {
 		this.scanner = scanner;
-		this.game = new Game(createPlayers());
+		initGame();
 		this.printer = new GamePrinter(this.game);
 	}
 	
+	private void initGame() {
+		System.out.println("Opciones de inicio:");
+		System.out.println("1. Nueva partida.");
+		System.out.println("2. Cargar partida de fichero.");
+		
+		int option = 0;
+		
+		while(option != 1 && option != 2) {
+			try {
+				System.out.print("Selecciona opcion: ");
+				option = scanner.nextInt();
+				if(option != 1 && option != 2)
+					System.out.println("Opcion no valida.");
+			}
+			
+			catch(InputMismatchException ime) {
+				scanner.nextLine();
+				System.out.println("Opcion no valida.");
+			}
+		}
+			
+		if(option == 1)
+			this.game = new Game(createPlayers());
+		
+		else {
+			// Cargar.
+		}
+		
+	}
+
 	public void run() {
 		
 		boolean refreshDisplay = true;
