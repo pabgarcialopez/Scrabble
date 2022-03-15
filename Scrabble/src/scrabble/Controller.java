@@ -9,6 +9,7 @@ import gameContainers.GamePlayers;
 import gameLogic.Game;
 import gameObjects.Player;
 import gameView.GamePrinter;
+import storage.GameLoader;
 
 public class Controller {
 	
@@ -21,6 +22,8 @@ public class Controller {
 	private GamePrinter printer;
 	
 	Controller(Scanner scanner) {
+	
+		// MUY IMPORTANTE ESTE ORDEN.
 		this.scanner = scanner;
 		initGame();
 		this.printer = new GamePrinter(this.game);
@@ -51,7 +54,8 @@ public class Controller {
 			this.game = new Game(createPlayers());
 		
 		else {
-			
+		
+			this.game = new Game();
 		}
 		
 	}

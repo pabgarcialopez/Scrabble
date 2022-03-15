@@ -38,21 +38,25 @@ public class Game {
 	
 	private WordChecker wordChecker;
 	
+	public Game() {
+		
+	}
+	
 	public Game(GamePlayers players) {
 		this.players = players;
 		this.tiles = new GameTiles();
 		this.tiles.loadTiles(tilesFile);
-		this.board = new Board();
-		this.board.loadBoard(boxesFile);
-		this.words = new ArrayList<String>();
-		this.loadWordList(wordsFile);
-		this.random = new Random();
+		this.board = new Board(); // comun
+		this.board.loadBoard(boxesFile); // comun
+		this.words = new ArrayList<String>(); // comun
+		this.loadWordList(wordsFile); // comun
+		this.random = new Random(); // comun
 		this.currentTurn = 0;
 		this.usedWords = new ArrayList<String>();
 		this.numConsecutivePassedTurns = 0;
 		this.numTurnsWithoutTiles = -1;
 		this.initializePlayerTiles();
-		this.wordsInBoard = false;
+		this.wordsInBoard = false; 
 		this.gameFinished = false;
 		this.wordChecker = new WordChecker(this);
 	}

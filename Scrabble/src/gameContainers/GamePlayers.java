@@ -26,10 +26,6 @@ public class GamePlayers {
 		players.add(player);
 	}
 	
-	public int getNumPlayers() {
-		return players.size();
-	}
-	
 	private boolean checkPlayerNames(String name) {
 		boolean namesAreDifferent = true;
 		
@@ -58,6 +54,30 @@ public class GamePlayers {
 			else break; // Si tile == null, significa que no quedan en el saco de fichas y no hay que continuar el bucle.
 		}
 	}
+	
+	public void removePlayerTile(int player, Tile tile) {
+		this.players.get(player).removeTile(tile);		
+	}
+
+	public int numberOfTilesOf(int player, String letter) {
+		return this.players.get(player).numberOfTilesOf(letter);
+	}
+	
+	public void givePoints(int player, int points) {
+		this.players.get(player).givePoints(points);
+	}
+	
+	public void removePlayerTile(int player, int tile) {
+		this.players.get(player).removeTile(tile);		
+	}
+
+	public boolean playerHasLetter(int player, String letter) {
+		return this.players.get(player).hasLetter(letter);
+	}
+	
+	public int getNumPlayers() {
+		return players.size();
+	}
 
 	public String getPlayerStatus(int i) {
 		return players.get(i).getStatus();
@@ -68,43 +88,14 @@ public class GamePlayers {
 	}
 
 	public int getNumPlayerTiles(int i) {
-		
 		return this.players.get(i).getNumTiles();
-		
 	}
 
 	public Tile getPlayerTile(int player, int tile) {
-		
 		return this.players.get(player).getTile(tile);
 	}
-
-	public void removePlayerTile(int player, int tile) {
-
-		this.players.get(player).removeTile(tile);		
-	}
-
-	public boolean playerHasLetter(int player, String letter) {
-		
-		
-		return this.players.get(player).hasLetter(letter);
-	}
-
-	public Tile getPlayerTile(int player, String letter) {
-		
-		return this.players.get(player).getTile(letter);
-	}
-
-	public void removePlayerTile(int player, Tile tile) {
-
-		this.players.get(player).removeTile(tile);		
-	}
-
-	public int numberOfTilesOf(int player, String letter) {
-		
-		return this.players.get(player).numberOfTilesOf(letter);
-	}
 	
-	public void givePoints(int player, int points) {
-		this.players.get(player).givePoints(points);
+	public Tile getPlayerTile(int player, String letter) {
+		return this.players.get(player).getTile(letter);
 	}
 }
