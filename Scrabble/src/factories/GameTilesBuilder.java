@@ -31,8 +31,6 @@ public class GameTilesBuilder extends Builder<GameTiles>{
 				tiles.add(tileBuilder.createTheInstance(jsonArrayTiles.getJSONObject(i)));
 			
 			return new GameTiles(tiles);
-				
-			
 		}
 	}
 

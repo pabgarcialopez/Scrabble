@@ -47,7 +47,7 @@ public class Game {
 		this.players = players;
 		this.tiles = new GameTiles();
 		//this.tiles.loadTiles(tilesFile);
-		this.board = new Board(); // comun
+		//this.board = new Board(); // comun
 		//this.board.loadBoard(boxesFile); // comun
 		this.words = new ArrayList<String>(); // comun
 		//this.loadWordList(wordsFile); // comun

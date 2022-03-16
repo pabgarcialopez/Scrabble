@@ -14,8 +14,13 @@ public class Board {
 	
 	private List<List<Box>> board;
 	
-	public Board() {
-		this.board = new ArrayList<List<Box>>();
+	//public Board() {
+	//	this.board = new ArrayList<List<Box>>();
+	//}
+	
+	// Constructor para nuevas y anteriores partidas.
+	public Board(List<List<Box>> board) {
+		this.board = board;
 	}
 	
 	public void add(List<Box> row) {

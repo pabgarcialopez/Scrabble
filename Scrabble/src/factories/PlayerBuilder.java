@@ -28,9 +28,9 @@ public class PlayerBuilder extends Builder<Player>{
 		if(data.has("tiles")) {
 			
 			JSONArray jsonArrayTiles = data.getJSONArray("tiles");
-			for(int i = 0; i < jsonArrayTiles.length(); i++) {
+			for(int i = 0; i < jsonArrayTiles.length(); i++)
 				tiles.add(tileBuilder.createTheInstance(jsonArrayTiles.getJSONObject(i)));
-			}
+			
 		}
 		
 		return new Player(name, totalPoints, tiles);
