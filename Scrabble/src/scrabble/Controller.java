@@ -9,7 +9,6 @@ import gameContainers.GamePlayers;
 import gameLogic.Game;
 import gameObjects.Player;
 import gameView.GamePrinter;
-import storage.GameLoader;
 
 public class Controller {
 	
@@ -55,7 +54,7 @@ public class Controller {
 		
 		else {
 		
-			this.game = new Game();
+			//this.game = new Game();
 		}
 		
 	}

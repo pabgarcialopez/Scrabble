@@ -6,6 +6,15 @@ public class Box {
 	private SpecialEffects specialEffect;
 	private boolean specialEffectAlreadyDone;
 	
+	// Constructor para cuando en la casilla existe una ficha
+	public Box(SpecialEffects specialEffect, Tile tile) {
+		
+		this.tile = tile;
+		this.specialEffect = specialEffect;
+		this.specialEffectAlreadyDone = true;
+	}
+	
+	// Constructor para cuando en la casilla NO existe una ficha
 	public Box(SpecialEffects specialEffect) {
 		this.specialEffect = specialEffect;
 		this.tile = null;

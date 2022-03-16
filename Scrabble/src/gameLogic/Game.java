@@ -14,6 +14,7 @@ import gameContainers.GamePlayers;
 import gameContainers.GameTiles;
 import gameObjects.Box;
 import gameObjects.Tile;
+import storage.GameLoader;
 
 public class Game {
 	
@@ -38,18 +39,18 @@ public class Game {
 	
 	private WordChecker wordChecker;
 	
-	public Game() {
-		
+	public Game(GameLoader gameLoader) {
+		gameLoader.getBoard();
 	}
 	
 	public Game(GamePlayers players) {
 		this.players = players;
 		this.tiles = new GameTiles();
-		this.tiles.loadTiles(tilesFile);
+		//this.tiles.loadTiles(tilesFile);
 		this.board = new Board(); // comun
-		this.board.loadBoard(boxesFile); // comun
+		//this.board.loadBoard(boxesFile); // comun
 		this.words = new ArrayList<String>(); // comun
-		this.loadWordList(wordsFile); // comun
+		//this.loadWordList(wordsFile); // comun
 		this.random = new Random(); // comun
 		this.currentTurn = 0;
 		this.usedWords = new ArrayList<String>();
@@ -90,20 +91,6 @@ public class Game {
 	
 	private void nextTurn() {
 		this.currentTurn = (this.currentTurn + 1) % this.getNumPlayers();
-	}
-	
-	private void loadWordList(String file) {
-		
-		try(BufferedReader buffer = new BufferedReader(new FileReader(file))) {
-			String linea = null;
-			while((linea = buffer.readLine()) != null) {
-				linea = linea.trim();
-				this.words.add(linea);
-			}
-		}
-		catch (IOException ioe) {
-			throw new IllegalArgumentException("Error al leer el fichero words.txt", ioe);
-		}
 	}
 	
 	public Tile getRandomTile() {

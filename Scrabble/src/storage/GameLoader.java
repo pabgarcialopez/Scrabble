@@ -5,75 +5,111 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Random;
+
+import org.json.JSONObject;
+
+import gameContainers.Board;
+import gameContainers.GamePlayers;
+import gameContainers.GameTiles;
+import gameObjects.Box;
+import gameObjects.SpecialEffects;
+import gameObjects.Tile;
 
 public class GameLoader {
-
-	private static final int NUMBER_OF_TILES_PER_PLAYER = 7;
-	private Scanner scanner;
+	
+	private GamePlayers players;
+	
+	private static final String tilesFile = "tiles.txt";
+	private static final String boxesFile = "boxes.txt";
+	private static final String wordsFile = "words.txt";
+	
+	private int currentTurn;
+	private int numConsecutivePassedTurns;
+	private int numTurnsWithoutTiles;
+	
+	private boolean wordsInBoard;
+	private boolean gameFinished;
+	
+	private GameTiles tiles;
+	private Board board;
+	private List<String> words;
+	private List<String> usedWords;
 
 	public GameLoader() {
-		this.scanner = new Scanner(System.in);
+		
+	}
+	
+	public void loadGame() {
+		JSONObject jo = new JSONObject();
+		
+		
+	}
+	
+	private void loadTiles(String file){
+		
+		try(BufferedReader buffer = new BufferedReader(new FileReader(file))) {
+			String linea = null;
+			
+			while((linea = buffer.readLine()) != null) {
+				String[] tile = linea.trim().split(" ");
+				// tile[0] es la letra; tile[1] es el numero fichas con esa letra; tile[2] son los puntos de esa letra.
+				for(int i = 0; i < Integer.parseInt(tile[1]); ++i)
+					tiles.add(new Tile(tile[0], Integer.parseInt(tile[2])));
+			}
+			
+		}
+		catch (IOException ioe) {
+			throw new IllegalArgumentException("Error al leer el fichero tiles.txt", ioe);
+		}
+		catch (NumberFormatException nfe) {
+			throw new IllegalArgumentException("Error al leer el fichero tiles.txt", nfe);
+		}
+	}
+	
+	private void loadBoard(String file) {
+		try(BufferedReader buffer = new BufferedReader(new FileReader(file))) {
+			
+			int xSize, ySize;
+			String line = buffer.readLine();
+			String[] size = line.trim().split(" ");
+			xSize = Integer.parseInt(size[0]);
+			ySize = Integer.parseInt(size[1]);
+			for (int i = 0; i < xSize; ++i) {
+				List<Box> row = new ArrayList<Box>();
+				for(int j = 0; j < ySize; ++j) {
+					line = buffer.readLine();
+					line = line.trim();
+					row.add(new Box(SpecialEffects.valueOf(line)));
+				}
+				this.board.add(row);
+			}					
+		}
+		catch (IOException ioe) {
+			throw new IllegalArgumentException("Error al leer el archivo board.txt", ioe);
+		}
+		catch (NumberFormatException nfe) {
+			throw new IllegalArgumentException("Error al leer el archivo board.txt", nfe);
+		}
 	}
 
-	public void loadGame() {
-
-		/*
-		 * Formato del fichero:
-		 * 
-		 * 1. Numero de jugadores 
-		 * 
-		 * 2. Para cada jugador:
-		 * 
-		 * - Nombre 
-		 * - Numero de puntos 
-		 * - Fichas
-		 * 
-		 * Las tres variables anteriores, en lineas separadas.
-		 * 
-		 * FALTAN COSAS
-		 */
-
-		String fileName = askFileName();
-
-		try (BufferedReader input = new BufferedReader(new FileReader(fileName))) {
-			int numPlayers = input.read();
-			// Aqui no se si hace falta aniadir un input.readLine();
-
-			String[] playerNames = new String[numPlayers];
-			Integer[] playerPoints = new Integer[numPlayers];
-			List<List<String>> tiles = new ArrayList<List<String>>(numPlayers);
-
-			// Para cada jugador i-esimo.
-			for (int i = 0; i < numPlayers; i++) {
-
-				// Leemos su nombre.
-				playerNames[i] = input.readLine();
-
-				// Leemos sus puntos.
-				playerPoints[i] = Integer.parseInt(input.readLine());
-
-				// Leemos sus fichas.
-				for (int j = 0; j < NUMBER_OF_TILES_PER_PLAYER; j++) {
-
-					String[] letters = input.readLine().trim().split(" ");
-
-					for (int k = 0; k < letters.length; k++)
-						tiles.get(i).add(letters[k]);
-				}
+	private void loadWordList(String file) {
+		
+		try(BufferedReader buffer = new BufferedReader(new FileReader(file))) {
+			String linea = null;
+			while((linea = buffer.readLine()) != null) {
+				linea = linea.trim();
+				this.words.add(linea);
 			}
 		}
-
 		catch (IOException ioe) {
-			System.out.println("El fichero \"" + fileName + "\" no existe.");
+			throw new IllegalArgumentException("Error al leer el fichero words.txt", ioe);
 		}
 	}
-
-	private String askFileName() {
 	
-		System.out.print("Introduce el nombre del fichero en el que tienes guardada la partida: ");
-		String fileName = scanner.nextLine();
-		return fileName;
+	public Board getBoard() {
+		return this.board;
 	}
+	
+	
 }
-       

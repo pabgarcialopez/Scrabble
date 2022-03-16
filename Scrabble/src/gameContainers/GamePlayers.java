@@ -13,8 +13,14 @@ public class GamePlayers {
 	
 	private List <Player> players;
 	
+	// Constructor para nueva partida.
 	public GamePlayers() {
 		this.players = new ArrayList<Player>();
+	}
+	
+	// Constructor para la carga de partida.
+	public GamePlayers(List<Player> players) {
+		this.players = players;
 	}
 
 	public void addPlayer(Player player) {

@@ -11,6 +11,12 @@ public class Player {
 	private List<Tile> tiles;
 	private int totalPoints;
 	
+	// Constructor para cuando se carga partida
+	public Player(String name, int totalPoints, List<Tile> tiles) {
+		
+	}
+	
+	// Constructor para cuando se crea nueva partida
 	public Player(String name) {
 		this.name = name;
 		this.totalPoints = 0;
