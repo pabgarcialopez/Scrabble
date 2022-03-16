@@ -13,7 +13,7 @@ public class PlayerBuilder extends Builder<Player>{
 
 	private TileBuilder tileBuilder;
 	
-	PlayerBuilder(TileBuilder tileBuilder) {
+	public PlayerBuilder(TileBuilder tileBuilder) {
 		super("player");
 		this.tileBuilder = tileBuilder;
 	}

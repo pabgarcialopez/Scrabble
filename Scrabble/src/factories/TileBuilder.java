@@ -6,7 +6,7 @@ import gameObjects.Tile;
 
 public class TileBuilder extends Builder<Tile>{
 
-	TileBuilder() {
+	public TileBuilder() {
 		super("tile");
 	}
 

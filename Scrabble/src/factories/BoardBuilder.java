@@ -12,7 +12,7 @@ import gameObjects.Box;
 public class BoardBuilder extends Builder<Board>{
 
 	private BoxBuilder boxBuilder;
-	BoardBuilder(BoxBuilder boxBuilder) {
+	public BoardBuilder(BoxBuilder boxBuilder) {
 		super("board");
 		this.boxBuilder = boxBuilder;
 	}

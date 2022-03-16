@@ -9,31 +9,26 @@ import org.json.JSONObject;
 import gameContainers.GamePlayers;
 import gameObjects.Player;
 
-public class GamePlayersBuilder extends Builder<GamePlayers>{
+public class GamePlayersBuilder extends Builder<GamePlayers> {
 
 	private PlayerBuilder playerBuilder;
 	
-	GamePlayersBuilder(PlayerBuilder playerBuilder) {
+	public GamePlayersBuilder(PlayerBuilder playerBuilder) {
 		super("gamePlayers");
 	}
 
 	@Override
 	protected GamePlayers createTheInstance(JSONObject data) {
 		
-		if(data == null)
-			return new GamePlayers();
+		JSONArray jsonArrayPlayers = data.getJSONArray("players");
 		
-		else {
-			
-			JSONArray jsonArrayPlayers = data.getJSONArray("players");
-			
-			List<Player> players = new ArrayList<Player>();
-			
-			for(int i = 0; i < jsonArrayPlayers.length(); i++)
-				players.add(playerBuilder.createTheInstance(jsonArrayPlayers.getJSONObject(i)));
-			
-			return new GamePlayers(players);
-		}
+		List<Player> players = new ArrayList<Player>();
+		
+		for(int i = 0; i < jsonArrayPlayers.length(); i++)
+			players.add(playerBuilder.createTheInstance(jsonArrayPlayers.getJSONObject(i)));
+		
+		return new GamePlayers(players);
+		
 	}
 
 }

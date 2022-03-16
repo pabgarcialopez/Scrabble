@@ -12,7 +12,7 @@ import gameObjects.Tile;
 public class GameTilesBuilder extends Builder<GameTiles>{
 
 	private TileBuilder tileBuilder;
-	GameTilesBuilder(TileBuilder tileBuilder) {
+	public GameTilesBuilder(TileBuilder tileBuilder) {
 		super("gameTiles");
 		this.tileBuilder = tileBuilder;
 	}
@@ -20,18 +20,13 @@ public class GameTilesBuilder extends Builder<GameTiles>{
 	@Override
 	protected GameTiles createTheInstance(JSONObject data) {
 		
-		if(data == null)
-			return new GameTiles();
+		JSONArray jsonArrayTiles = data.getJSONArray("tiles");
+		List<Tile> tiles = new ArrayList<Tile>();
 		
-		else {
-			JSONArray jsonArrayTiles = data.getJSONArray("tiles");
-			List<Tile> tiles = new ArrayList<Tile>();
-			
-			for(int i = 0; i < jsonArrayTiles.length(); i++)
-				tiles.add(tileBuilder.createTheInstance(jsonArrayTiles.getJSONObject(i)));
-			
-			return new GameTiles(tiles);
-		}
+		for(int i = 0; i < jsonArrayTiles.length(); i++)
+			tiles.add(tileBuilder.createTheInstance(jsonArrayTiles.getJSONObject(i)));
+		
+		return new GameTiles(tiles);
 	}
 
 }

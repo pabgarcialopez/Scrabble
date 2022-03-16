@@ -1,7 +1,10 @@
+
 {
 	"consecutive_turns_passed" : 0,
 
-	"turns_without_tiles" : 0,
+	"current_turn": -1,
+
+	"turns_without_tiles" : -1,
 
 	"words_in_board" : false,
 

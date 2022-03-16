@@ -14,9 +14,9 @@ public class GamePlayers {
 	private List <Player> players;
 	
 	// Constructor para nueva partida.
-	public GamePlayers() {
-		this.players = new ArrayList<Player>();
-	}
+	//public GamePlayers() {
+	//	this.players = new ArrayList<Player>();
+	//}
 	
 	// Constructor para la carga de partida.
 	public GamePlayers(List<Player> players) {

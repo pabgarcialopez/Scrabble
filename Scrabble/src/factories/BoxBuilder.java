@@ -10,7 +10,7 @@ public class BoxBuilder extends Builder<Box>{
 	
 	private TileBuilder tileBuilder;
 
-	BoxBuilder(TileBuilder tileBuilder) {
+	public BoxBuilder(TileBuilder tileBuilder) {
 		super("Box");
 		this.tileBuilder = tileBuilder;
 	}

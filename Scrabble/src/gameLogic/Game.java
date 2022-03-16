@@ -21,9 +21,9 @@ public class Game {
 	private GamePlayers players;
 	private Random random;
 	
-	private static final String tilesFile = "tiles.txt";
-	private static final String boxesFile = "boxes.txt";
-	private static final String wordsFile = "words.txt";
+	//private static final String tilesFile = "tiles.txt";
+	//private static final String boxesFile = "boxes.txt";
+	//private static final String wordsFile = "words.txt";
 	
 	private int currentTurn;
 	private int numConsecutivePassedTurns;
@@ -34,46 +34,67 @@ public class Game {
 	
 	private GameTiles tiles;
 	private Board board;
-	private List<String> words;
 	private List<String> usedWords;
+	private static List<String> words = GameLoader.loadWordList();
+
 	
 	private WordChecker wordChecker;
 	
-	public Game(GameLoader gameLoader) {
-		gameLoader.getBoard();
-	}
-	
 	public Game(GamePlayers players) {
-		this.players = players;
-		this.tiles = new GameTiles();
+		//this.players = players;
+		//this.tiles = new GameTiles();
 		//this.tiles.loadTiles(tilesFile);
 		//this.board = new Board(); // comun
 		//this.board.loadBoard(boxesFile); // comun
-		this.words = new ArrayList<String>(); // comun
+		//this.words = new ArrayList<String>(); // comun
 		//this.loadWordList(wordsFile); // comun
-		this.random = new Random(); // comun
-		this.currentTurn = 0;
-		this.usedWords = new ArrayList<String>();
-		this.numConsecutivePassedTurns = 0;
-		this.numTurnsWithoutTiles = -1;
+		//this.random = new Random(); // comun
+		//this.currentTurn = 0;
+		//this.usedWords = new ArrayList<String>();
+		//this.numConsecutivePassedTurns = 0;
+		//this.numTurnsWithoutTiles = -1;
 		this.initializePlayerTiles();
-		this.wordsInBoard = false; 
-		this.gameFinished = false;
+		//this.wordsInBoard = false; 
+		//this.gameFinished = false;
+		
+	}
+
+	public Game(int currentTurn, int numConsecutivePassedTurns, int numTurnsWithoutTiles, boolean wordsInBoard,
+			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
+		
+		this.random = new Random();
+		
+		// Hace falta ver que si currentTurn es -1, entomnces hay que decidir quien empieza
+		this.currentTurn = currentTurn;
+		
+		
+		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
+		this.numTurnsWithoutTiles = numTurnsWithoutTiles;
+		this.wordsInBoard = wordsInBoard;
+		this.gameFinished = gameFinished;
+		this.players = players;
+		this.tiles = tiles;
+		this.board = board;
+		this.usedWords = usedWords;
+		
 		this.wordChecker = new WordChecker(this);
 	}
 
 	public boolean gameIsFinished() {
-
 		return this.gameFinished;
 	}
 
 	public String[] decideFirstTurn() {
+		
+		if(currentTurn < 0 || currentTurn > players.getNumPlayers())
+			return null;
 		
 		String[] lettersObtained = new String[this.getNumPlayers()];
 		
 		for(int i = 0; i < this.getNumPlayers(); ++i) 
 			lettersObtained[i] = this.getRandomTile().getLetter();
 	
+		// La partida es empezada por quien obtenga la letra mas cercana a la A.
 		for(int i = 1; i < this.getNumPlayers(); ++i)
 			if (lettersObtained[i].compareTo(lettersObtained[this.currentTurn]) < 0) 
 				this.currentTurn = i;
@@ -198,7 +219,6 @@ public class Game {
 			this.gameFinished = true;
 	}
 
-	
 	public boolean writeAWord(String word, int posX, int posY, String direction) {
 		
 		usedWords.add(word);
@@ -256,23 +276,18 @@ public class Game {
 	}
 
 	public boolean getWordsInBoard() {
-		
 		return this.wordsInBoard;
 	}
 
 	public List<String> getWordsList() {
-		
 		return this.words;
 	}
 
 	public List<String> getUsedWords() {
-		
 		return this.usedWords;
 	}
 
 	public Board getBoard() {
-		
 		return this.board;
 	}
-
 }

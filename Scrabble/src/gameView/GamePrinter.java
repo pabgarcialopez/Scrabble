@@ -19,8 +19,6 @@ public class GamePrinter {
 	public GamePrinter(Game game) {
 		this.game = game;
 	}
-	
-	
 
 	public void showStatus() {
 		System.out.println(this.game.getStatus());
@@ -28,6 +26,11 @@ public class GamePrinter {
 
 	// Funcion para mostrar como ha sido la decision de quien empieza a jugar
 	public void showFirstTurn(String[] lettersObtained, GamePlayers players, int turn) {
+		
+		// 
+		if(lettersObtained == null)
+			return;
+		
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("Eleccion de turnos:").append(StringUtils.LINE_SEPARATOR);
 		
