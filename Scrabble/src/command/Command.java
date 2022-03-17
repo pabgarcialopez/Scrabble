@@ -16,7 +16,8 @@ public abstract class Command {
 		new HelpCommand(),
 		new ExitCommand(),
 		new LoadCommand(),
-		new ResetCommand()
+		new ResetCommand(),
+		new SaveCommand()
 	};
 	/* @formatter:on */
 

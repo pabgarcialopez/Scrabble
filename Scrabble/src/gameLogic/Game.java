@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import exceptions.CommandExecuteException;
 import gameContainers.Board;
 import gameContainers.GamePlayers;
@@ -31,7 +34,6 @@ public class Game {
 	private List<String> usedWords;
 	private static List<String> words = GameLoader.loadWordList();
 
-	
 	private WordChecker wordChecker;
 	
 	public Game(int currentTurn, int numConsecutivePassedTurns, int numTurnsWithoutTiles, boolean wordsInBoard,
@@ -272,5 +274,30 @@ public class Game {
 
 	public Board getBoard() {
 		return this.board;
+	}
+	
+	public JSONObject report() {
+		
+		JSONObject jo = new JSONObject();
+		
+		jo.put("current_turn", this.currentTurn);
+		jo.put("consecutive_turns_passed", this.numConsecutivePassedTurns);
+		jo.put("turns_without_tiles", this.numTurnsWithoutTiles);
+		jo.put("words_in_board", this.wordsInBoard);
+		jo.put("game_finished", this.gameFinished);
+		
+		JSONArray words = new JSONArray();
+		for(int i = 0; i < this.usedWords.size(); ++i)
+			words.put(this.usedWords.get(i));
+		
+		JSONObject usedWords = new JSONObject();
+		usedWords.put("words", words);
+		
+		jo.put("used_words", usedWords);
+		jo.put("game_players", this.players.report());
+		jo.put("game_tiles", this.tiles.report());
+		jo.put("game_board", this.board.report());
+		
+		return jo;
 	}
 }

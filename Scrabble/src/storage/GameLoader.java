@@ -27,7 +27,7 @@ import gameObjects.Player;
 public class GameLoader {
 	
 	private static final String wordsFile = "words.json";
-	private static final String NEW_GAME = "new_game.json";
+	public static final String NEW_GAME = "new_game.json";
 
 	private static Scanner _scanner;
 	
@@ -40,9 +40,8 @@ public class GameLoader {
 		return createGame(new FileInputStream(NEW_GAME), game);
 	}
 	
-	public static Game loadGame(Game game) throws FileNotFoundException {
-		System.out.print("Introduce el nombre de fichero a cargar: ");
-		String file = _scanner.nextLine() + ".json";
+	public static Game loadGame(Game game, String file) throws FileNotFoundException {
+		
 		return createGame(new FileInputStream(file), game);
 	}
 	
@@ -107,11 +106,17 @@ public class GameLoader {
 			}
 		}
 		
+		scanner.nextLine();
+		
 		// Nueva partida
 		if(option == 1) return reset(null);
 		
 		// Carga de partida
-		else return loadGame(null);
+		else  {
+			System.out.print("Introduce el nombre de fichero a cargar: ");
+			String file = _scanner.nextLine() + ".json";
+			return loadGame(null, file);
+		}
 	}
 	
 	private static GamePlayers createPlayers() {

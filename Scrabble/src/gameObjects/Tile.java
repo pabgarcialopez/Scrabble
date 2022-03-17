@@ -1,5 +1,7 @@
 package gameObjects;
 
+import org.json.JSONObject;
+
 public class Tile {
 
 	private String letter;
@@ -23,5 +25,14 @@ public class Tile {
 	@Override
 	public String toString() {
 		return this.letter + ": " + this.points;
+	}
+	
+	public JSONObject report() {
+		
+		JSONObject jo = new JSONObject();
+		jo.put("letter", this.letter);
+		jo.put("points", this.points);
+		
+		return jo;
 	}
 }

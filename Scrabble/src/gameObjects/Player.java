@@ -3,6 +3,9 @@ package gameObjects;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import gameUtils.StringUtils;
 
 public class Player {
@@ -13,7 +16,9 @@ public class Player {
 	
 	// Constructor para cuando se carga partida
 	public Player(String name, int totalPoints, List<Tile> tiles) {
-		
+		this.name = name;
+		this.tiles = tiles;
+		this.totalPoints = totalPoints;
 	}
 	
 	// Constructor para cuando se crea nueva partida
@@ -105,6 +110,22 @@ public class Player {
 
 	public void givePoints(int points) {
 		this.totalPoints += points;
+	}
+	
+	public JSONObject report() {
+		
+		JSONObject jo = new JSONObject();
+		
+		jo.put("name", this.name);
+		jo.put("total_points", this.totalPoints);
+		
+		JSONArray tiles = new JSONArray();
+		for(int i = 0; i < this.tiles.size(); ++i)
+			tiles.put(this.tiles.get(i).report());
+		
+		jo.put("tiles", tiles);
+		
+		return jo;
 	}
 
 }

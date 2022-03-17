@@ -2,26 +2,24 @@ package command;
 
 import java.io.FileNotFoundException;
 
-import org.json.JSONException;
-
 import exceptions.CommandExecuteException;
 import exceptions.CommandParseException;
 import gameLogic.Game;
-import storage.GameLoader;
+import storage.GameSaver;
 
-public class LoadCommand extends Command {
+public class SaveCommand extends Command {
 
-	private static final String NAME = "cargar";
+	private static final String NAME = "guardar";
 
-	private static final String DETAILS = "[c]argar [nombre del fichero]";
+	private static final String DETAILS = "[g]uardar [nombre del fichero]";
 
-	private static final String SHORTCUT = "c";
+	private static final String SHORTCUT = "g";
 
-	private static final String HELP = "cargar una partida de fichero";
+	private static final String HELP = "guardar una partida en un fichero";
 	
 	private String file;
 	
-	public LoadCommand() {
+	public SaveCommand() {
 		super(NAME, SHORTCUT, DETAILS, HELP);
 	}
 	
@@ -29,16 +27,17 @@ public class LoadCommand extends Command {
 	public boolean execute(Game game) throws CommandExecuteException {
 		
 		try {
-			GameLoader.loadGame(game, this.file);
+			GameSaver.saveGame(game, this.file);
+			System.out.println("La partida ha sido guardada con éxito.");
 		}
 		catch(FileNotFoundException fnfe) {
 			throw new CommandExecuteException("El fichero introducido no es válido", fnfe);
 		}
-		catch(JSONException je) {
-			throw new CommandExecuteException("El formato JSON del fichero introducido no es válido.", je);
+		catch(IllegalArgumentException iae) {
+			throw new CommandExecuteException(iae.getMessage(), iae);
 		}
 		
-		return true;
+		return false;
 	}
 	
 	@Override

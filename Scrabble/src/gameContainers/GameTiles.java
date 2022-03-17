@@ -2,6 +2,9 @@ package gameContainers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import gameObjects.Tile;
 
 public class GameTiles {
@@ -35,5 +38,19 @@ public class GameTiles {
 
 	public int getSize() {
 		return tiles.size();
+	}
+	
+	public JSONObject report() {
+		
+		JSONObject jo = new JSONObject();
+		
+		JSONArray tiles = new JSONArray();
+		
+		for(int i = 0; i < this.tiles.size(); ++i)
+			tiles.put(this.tiles.get(i).report());
+		
+		jo.put("tiles", tiles);
+		
+		return jo;
 	}
 }

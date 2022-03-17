@@ -2,6 +2,9 @@ package gameContainers;
 
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import gameLogic.Game;
 import gameObjects.Player;
 import gameObjects.Tile;
@@ -102,5 +105,19 @@ public class GamePlayers {
 	
 	public Tile getPlayerTile(int player, String letter) {
 		return this.players.get(player).getTile(letter);
+	}
+	
+	public JSONObject report() {
+		
+		JSONObject jo = new JSONObject();
+		
+		JSONArray players = new JSONArray();
+		
+		for(int i = 0; i < this.players.size(); ++i)
+			players.put(this.players.get(i).report());
+		
+		jo.put("players", players);
+		
+		return jo;
 	}
 }

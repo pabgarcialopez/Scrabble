@@ -15,6 +15,7 @@ public class GamePlayersBuilder extends Builder<GamePlayers> {
 	
 	public GamePlayersBuilder(PlayerBuilder playerBuilder) {
 		super("gamePlayers");
+		this.playerBuilder = playerBuilder;
 	}
 
 	@Override

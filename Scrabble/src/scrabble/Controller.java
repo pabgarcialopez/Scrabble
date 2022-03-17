@@ -35,7 +35,6 @@ public class Controller {
 				printer.showStatus();
 			}
 			
-			// Esto creo que no hace falta porque ya se hace en la linea 56 si es necesario.
 			refreshDisplay = false;
 			
 			System.out.print(PROMPT);

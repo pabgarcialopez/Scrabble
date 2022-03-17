@@ -20,7 +20,7 @@ public class BoxBuilder extends Builder<Box>{
 		
 		SpecialEffects specialEffect = null;
 		
-		if(!data.getString("special_effect").equalsIgnoreCase("NORMAL"))
+		if(data.has("special_effect"))
 			specialEffect = SpecialEffects.valueOf(data.getString("special_effect"));
 		
 		if(data.has("tile")) {

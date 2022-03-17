@@ -2,6 +2,9 @@ package gameContainers;
 
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import gameObjects.Box;
 import gameObjects.Tile;
 
@@ -57,5 +60,23 @@ public class Board {
 	public int getWordMultiplier(int posX, int posY) {
 		
 		return this.board.get(posX).get(posY).getWordMultiplier();
+	}
+	
+	public JSONObject report() {
+		
+		JSONObject jo = new JSONObject();
+		JSONArray board = new JSONArray();
+		
+		for(int i = 0; i < this.board.size(); ++i) {
+			JSONArray row = new JSONArray();
+			for(int j = 0; j < this.board.get(i).size(); ++j) {
+				row.put(this.board.get(i).get(j).report());
+			}
+			board.put(row);
+		}
+		
+		jo.put("board", board);
+		
+		return jo;
 	}
 }
