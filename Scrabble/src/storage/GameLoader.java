@@ -1,15 +1,11 @@
 package storage;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
 import org.json.JSONObject;
@@ -17,7 +13,6 @@ import org.json.JSONTokener;
 
 import factories.BoardBuilder;
 import factories.BoxBuilder;
-import factories.Factory;
 import factories.GamePlayersBuilder;
 import factories.GameTilesBuilder;
 import factories.PlayerBuilder;
@@ -27,10 +22,7 @@ import gameContainers.Board;
 import gameContainers.GamePlayers;
 import gameContainers.GameTiles;
 import gameLogic.Game;
-import gameObjects.Box;
 import gameObjects.Player;
-import gameObjects.SpecialEffects;
-import gameObjects.Tile;
 
 public class GameLoader {
 	
@@ -42,7 +34,7 @@ public class GameLoader {
 	private static BoardBuilder boardBuilder;
 	private static GameTilesBuilder gameTilesBuilder;
 	private static GamePlayersBuilder gamePlayersBuilder;
-	private static WordsBuilder wordsBuilder;
+	private static WordsBuilder wordsBuilder = new WordsBuilder();
 	
 	public static Game reset() throws FileNotFoundException {
 		return createGame(new FileInputStream(NEW_GAME));
@@ -86,7 +78,6 @@ public class GameLoader {
 		boardBuilder = new BoardBuilder(new BoxBuilder(tileBuilder));
 		gameTilesBuilder = new GameTilesBuilder(tileBuilder);
 		gamePlayersBuilder = new GamePlayersBuilder(new PlayerBuilder(tileBuilder));
-		wordsBuilder = new WordsBuilder();
 		
 		System.out.println("Opciones de inicio:");
 		System.out.println("1. Nueva partida.");
@@ -168,25 +159,14 @@ public class GameLoader {
 		return numPlayers;
 	}
 
-	private static ArrayList<String> words;
-
-	public static ArrayList<String> loadWordList() {
+	public static List<String> loadWordList() throws RuntimeException {
 		
-		// HABRA QUE CAMBIARLO POR JSONS
-		try(BufferedReader buffer = new BufferedReader(new FileReader(wordsFile))) {
-			
-			List<String> words = new ArrayList<String>();
-			
-			String linea = null;
-			while((linea = buffer.readLine()) != null) {
-				words.add(linea.trim());
-			}
+		try {
+			JSONObject jo = new JSONObject(new JSONTokener(new FileInputStream(wordsFile)));
+			return wordsBuilder.createInstance(jo);
 		}
-		
-		catch (IOException ioe) {
-			System.out.println("Error al leer el fichero words.txt");
+		catch(FileNotFoundException fnfe) {
+			throw new RuntimeException("El fichero de las palabras no es válido");
 		}
-		
-		return words;
 	}
 }

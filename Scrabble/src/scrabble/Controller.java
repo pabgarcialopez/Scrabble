@@ -1,17 +1,11 @@
 package scrabble;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import command.Command;
 import exceptions.GameException;
-import gameContainers.GamePlayers;
 import gameLogic.Game;
-import gameObjects.Player;
 import gameView.GamePrinter;
-import storage.GameLoader;
 
 public class Controller {
 	
@@ -64,8 +58,4 @@ public class Controller {
 		
 		printer.showEndMessage();
 	}
-	
-	
-	
-	
 }

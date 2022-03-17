@@ -1,9 +1,5 @@
 package gameLogic;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -20,10 +16,6 @@ public class Game {
 	
 	private GamePlayers players;
 	private Random random;
-	
-	//private static final String tilesFile = "tiles.txt";
-	//private static final String boxesFile = "boxes.txt";
-	//private static final String wordsFile = "words.txt";
 	
 	private int currentTurn;
 	private int numConsecutivePassedTurns;
@@ -64,9 +56,8 @@ public class Game {
 		
 		this.random = new Random();
 		
-		// Hace falta ver que si currentTurn es -1, entomnces hay que decidir quien empieza
+		// Hace falta ver que si currentTurn es -1, entonces hay que decidir quien empieza
 		this.currentTurn = currentTurn;
-		
 		
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
 		this.numTurnsWithoutTiles = numTurnsWithoutTiles;
@@ -280,7 +271,7 @@ public class Game {
 	}
 
 	public List<String> getWordsList() {
-		return this.words;
+		return words;
 	}
 
 	public List<String> getUsedWords() {
