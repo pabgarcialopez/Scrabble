@@ -45,10 +45,9 @@ public class Game {
 		//this.usedWords = new ArrayList<String>();
 		//this.numConsecutivePassedTurns = 0;
 		//this.numTurnsWithoutTiles = -1;
-		this.initializePlayerTiles();
+		//this.initializePlayerTiles();
 		//this.wordsInBoard = false; 
 		//this.gameFinished = false;
-		
 	}
 
 	public Game(int currentTurn, int numConsecutivePassedTurns, int numTurnsWithoutTiles, boolean wordsInBoard,
@@ -67,7 +66,7 @@ public class Game {
 		this.tiles = tiles;
 		this.board = board;
 		this.usedWords = usedWords;
-		
+		this.initializePlayerTiles();
 		this.wordChecker = new WordChecker(this);
 	}
 

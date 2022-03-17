@@ -18,7 +18,10 @@ public class BoxBuilder extends Builder<Box>{
 	@Override
 	protected Box createTheInstance(JSONObject data) {
 		
-		SpecialEffects specialEffect = SpecialEffects.valueOf(data.getString("special_effect"));
+		SpecialEffects specialEffect = null;
+		
+		if(!data.getString("special_effect").equalsIgnoreCase("NORMAL"))
+			specialEffect = SpecialEffects.valueOf(data.getString("special_effect"));
 		
 		if(data.has("tile")) {
 			Tile tile = tileBuilder.createTheInstance(data.getJSONObject("tile"));
