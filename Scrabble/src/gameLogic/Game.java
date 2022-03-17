@@ -10,6 +10,7 @@ import gameContainers.GamePlayers;
 import gameContainers.GameTiles;
 import gameObjects.Box;
 import gameObjects.Tile;
+import gameUtils.StringUtils;
 import gameView.GamePrinter;
 import storage.GameLoader;
 
@@ -36,6 +37,14 @@ public class Game {
 	public Game(int currentTurn, int numConsecutivePassedTurns, int numTurnsWithoutTiles, boolean wordsInBoard,
 			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
 		
+		reset(currentTurn, numConsecutivePassedTurns, numTurnsWithoutTiles, wordsInBoard, 
+				gameFinished, players, tiles, board, usedWords);
+		this.wordChecker = new WordChecker(this);
+	}
+	
+	public void reset(int currentTurn, int numConsecutivePassedTurns, int numTurnsWithoutTiles, boolean wordsInBoard,
+			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
+		
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
 		this.numTurnsWithoutTiles = numTurnsWithoutTiles;
 		this.wordsInBoard = wordsInBoard;
@@ -48,7 +57,6 @@ public class Game {
 		this.currentTurn = currentTurn;
 		decideFirstTurn();
 		this.initializePlayerTiles();
-		this.wordChecker = new WordChecker(this);
 	}
 
 	public boolean gameIsFinished() {
@@ -106,7 +114,9 @@ public class Game {
 	}
 	
 	public String getStatus() {
-		return players.getPlayerStatus(currentTurn);
+		String status = "Fichas restantes: " + this.getRemainingTiles() + StringUtils.LINE_SEPARATOR;
+		status += players.getPlayerStatus(currentTurn);
+		return status;
 	}
 	
 	public void assignTiles(String word, int posX, int posY, String direction) {

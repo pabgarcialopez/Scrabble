@@ -6,9 +6,9 @@ public class PassTurnCommand extends Command {
 
 	private static final String NAME = "pasar";
 
-	private static final String DETAILS = "pasa[r]";
+	private static final String DETAILS = "p[a]sar";
 
-	private static final String SHORTCUT = "r";
+	private static final String SHORTCUT = "a";
 
 	private static final String HELP = "pasar de turno";
 	
@@ -24,5 +24,4 @@ public class PassTurnCommand extends Command {
 		
 		return true;
 	}
-	
 }

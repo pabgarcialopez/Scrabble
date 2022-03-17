@@ -14,7 +14,9 @@ public abstract class Command {
 		new PassTurnCommand(),
 		new SwapTileCommand(),
 		new HelpCommand(),
-		new ExitCommand()
+		new ExitCommand(),
+		new LoadCommand(),
+		new ResetCommand()
 	};
 	/* @formatter:on */
 

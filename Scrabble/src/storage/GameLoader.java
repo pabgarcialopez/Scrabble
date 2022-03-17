@@ -36,17 +36,17 @@ public class GameLoader {
 	private static GamePlayersBuilder gamePlayersBuilder;
 	private static WordsBuilder wordsBuilder = new WordsBuilder();
 	
-	public static Game reset() throws FileNotFoundException {
-		return createGame(new FileInputStream(NEW_GAME));
+	public static Game reset(Game game) throws FileNotFoundException {
+		return createGame(new FileInputStream(NEW_GAME), game);
 	}
 	
-	public static Game loadGame() throws FileNotFoundException {
+	public static Game loadGame(Game game) throws FileNotFoundException {
 		System.out.print("Introduce el nombre de fichero a cargar: ");
 		String file = _scanner.nextLine() + ".json";
-		return createGame(new FileInputStream(file));
+		return createGame(new FileInputStream(file), game);
 	}
 	
-	private static Game createGame(InputStream input) {
+	private static Game createGame(InputStream input, Game game) {
 		
 		JSONObject json = new JSONObject(new JSONTokener(input));
 		
@@ -66,8 +66,14 @@ public class GameLoader {
 		
 		List<String> usedWords = wordsBuilder.createInstance(json.getJSONObject("used_words"));
 		
-		return new Game(currentTurn, numConsecutivePassedTurns, numTurnsWithoutTiles, wordsInBoard, gameFinished, 
+		if(game == null)
+			return new Game(currentTurn, numConsecutivePassedTurns, numTurnsWithoutTiles, wordsInBoard, gameFinished, 
 				players, tiles, board, usedWords);
+		else {
+			game.reset(currentTurn, numConsecutivePassedTurns, numTurnsWithoutTiles, wordsInBoard, gameFinished, 
+					players, tiles, board, usedWords);
+			return game;
+		}
 	}
 	
 	public static Game initGame(Scanner scanner) throws FileNotFoundException {
@@ -102,11 +108,10 @@ public class GameLoader {
 		}
 		
 		// Nueva partida
-		if(option == 1) return reset();
+		if(option == 1) return reset(null);
 		
 		// Carga de partida
-		else return loadGame();
-		
+		else return loadGame(null);
 	}
 	
 	private static GamePlayers createPlayers() {

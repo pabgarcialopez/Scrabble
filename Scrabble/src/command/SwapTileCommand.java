@@ -4,13 +4,13 @@ import gameLogic.Game;
 
 public class SwapTileCommand extends Command {
 	
-	private static final String NAME = "cambio";
+	private static final String NAME = "intercambio";
 
-	private static final String DETAILS = "[c]ambio";
+	private static final String DETAILS = "[i]ntercambio";
 
-	private static final String SHORTCUT = "c";
+	private static final String SHORTCUT = "i";
 
-	private static final String HELP = "cambiar una ficha por una del saco";
+	private static final String HELP = "intercambiar una ficha por una del saco";
 	
 	public SwapTileCommand() {
 		super(NAME, SHORTCUT, DETAILS, HELP);
