@@ -27,7 +27,7 @@ public class ResetCommand extends Command {
 			GameLoader.reset(game);
 		}
 		catch(FileNotFoundException fnfe) {
-			throw new CommandExecuteException("El fichero de reseteo no es válido", fnfe);
+			throw new CommandExecuteException("El fichero de reseteo no se ha podido encontrar.", fnfe);
 		}
 		
 		return true;

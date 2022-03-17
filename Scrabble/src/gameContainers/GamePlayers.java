@@ -35,17 +35,16 @@ public class GamePlayers {
 	}
 	
 	private boolean checkPlayerNames(String name) {
-		boolean namesAreDifferent = true;
-		
+	
 		int i = 0;
-		while(namesAreDifferent && i < players.size()) {
+		while(i < players.size()) {
 			if(players.get(i).getName().equalsIgnoreCase(name))
-				namesAreDifferent = false;
+				return false;
 			
 			++i;
 		}
 		
-		return namesAreDifferent;
+		return true;
 	}
 	
 	public void drawTiles(Game game, int i) {
@@ -110,7 +109,6 @@ public class GamePlayers {
 	public JSONObject report() {
 		
 		JSONObject jo = new JSONObject();
-		
 		JSONArray players = new JSONArray();
 		
 		for(int i = 0; i < this.players.size(); ++i)

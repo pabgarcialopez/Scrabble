@@ -9,7 +9,7 @@ import gameView.GamePrinter;
 
 public class Controller {
 	
-	private static final String PROMPT = "Comando ([a]yuda) > ";
+	private static final String PROMPT = "Comando ([h]elp) > ";
 	
 	private Game game;
 	

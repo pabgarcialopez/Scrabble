@@ -41,6 +41,7 @@ public class Game {
 		
 		reset(currentTurn, numConsecutivePassedTurns, numTurnsWithoutTiles, wordsInBoard, 
 				gameFinished, players, tiles, board, usedWords);
+		
 		this.wordChecker = new WordChecker(this);
 	}
 	

@@ -5,11 +5,11 @@ import gameUtils.StringUtils;
 
 public class HelpCommand extends Command {
 
-	private static final String NAME = "ayuda";
+	private static final String NAME = "help";
 
-	private static final String DETAILS = "[a]yuda";
+	private static final String DETAILS = "[h]elp";
 
-	private static final String SHORTCUT = "a";
+	private static final String SHORTCUT = "h";
 
 	private static final String HELP = "muestra esta ayuda";
 

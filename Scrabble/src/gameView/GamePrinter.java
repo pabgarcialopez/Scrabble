@@ -14,7 +14,6 @@ public class GamePrinter {
 	private static final String TRIPLE_LETTER_SYMBOL = "▒";
 	private static final String TRIPLE_WORD_SYMBOL = "█";
 	
-	
 	private Game game;
 	public GamePrinter(Game game) {
 		this.game = game;

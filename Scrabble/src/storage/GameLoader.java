@@ -23,6 +23,7 @@ import gameContainers.GamePlayers;
 import gameContainers.GameTiles;
 import gameLogic.Game;
 import gameObjects.Player;
+import gameUtils.StringUtils;
 
 public class GameLoader {
 	
@@ -42,7 +43,16 @@ public class GameLoader {
 	
 	public static Game loadGame(Game game, String file) throws FileNotFoundException {
 		
-		return createGame(new FileInputStream(file), game);
+		try {
+			Game _game = createGame(new FileInputStream(file), game);
+			System.out.println(StringUtils.LINE_SEPARATOR + "La partida se ha cargado con exito." + StringUtils.LINE_SEPARATOR);
+			
+			return _game;
+		}
+		
+		catch(FileNotFoundException fnfe) {
+			throw new FileNotFoundException("El fichero de carga no se ha podido encontrar.");
+		}
 	}
 	
 	private static Game createGame(InputStream input, Game game) {
@@ -68,9 +78,11 @@ public class GameLoader {
 		if(game == null)
 			return new Game(currentTurn, numConsecutivePassedTurns, numTurnsWithoutTiles, wordsInBoard, gameFinished, 
 				players, tiles, board, usedWords);
+		
 		else {
 			game.reset(currentTurn, numConsecutivePassedTurns, numTurnsWithoutTiles, wordsInBoard, gameFinished, 
 					players, tiles, board, usedWords);
+			
 			return game;
 		}
 	}
@@ -84,6 +96,8 @@ public class GameLoader {
 		gameTilesBuilder = new GameTilesBuilder(tileBuilder);
 		gamePlayersBuilder = new GamePlayersBuilder(new PlayerBuilder(tileBuilder));
 		
+		System.out.println("¡Bienvenido a Scrabble!" + StringUtils.LINE_SEPARATOR);
+
 		System.out.println("Opciones de inicio:");
 		System.out.println("1. Nueva partida.");
 		System.out.println("2. Cargar partida de fichero.");
@@ -93,7 +107,7 @@ public class GameLoader {
 		while(option != 1 && option != 2) {
 			
 			try {
-				System.out.print("Selecciona opcion: ");
+				System.out.print(StringUtils.LINE_SEPARATOR + "Selecciona opcion: ");
 				option = scanner.nextInt();
 				
 				if(option != 1 && option != 2)
@@ -109,10 +123,11 @@ public class GameLoader {
 		scanner.nextLine();
 		
 		// Nueva partida
-		if(option == 1) return reset(null);
+		if(option == 1)
+			return reset(null);
 		
 		// Carga de partida
-		else  {
+		else {
 			System.out.print("Introduce el nombre de fichero a cargar: ");
 			String file = _scanner.nextLine() + ".json";
 			return loadGame(null, file);
@@ -128,7 +143,7 @@ public class GameLoader {
 		while(players.size() < numPlayers) {
 			try {
 				System.out.print("Nombre del jugador " + (players.size() + 1) + ": ");
-				players.add(new Player(_scanner.nextLine()));
+				players.add(new Player(_scanner.nextLine().trim()));
 			}
 			
 			catch(IllegalArgumentException iae) {
@@ -159,7 +174,7 @@ public class GameLoader {
 				
 			}
 			catch (InputMismatchException ime) {
-				System.out.println ("La entrada debe ser un número!");
+				System.out.println("¡La entrada debe ser un numero!");
 				System.out.print("Selecciona el numero de jugadores (2-4): ");
 				_scanner.nextLine();
 			}

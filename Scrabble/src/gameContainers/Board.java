@@ -69,9 +69,10 @@ public class Board {
 		
 		for(int i = 0; i < this.board.size(); ++i) {
 			JSONArray row = new JSONArray();
-			for(int j = 0; j < this.board.get(i).size(); ++j) {
+			
+			for(int j = 0; j < this.board.get(i).size(); ++j) 
 				row.put(this.board.get(i).get(j).report());
-			}
+			
 			board.put(row);
 		}
 		

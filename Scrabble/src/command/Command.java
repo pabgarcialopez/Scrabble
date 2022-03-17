@@ -21,24 +21,6 @@ public abstract class Command {
 	};
 	/* @formatter:on */
 
-	public static Command getCommand(String[] commandWords) throws CommandParseException {
-		
-		Command command = null;
-		
-		int i = 0;
-		
-		while (command == null && i < AVAILABLE_COMMANDS.length) {
-			command = AVAILABLE_COMMANDS[i].parse(commandWords);
-			++i;
-		}
-		
-		if (command == null) {
-			throw new CommandParseException(String.format("[ERROR]: %s%n", UNKNOWN_COMMAND_MSG));
-		}
-		
-		return command;
-	}
-
 	private final String name;
 
 	private final String shortcut;
@@ -62,14 +44,33 @@ public abstract class Command {
 
 	protected Command parse(String[] words) throws CommandParseException {
 		if (matchCommandName(words[0])) {
-			if (words.length != 1) {
+			
+			if (words.length != 1) 
 				throw new CommandParseException(String.format("[ERROR]: Comando %s: %s%n", name ,INCORRECT_NUMBER_OF_ARGS_MSG));
-			} 
-			else {
-				return this;
-			}
+			
+			else return this;
+			
 		}
+		
 		return null;
+	}
+	
+	public static Command getCommand(String[] commandWords) throws CommandParseException {
+		
+		Command command = null;
+		
+		int i = 0;
+		
+		while (command == null && i < AVAILABLE_COMMANDS.length) {
+			command = AVAILABLE_COMMANDS[i].parse(commandWords);
+			++i;
+		}
+		
+		if (command == null) {
+			throw new CommandParseException(String.format("[ERROR]: %s%n", UNKNOWN_COMMAND_MSG));
+		}
+		
+		return command;
 	}
 
 

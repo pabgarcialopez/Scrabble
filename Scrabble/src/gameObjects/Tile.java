@@ -13,12 +13,10 @@ public class Tile {
 	}
 
 	public int getPoints() {
-	
 		return this.points;
 	}
 
 	public String getLetter() {
-		
 		return letter;
 	}
 	

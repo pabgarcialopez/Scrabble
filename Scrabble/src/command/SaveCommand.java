@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import exceptions.CommandExecuteException;
 import exceptions.CommandParseException;
 import gameLogic.Game;
+import gameUtils.StringUtils;
 import storage.GameSaver;
 
 public class SaveCommand extends Command {
@@ -28,10 +29,10 @@ public class SaveCommand extends Command {
 		
 		try {
 			GameSaver.saveGame(game, this.file);
-			System.out.println("La partida ha sido guardada con éxito.");
+			System.out.println(StringUtils.LINE_SEPARATOR + "La partida ha sido guardada con exito.");
 		}
 		catch(FileNotFoundException fnfe) {
-			throw new CommandExecuteException("El fichero introducido no es válido", fnfe);
+			throw new CommandExecuteException("El fichero introducido no es valido", fnfe);
 		}
 		catch(IllegalArgumentException iae) {
 			throw new CommandExecuteException(iae.getMessage(), iae);
