@@ -28,9 +28,6 @@ public class Controller {
 		
 		boolean refreshDisplay = true;
 		
-		// Esto hay que quitarlo de aqui y ponerlo en algun otro lado.
-		printer.showFirstTurn(game.decideFirstTurn(), game.getPlayers(), game.getCurrentTurn());
-		
 		while(!game.gameIsFinished()) {
 			
 			if (refreshDisplay) {

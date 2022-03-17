@@ -10,6 +10,7 @@ import gameContainers.GamePlayers;
 import gameContainers.GameTiles;
 import gameObjects.Box;
 import gameObjects.Tile;
+import gameView.GamePrinter;
 import storage.GameLoader;
 
 public class Game {
@@ -32,31 +33,8 @@ public class Game {
 	
 	private WordChecker wordChecker;
 	
-	public Game(GamePlayers players) {
-		//this.players = players;
-		//this.tiles = new GameTiles();
-		//this.tiles.loadTiles(tilesFile);
-		//this.board = new Board(); // comun
-		//this.board.loadBoard(boxesFile); // comun
-		//this.words = new ArrayList<String>(); // comun
-		//this.loadWordList(wordsFile); // comun
-		//this.random = new Random(); // comun
-		//this.currentTurn = 0;
-		//this.usedWords = new ArrayList<String>();
-		//this.numConsecutivePassedTurns = 0;
-		//this.numTurnsWithoutTiles = -1;
-		//this.initializePlayerTiles();
-		//this.wordsInBoard = false; 
-		//this.gameFinished = false;
-	}
-
 	public Game(int currentTurn, int numConsecutivePassedTurns, int numTurnsWithoutTiles, boolean wordsInBoard,
 			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
-		
-		this.random = new Random();
-		
-		// Hace falta ver que si currentTurn es -1, entonces hay que decidir quien empieza
-		this.currentTurn = currentTurn;
 		
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
 		this.numTurnsWithoutTiles = numTurnsWithoutTiles;
@@ -66,6 +44,9 @@ public class Game {
 		this.tiles = tiles;
 		this.board = board;
 		this.usedWords = usedWords;
+		this.random = new Random();
+		this.currentTurn = currentTurn;
+		decideFirstTurn();
 		this.initializePlayerTiles();
 		this.wordChecker = new WordChecker(this);
 	}
@@ -74,10 +55,12 @@ public class Game {
 		return this.gameFinished;
 	}
 
-	public String[] decideFirstTurn() {
+	public void decideFirstTurn() {
 		
-		if(currentTurn < 0 || currentTurn > players.getNumPlayers())
-			return null;
+		if(0 <= this.currentTurn && this.currentTurn < this.players.getNumPlayers())
+			return;
+		
+		this.currentTurn = 0;
 		
 		String[] lettersObtained = new String[this.getNumPlayers()];
 		
@@ -89,7 +72,7 @@ public class Game {
 			if (lettersObtained[i].compareTo(lettersObtained[this.currentTurn]) < 0) 
 				this.currentTurn = i;
 		
-		return lettersObtained;
+		GamePrinter.showFirstTurn(lettersObtained, this.players, this.currentTurn);
 	}
 	
 	private Double getRandomDouble() {

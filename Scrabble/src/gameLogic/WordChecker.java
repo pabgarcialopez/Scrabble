@@ -177,14 +177,14 @@ public final class WordChecker {
 	private void checkWordUnionVertical(String word, int posX, int posY) throws CommandExecuteException {
 		
 		if((posX != 0 && game.getBoard().getTile(posX - 1, posY) != null) 
-				|| (posX != game.getBoardSize() - 1 && game.getBoard().getTile(posX + 1, posY) != null))
+				|| ((posX + word.length() - 1) != game.getBoardSize() - 1 && game.getBoard().getTile(posX + word.length(), posY) != null))
 			throw new CommandExecuteException("La palabra introducida debe ser la que se forma en total en el tablero");
 	}
 	
 	private void checkWordUnionHorizontal(String word, int posX, int posY) throws CommandExecuteException {
 		
 		if((posY != 0 && game.getBoard().getTile(posX, posY - 1) != null) 
-				|| (posY != game.getBoardSize() - 1 && game.getBoard().getTile(posX, posY + 1) != null))
+				|| ((posY + word.length() - 1) != game.getBoardSize() - 1 && game.getBoard().getTile(posX, posY + word.length()) != null))
 			throw new CommandExecuteException("La palabra introducida debe ser la que se forma en total en el tablero");
 	
 	}

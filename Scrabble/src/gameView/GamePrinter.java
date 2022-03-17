@@ -25,11 +25,7 @@ public class GamePrinter {
 	}
 
 	// Funcion para mostrar como ha sido la decision de quien empieza a jugar
-	public void showFirstTurn(String[] lettersObtained, GamePlayers players, int turn) {
-		
-		// 
-		if(lettersObtained == null)
-			return;
+	public static void showFirstTurn(String[] lettersObtained, GamePlayers players, int turn) {
 		
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("Eleccion de turnos:").append(StringUtils.LINE_SEPARATOR);

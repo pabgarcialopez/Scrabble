@@ -126,6 +126,8 @@ public class GameLoader {
 			}
 		}
 		
+		System.out.println();
+		
 		return new GamePlayers(players);
 	}
 	
