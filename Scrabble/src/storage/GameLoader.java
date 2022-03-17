@@ -26,7 +26,7 @@ import gameObjects.Player;
 
 public class GameLoader {
 	
-	private static final String wordsFile = "words.txt";
+	private static final String wordsFile = "words.json";
 	private static final String NEW_GAME = "new_game.json";
 
 	private static Scanner _scanner;
