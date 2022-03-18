@@ -207,8 +207,7 @@ public class Game {
 
 	public boolean writeAWord(String word, int posX, int posY, String direction) {
 		
-		usedWords.add(word);
-		Collections.sort(usedWords);
+		addUsedWord(word);
 		assignTiles(word, posX, posY, direction);
 		this.wordsInBoard = true;
 		players.givePoints(currentTurn, getPoints(word, posX, posY, direction));
@@ -249,6 +248,10 @@ public class Game {
 		this.wordChecker.checkArguments(word, posX, posY, direction);
 	}
 
+	public void addUsedWord(String word) {
+		this.usedWords.add(Collections.binarySearch(this.usedWords, word), word);
+	}
+	
 	public GamePlayers getPlayers() {
 		return this.players;
 	}
@@ -273,6 +276,9 @@ public class Game {
 		return this.usedWords;
 	}
 
+	
+	
+	
 	public Board getBoard() {
 		return this.board;
 	}
@@ -301,4 +307,6 @@ public class Game {
 		
 		return jo;
 	}
+
+	
 }

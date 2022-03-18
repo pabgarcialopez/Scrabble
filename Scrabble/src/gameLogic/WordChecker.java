@@ -37,16 +37,17 @@ public final class WordChecker {
 		if (!game.getWordsInBoard()) checkWordInCentre(word, posX, posY, direction);
 		else checkWordNextToOther(word, posX, posY, direction);
 		
+		checkNewFormedWords(word, posX, posY, direction);
 	}
 	
 	private void checkWordExists(String word) throws CommandExecuteException {
 		if(Collections.binarySearch(game.getWordsList(), word) < 0)
-			throw new CommandExecuteException("La palabra introducida no existe.");
+			throw new CommandExecuteException("La palabra " + "\"" + word.toUpperCase() + "\" introducida no existe.");
 	}
-	
+
 	private void checkWordNotUsed(String word) throws CommandExecuteException {
 		if(Collections.binarySearch(game.getUsedWords(), word) >= 0)
-			throw new CommandExecuteException("La palabra introducida ya se encuentra en el tablero.");
+			throw new CommandExecuteException("La palabra " + "\"" + word.toUpperCase() + "\" ya se encuentra en el tablero.");
 	}
 	
 	private void checkDirection(String direction) throws CommandExecuteException {
@@ -57,6 +58,10 @@ public final class WordChecker {
 	private void checkWordLength(String word) throws CommandExecuteException {
 		if (word.length() > game.getBoardSize())
 			throw new CommandExecuteException("La palabra introducida es demasiado larga para entrar en el tablero.");
+		
+		if(word.length() < 2) {
+			throw new CommandExecuteException("La palabra introducida debe tener al menos dos letras.");
+		}
 	}
 	
 	private void checkPosInRange(int posX, int posY) throws CommandExecuteException {
@@ -187,5 +192,92 @@ public final class WordChecker {
 				|| ((posY + word.length() - 1) != game.getBoardSize() - 1 && game.getBoard().getTile(posX, posY + word.length()) != null))
 			throw new CommandExecuteException("La palabra introducida debe ser la que se forma en total en el tablero");
 	
+	}
+
+	private void checkNewFormedWords(String word, int posX, int posY, String direction) throws CommandExecuteException {
+		if("V".equalsIgnoreCase(direction)) checkNewFormedWordsVertical(word, posX, posY);
+		else checkNewFormedWordsHorizontal(word, posX, posY);
+		
+	}
+	
+	private void checkNewFormedWordsVertical(String word, int posX, int posY) throws CommandExecuteException {
+		
+		for(int i = 0; i < word.length(); i++) {
+			String newWord = getWordHorizontal(String.valueOf(word.charAt(i)), posX + i, posY);
+			if(newWord != null && newWord.length() != 1) {
+				
+				try {
+					checkWordExists(newWord);
+					checkWordNotUsed(newWord);
+					game.addUsedWord(newWord);
+				}
+				catch(CommandExecuteException cee) {
+					throw new CommandExecuteException("Se forma la palabra adicional " + "\"" + newWord.toUpperCase() + "\".\n" + cee.getMessage(), cee);
+				}
+			}
+		}
+	}
+	
+	private void checkNewFormedWordsHorizontal(String word, int posX, int posY) throws CommandExecuteException {
+		for(int i = 0; i < word.length(); i++) {
+			String newWord = getWordVertical(String.valueOf(word.charAt(i)), posX, posY + i);
+			if(newWord != null && newWord.length() != 1) {
+				
+				try {
+					checkWordExists(newWord);
+					checkWordNotUsed(newWord);
+					game.addUsedWord(newWord);
+				}
+				catch(CommandExecuteException cee) {
+					throw new CommandExecuteException("Se forma la palabra adicional " + "\"" + newWord.toUpperCase() + "\".\n" + cee.getMessage(), cee);
+				}
+			}
+		}
+	}
+	
+	private String getWordVertical(String letter, int posX, int posY) {
+		
+		if(game.getBoard().getTile(posX, posY) != null)
+			return null;
+		
+		int auxPosX = posX - 1;
+		String word = letter;
+		
+		while(auxPosX > 0 && game.getBoard().getTile(auxPosX, posY) != null) {
+			word = game.getBoard().getTile(auxPosX, posY).getLetter() + word;
+			auxPosX--;
+		}
+		
+		auxPosX = posX + 1;
+		
+		while(auxPosX < game.getBoardSize() && game.getBoard().getTile(auxPosX, posY) != null) {
+			word += game.getBoard().getTile(auxPosX, posY).getLetter();
+			auxPosX++;
+		}
+		
+		return word;
+	}
+	
+	private String getWordHorizontal(String letter, int posX, int posY) {
+		
+		if(game.getBoard().getTile(posX, posY) != null)
+			return null;
+		
+		int auxPosY = posY - 1;
+		String word = letter;
+		
+		while(auxPosY > 0 && game.getBoard().getTile(posX, auxPosY) != null) {
+			word = game.getBoard().getTile(posX, auxPosY).getLetter() + word;
+			auxPosY--;
+		}
+		
+		auxPosY = posY + 1;
+		
+		while(auxPosY < game.getBoardSize() && game.getBoard().getTile(posX, auxPosY) != null) {
+			word += game.getBoard().getTile(posX, auxPosY).getLetter();
+			auxPosY++;
+		}
+		
+		return word;
 	}
 }
