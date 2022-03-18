@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import gameUtils.StringUtils;
 
-public class Player {
+public abstract class Player {
 	
 	private String name;
 	private List<Tile> tiles;
@@ -127,5 +127,9 @@ public class Player {
 		
 		return jo;
 	}
+
+	public abstract void play();
+	
+	public abstract boolean isHuman();
 
 }

@@ -37,19 +37,22 @@ public class Controller {
 			
 			refreshDisplay = false;
 			
-			System.out.print(PROMPT);
-			String s = scanner.nextLine();
+			if(game.humanIsPlaying()) {
+				System.out.print(PROMPT);
+				String s = scanner.nextLine();
 
-			String[] parameters = s.toLowerCase().trim().split(" ");
-			
-			try {
-				Command command = Command.getCommand(parameters);
-				refreshDisplay = command.execute(game);
+				String[] parameters = s.toLowerCase().trim().split(" ");
+				
+				try {
+					Command command = Command.getCommand(parameters);
+					refreshDisplay = command.execute(game);
+				}
+				
+				catch (GameException ex) {
+					System.out.println(ex.getMessage());
+				}
 			}
 			
-			catch (GameException ex) {
-				System.out.println(ex.getMessage());
-			}
 		}
 		
 		printer.showEndMessage();

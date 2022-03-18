@@ -118,4 +118,8 @@ public class GamePlayers {
 		
 		return jo;
 	}
+
+	public boolean humanIsPlaying(int currentTurn) {
+		return players.get(currentTurn).isHuman();
+	}
 }

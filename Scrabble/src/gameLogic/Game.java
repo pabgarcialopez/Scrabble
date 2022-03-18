@@ -283,6 +283,12 @@ public class Game {
 		return this.board;
 	}
 	
+	
+	public boolean humanIsPlaying() {
+		return players.humanIsPlaying(currentTurn);
+	}
+	
+	
 	public JSONObject report() {
 		
 		JSONObject jo = new JSONObject();
@@ -307,6 +313,8 @@ public class Game {
 		
 		return jo;
 	}
+
+	
 
 	
 }
