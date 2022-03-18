@@ -43,16 +43,10 @@ public class GameLoader {
 	
 	public static Game loadGame(Game game, String file) throws FileNotFoundException {
 		
-		try {
-			Game _game = createGame(new FileInputStream(file), game);
-			System.out.println(StringUtils.LINE_SEPARATOR + "La partida se ha cargado con exito." + StringUtils.LINE_SEPARATOR);
+		Game _game = createGame(new FileInputStream(file), game);
+		System.out.println(StringUtils.LINE_SEPARATOR + "La partida se ha cargado con exito." + StringUtils.LINE_SEPARATOR);
 			
-			return _game;
-		}
-		
-		catch(FileNotFoundException fnfe) {
-			throw new FileNotFoundException("El fichero de carga no se ha podido encontrar.");
-		}
+		return _game;
 	}
 	
 	private static Game createGame(InputStream input, Game game) {

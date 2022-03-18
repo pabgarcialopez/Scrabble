@@ -7,6 +7,7 @@ import org.json.JSONException;
 import exceptions.CommandExecuteException;
 import exceptions.CommandParseException;
 import gameLogic.Game;
+import gameUtils.StringUtils;
 import storage.GameLoader;
 
 public class LoadCommand extends Command {
@@ -32,10 +33,10 @@ public class LoadCommand extends Command {
 			GameLoader.loadGame(game, this.file);
 		}
 		catch(FileNotFoundException fnfe) {
-			throw new CommandExecuteException("El fichero introducido no es válido", fnfe);
+			throw new CommandExecuteException("El fichero introducido no se ha podido encontrar." + StringUtils.LINE_SEPARATOR, fnfe);
 		}
 		catch(JSONException je) {
-			throw new CommandExecuteException("El formato JSON del fichero introducido no es válido.", je);
+			throw new CommandExecuteException("El formato JSON del fichero introducido no es válido." + StringUtils.LINE_SEPARATOR, je);
 		}
 		
 		return true;
