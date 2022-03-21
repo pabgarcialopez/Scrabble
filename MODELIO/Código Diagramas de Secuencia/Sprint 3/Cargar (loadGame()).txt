@@ -1,0 +1,99 @@
+@startuml
+
+header Cargar/Guardar: loadGame() (Sprint 3)
+
+GameLoader -> GameLoader: o() loadGame(file)
+
+activate GameLoader
+
+GameLoader -> FileInputStream: c() FileInputStream(fila)
+
+activate FileInputStream
+
+return input
+
+deactivate FileInputStream
+
+GameLoader -> GameLoader: o() createGame(input)
+
+activate GameLoader
+
+GameLoader -> JSONTokener: c() JSONTokener(input)
+
+activate JSONTokener
+
+return JSONTokener
+
+GameLoader -> JSONObject: c() JSONObject(JSONTokener)
+
+activate JSONObject
+
+return json
+
+deactivate JSONObject
+
+GameLoader -> GamePlayers: o() getNumPlayers
+
+activate GamePlayers
+
+return numPlayers
+
+deactivate GamePlayers
+
+alt numPlayers == 0
+
+GameLoader -> GameLoader: o() createPlayers
+
+return players
+
+end
+
+GameLoader -> GameTilesBuilder: o() createInstance(gameTiles)
+
+activate GameTilesBuilder
+
+return tiles
+
+deactivate GameTilesBuilder
+
+GameLoader -> BoardBuilder: o() createInstance(gameBoard)
+
+activate BoardBuilder
+
+return board
+
+deactivate BoardBuilder
+
+GameLoader -> WordsBuilder: o() createInstance(usedWords)
+
+activate WordsBuilder
+
+return usedWords
+
+deactivate WordsBuilder
+
+alt game == null
+
+GameLoader -> GameLoader: c() Game(currentTurn, numConsecutivePassedTurns, numTurnsWithoutTiles, wordsInBoard,gameFinished,players, tiles, board, usedWords)
+
+activate GameLoader
+
+else
+
+GameLoader -> Game: o() reset(currentTurn, numConsecutivePassedTurns, numTurnsWithoutTiles, wordsInBoard,gameFinished,players, tiles, board, usedWords)
+
+activate Game
+
+return game
+
+deactivate Game
+
+end
+
+deactivate GameLoader
+
+GameLoader --> GameLoader: game
+
+deactivate GameLoader
+
+@enduml

@@ -1,0 +1,57 @@
+@startuml
+
+header Historia Cargar/Guardar: Box Report (Sprint 3)
+
+participant JSONObject as obj
+
+participant JSONArray as array
+
+Game -> Box: o() report
+
+activate Game
+
+activate Box
+
+Box -> obj: c() JSONObject
+
+activate obj
+
+return jo
+
+deactivate obj
+
+alt specialEffect != null
+
+Box -> obj: o() put("special_effect", special_effect)
+
+activate obj
+
+deactivate obj
+
+end
+
+alt tile != null
+
+Box -> Tile: o() report
+
+activate Tile
+
+return tileReport
+
+deactivate Tile
+
+Box -> obj: o() put("tile", tileReport)
+
+activate obj
+
+deactivate obj
+
+end
+
+Box --> Game: jo
+
+deactivate Box
+
+deactivate Game
+
+@enduml

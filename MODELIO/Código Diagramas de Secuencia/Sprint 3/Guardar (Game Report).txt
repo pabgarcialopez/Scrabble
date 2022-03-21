@@ -1,0 +1,163 @@
+@startuml
+
+header Historia Cargar/Guardar: Game Report (Sprint3)
+
+participant Game as g
+
+participant JSONObject as obj
+
+participant JSONArray as array
+
+collections list
+
+activate GameSaver
+
+GameSaver -> g: o() report
+
+activate g
+
+g -> obj: c() JSONObject
+
+activate obj
+
+return jo
+
+deactivate obj
+
+g -> obj: o() put("current_turn", currentTurn)
+
+activate obj
+
+deactivate obj
+
+g -> obj: o() put("consecutive_turns_passed", numConsecutivePassedTurns)
+
+activate obj
+
+deactivate obj
+
+g -> obj: o() put("turns_without_tiles", numTurnsWithoutTiles)
+
+activate obj
+
+deactivate obj
+
+g -> obj: o() put("words_in_board", wordsInBoard)
+
+activate obj
+
+deactivate obj
+
+g -> obj: o() put("game_finished", gameFinished)
+
+activate obj
+
+deactivate obj
+
+g -> obj: c() JSONObject
+
+activate obj
+
+deactivate obj
+
+g -> list: o() size
+
+activate list
+
+return size
+
+deactivate list
+
+loop i < size
+
+g -> list: o() size
+
+activate list
+
+return size
+
+deactivate list
+
+g -> list: o() get(i)
+
+activate list
+
+return elem
+
+deactivate elem
+
+g -> obj: o() put(elem)
+
+activate obj
+
+deactivate obj
+
+end
+
+g -> obj: c() JSONObject
+
+activate obj
+
+return usedWords
+
+deactivate obj
+
+g -> obj: o() put("words", words)
+
+activate obj
+
+deactivate obj
+
+g -> obj: o() put("used_words", usedWords)
+
+activate obj
+
+deactivate obj
+
+g -> Players: o() report
+
+activate Players
+
+return playerReport
+
+deactivate Players
+
+g -> obj: o() put("game_players", playerReport)
+
+activate obj
+
+deactivate obj
+
+g -> Tiles: o() report
+
+activate Tiles
+
+return tilesReport
+
+deactivate Tiles
+
+g -> obj: o() put("game_tiles", tilesReport)
+
+activate obj
+
+deactivate obj
+
+g -> Board: o() report
+
+activate Board
+
+return boardReport
+
+deactivate Board
+
+g -> obj: o() put("game_board", boardReport)
+
+activate obj
+
+deactivate obj
+
+GameSaver --> g: jo
+
+deactivate GameSaver
+
+@enduml
