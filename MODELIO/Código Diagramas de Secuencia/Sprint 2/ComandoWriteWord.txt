@@ -1,0 +1,67 @@
+@startuml
+
+participant Controller as con
+
+participant Command as cmm
+
+participant WriteWordCommand as wwc
+
+con -> con: o() run
+
+activate con
+
+con -> Game: o() humanIsPlaying
+
+activate Game
+
+return humanIsPlaying
+
+deactivate Game
+
+alt humaIsPlaying == true
+
+con -> Scanner: o() nextLine
+
+activate Scanner
+
+return s
+
+deactivate Scanner
+
+con -> cmm: o() getCommand(s)
+
+activate cmm
+
+return WriteWordCommand
+
+deactivate cmm
+
+con -> wwc: o() execute(game)
+
+activate wwc
+
+wwc -> Game: o() checkArguments(word, posX, posY, direction)
+
+activate Game
+
+deactivate Game
+
+wwc -> Game: o() writeAWord(word, posX, posY, direction)
+
+activate Game
+
+deactivate Game
+
+wwc -> Game: o() update
+
+activate Game
+
+deactivate Game
+
+return refreshDisplay
+
+deactivate con
+
+end
+
+@enduml
