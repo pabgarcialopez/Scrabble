@@ -18,6 +18,7 @@ import factories.EasyPlayerBuilder;
 import factories.GamePlayersBuilder;
 import factories.GameTilesBuilder;
 import factories.HardPlayerBuilder;
+import factories.HumanPlayerBuilder;
 import factories.MediumPlayerBuilder;
 import factories.PlayerBuilder;
 import factories.TileBuilder;
@@ -26,7 +27,6 @@ import gameContainers.Board;
 import gameContainers.GamePlayers;
 import gameContainers.GameTiles;
 import gameLogic.Game;
-import gameObjects.Player;
 import gameUtils.StringUtils;
 
 public class GameLoader {
@@ -134,21 +134,39 @@ public class GameLoader {
 		JSONArray players = new JSONArray();
 		
 		while(players.length() < numPlayers) {
-			try {
-				System.out.print("Nombre del jugador " + (players.length() + 1) + ": ");
-				String name = _scanner.nextLine().trim();
-				
-				
-			}
 			
-			catch(IllegalArgumentException iae) {
-				System.out.println(iae.getMessage());
+			System.out.print("Tipo del jugador " + (players.length() + 1) + " [facil, medio, dificil o humano]: ");
+			String type = takeType(_scanner.nextLine().trim());
+			
+			if(type != null) {
+				
+				JSONObject player = new JSONObject();
+				player.put("type", type);
+				player.put("total_points", 0);
+				
+				if(type.equalsIgnoreCase("human_player")) {
+					System.out.print("Nombre del jugador " + (players.length() + 1) + ": ");
+					String name = _scanner.nextLine().trim();
+					
+					if(checkPlayerNames(name, players)) {
+						player.put("name", name);
+						players.put(player);
+					}
+					else 
+						System.out.println("Ya hay un jugador con el nombre " + name);
+				}
+				else players.put(player);
 			}
+			else
+				System.out.println("El tipo introducido no es válido.");
 		}
 		
 		System.out.println();
 		
-		return new GamePlayers(players);
+		JSONObject data = new JSONObject();
+		data.put("players", players);
+		
+		return gamePlayersBuilder.createInstance(data);
 	}
 	
 	private static int selectNumPlayers() {
@@ -204,7 +222,35 @@ public class GameLoader {
 		playerBuilders.add(new EasyPlayerBuilder(tileBuilder));
 		playerBuilders.add(new MediumPlayerBuilder(tileBuilder));
 		playerBuilders.add(new HardPlayerBuilder(tileBuilder));
+		playerBuilders.add(new HumanPlayerBuilder(tileBuilder));
 		
 		gamePlayersBuilder = new GamePlayersBuilder(playerBuilders);
+	}
+	
+	private static boolean checkPlayerNames(String name, JSONArray players) {
+		
+		int i = 0;
+		while(i < players.length()) {
+			if(players.getJSONObject(i).has("name") && players.getJSONObject(i).getString("name").equalsIgnoreCase(name))
+				return false;
+			++i;
+		}
+		
+		return true;
+	}
+	
+	private static String takeType(String type) {
+		switch(type.toLowerCase()) {
+		case "facil":
+			return "easy_player";
+		case "medio":
+			return "medium_player";
+		case "dificil":
+			return "hard_player";
+		case "humano":
+			return "human_player";
+		default:
+			return null;
+		}
 	}
 }

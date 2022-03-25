@@ -4,8 +4,10 @@ import java.util.List;
 
 public class EasyPlayer extends Player {
 
+	private static int numEasyPlayers = 0;
+	
 	public EasyPlayer(String name, int totalPoints, List<Tile> tiles) {
-		super(name, totalPoints, tiles);
+		super(name + " Easy " + ++numEasyPlayers, totalPoints, tiles);
 	}
 
 	@Override

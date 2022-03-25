@@ -24,28 +24,6 @@ public class GamePlayers {
 	public GamePlayers(List<Player> players) {
 		this.players = players;
 	}
-
-	public void addPlayer(Player player) {
-		
-		// checkPlayerNames devuelve true si son diferentes los nombres.
-		if(!checkPlayerNames(player.getName()))
-			throw new IllegalArgumentException("Ya hay un jugador con el nombre " + player.getName());
-			
-		players.add(player);
-	}
-	
-	private boolean checkPlayerNames(String name) {
-	
-		int i = 0;
-		while(i < players.size()) {
-			if(players.get(i).getName().equalsIgnoreCase(name))
-				return false;
-			
-			++i;
-		}
-		
-		return true;
-	}
 	
 	public void drawTiles(Game game, int i) {
 		

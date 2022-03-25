@@ -23,7 +23,11 @@ public abstract class PlayerBuilder extends Builder<Player>{
 		
 		if(data.getString("type").equalsIgnoreCase(this._type)) {
 			
-			String name = data.getString("name");
+			String name;
+			if(data.has("name"))
+				name = data.getString("name");
+			else name = "CPU";
+			
 			int totalPoints = data.getInt("total_points");
 			List <Tile> tiles = new ArrayList<Tile>();
 			

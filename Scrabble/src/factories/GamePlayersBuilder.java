@@ -36,7 +36,7 @@ public class GamePlayersBuilder extends Builder<GamePlayers> {
 			if(playerToAdd != null)
 				players.add(playerToAdd);
 			else
-				throw new InputMismatchException("El fichero JSON no es válido");
+				throw new InputMismatchException("El JSON no es válido");
 		}
 		
 		return new GamePlayers(players);
