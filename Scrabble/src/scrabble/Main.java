@@ -8,7 +8,10 @@ public class Main {
 	public static void main(String[] args) {
 
 		try {
+			GameLoader.initBuilders();
+			
 			Scanner scanner = new Scanner(System.in);
+			
 			Controller controller = new Controller(GameLoader.initGame(scanner), scanner);
 			controller.run();
 		}

@@ -1,6 +1,7 @@
 package factories;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -11,11 +12,11 @@ import gameObjects.Player;
 
 public class GamePlayersBuilder extends Builder<GamePlayers> {
 
-	private PlayerBuilder playerBuilder;
+	private List<PlayerBuilder> playerBuilders;
 	
-	public GamePlayersBuilder(PlayerBuilder playerBuilder) {
+	public GamePlayersBuilder(List<PlayerBuilder> playerBuilders) {
 		super("gamePlayers");
-		this.playerBuilder = playerBuilder;
+		this.playerBuilders = playerBuilders;
 	}
 
 	@Override
@@ -25,8 +26,18 @@ public class GamePlayersBuilder extends Builder<GamePlayers> {
 		
 		List<Player> players = new ArrayList<Player>();
 		
-		for(int i = 0; i < jsonArrayPlayers.length(); i++)
-			players.add(playerBuilder.createTheInstance(jsonArrayPlayers.getJSONObject(i)));
+		for(int i = 0; i < jsonArrayPlayers.length(); i++) {
+			Player playerToAdd = null;
+			for(PlayerBuilder pb : this.playerBuilders) {
+				playerToAdd = pb.createTheInstance(jsonArrayPlayers.getJSONObject(i));
+				if(playerToAdd != null) break;
+			}
+			
+			if(playerToAdd != null)
+				players.add(playerToAdd);
+			else
+				throw new InputMismatchException("El fichero JSON no es válido");
+		}
 		
 		return new GamePlayers(players);
 		

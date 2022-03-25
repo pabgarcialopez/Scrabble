@@ -8,13 +8,17 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import factories.BoardBuilder;
 import factories.BoxBuilder;
+import factories.EasyPlayerBuilder;
 import factories.GamePlayersBuilder;
 import factories.GameTilesBuilder;
+import factories.HardPlayerBuilder;
+import factories.MediumPlayerBuilder;
 import factories.PlayerBuilder;
 import factories.TileBuilder;
 import factories.WordsBuilder;
@@ -85,11 +89,6 @@ public class GameLoader {
 		
 		_scanner = scanner;
 		
-		TileBuilder tileBuilder = new TileBuilder();
-		boardBuilder = new BoardBuilder(new BoxBuilder(tileBuilder));
-		gameTilesBuilder = new GameTilesBuilder(tileBuilder);
-		gamePlayersBuilder = new GamePlayersBuilder(new PlayerBuilder(tileBuilder));
-		
 		System.out.println("¡Bienvenido a Scrabble!" + StringUtils.LINE_SEPARATOR);
 
 		System.out.println("Opciones de inicio:");
@@ -132,12 +131,14 @@ public class GameLoader {
 		
 		int numPlayers = selectNumPlayers();
 		
-		List<Player> players = new ArrayList<Player>();
+		JSONArray players = new JSONArray();
 		
-		while(players.size() < numPlayers) {
+		while(players.length() < numPlayers) {
 			try {
-				System.out.print("Nombre del jugador " + (players.size() + 1) + ": ");
-				players.add(new Player(_scanner.nextLine().trim()));
+				System.out.print("Nombre del jugador " + (players.length() + 1) + ": ");
+				String name = _scanner.nextLine().trim();
+				
+				
 			}
 			
 			catch(IllegalArgumentException iae) {
@@ -189,5 +190,21 @@ public class GameLoader {
 		catch(FileNotFoundException fnfe) {
 			throw new RuntimeException("El fichero de las palabras no es válido");
 		}
+	}
+	
+	public static void initBuilders() {
+		
+		TileBuilder tileBuilder = new TileBuilder();
+		
+		boardBuilder = new BoardBuilder(new BoxBuilder(tileBuilder));
+		
+		gameTilesBuilder = new GameTilesBuilder(tileBuilder);
+		
+		List<PlayerBuilder> playerBuilders= new ArrayList<PlayerBuilder>();
+		playerBuilders.add(new EasyPlayerBuilder(tileBuilder));
+		playerBuilders.add(new MediumPlayerBuilder(tileBuilder));
+		playerBuilders.add(new HardPlayerBuilder(tileBuilder));
+		
+		gamePlayersBuilder = new GamePlayersBuilder(playerBuilders);
 	}
 }

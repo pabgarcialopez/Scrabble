@@ -1,1 +1,707 @@
-{"game_finished":false,"turns_without_tiles":-1,"used_words":{"words":["jeto","late","te","tu","zaga"]},"game_tiles":{"tiles":[{"letter":"A","points":1},{"letter":"A","points":1},{"letter":"A","points":1},{"letter":"A","points":1},{"letter":"A","points":1},{"letter":"A","points":1},{"letter":"B","points":3},{"letter":"B","points":3},{"letter":"C","points":3},{"letter":"D","points":2},{"letter":"D","points":2},{"letter":"D","points":2},{"letter":"D","points":2},{"letter":"E","points":1},{"letter":"E","points":1},{"letter":"E","points":1},{"letter":"E","points":1},{"letter":"E","points":1},{"letter":"E","points":1},{"letter":"E","points":1},{"letter":"F","points":4},{"letter":"F","points":4},{"letter":"G","points":2},{"letter":"G","points":2},{"letter":"H","points":4},{"letter":"I","points":1},{"letter":"I","points":1},{"letter":"I","points":1},{"letter":"I","points":1},{"letter":"I","points":1},{"letter":"I","points":1},{"letter":"K","points":5},{"letter":"L","points":1},{"letter":"L","points":1},{"letter":"M","points":3},{"letter":"N","points":1},{"letter":"N","points":1},{"letter":"N","points":1},{"letter":"N","points":1},{"letter":"O","points":1},{"letter":"O","points":1},{"letter":"O","points":1},{"letter":"O","points":1},{"letter":"O","points":1},{"letter":"P","points":3},{"letter":"R","points":1},{"letter":"R","points":1},{"letter":"R","points":1},{"letter":"R","points":1},{"letter":"R","points":1},{"letter":"S","points":1},{"letter":"S","points":1},{"letter":"T","points":1},{"letter":"T","points":1},{"letter":"T","points":1},{"letter":"U","points":1},{"letter":"U","points":1},{"letter":"W","points":4},{"letter":"W","points":4}]},"words_in_board":true,"consecutive_turns_passed":0,"game_board":{"board":[[{"special_effect":"TRIPLE_WORD"},{},{},{"special_effect":"DOUBLE_LETTER"},{},{},{},{"special_effect":"TRIPLE_WORD"},{},{},{},{"special_effect":"DOUBLE_LETTER"},{},{},{"special_effect":"TRIPLE_WORD"}],[{},{"special_effect":"DOUBLE_WORD"},{},{},{},{"special_effect":"TRIPLE_LETTER"},{},{},{},{"special_effect":"TRIPLE_LETTER"},{},{},{},{"special_effect":"DOUBLE_WORD"},{}],[{},{},{"special_effect":"DOUBLE_WORD"},{},{},{},{"special_effect":"DOUBLE_LETTER"},{},{"special_effect":"DOUBLE_LETTER"},{},{},{},{"special_effect":"DOUBLE_WORD"},{},{}],[{"special_effect":"DOUBLE_LETTER"},{},{},{"special_effect":"DOUBLE_WORD"},{},{},{},{"special_effect":"DOUBLE_LETTER"},{},{},{},{"special_effect":"DOUBLE_WORD"},{},{},{"special_effect":"DOUBLE_LETTER"}],[{},{},{},{},{"special_effect":"DOUBLE_WORD"},{},{},{},{},{},{"special_effect":"DOUBLE_WORD"},{},{},{},{}],[{},{"special_effect":"TRIPLE_LETTER"},{},{},{},{"special_effect":"TRIPLE_LETTER"},{},{"tile":{"letter":"L","points":1}},{},{"special_effect":"TRIPLE_LETTER"},{},{},{},{"special_effect":"TRIPLE_LETTER"},{}],[{},{},{"special_effect":"DOUBLE_LETTER"},{},{},{},{"tile":{"letter":"Z","points":10},"special_effect":"DOUBLE_LETTER"},{"tile":{"letter":"A","points":1}},{"tile":{"letter":"G","points":2},"special_effect":"DOUBLE_LETTER"},{"tile":{"letter":"A","points":1}},{},{},{"special_effect":"DOUBLE_LETTER"},{},{}],[{"special_effect":"TRIPLE_WORD"},{},{},{"special_effect":"DOUBLE_LETTER"},{},{},{},{"tile":{"letter":"T","points":1},"special_effect":"CENTRE"},{"tile":{"letter":"U","points":1}},{},{},{"special_effect":"DOUBLE_LETTER"},{},{},{"special_effect":"TRIPLE_WORD"}],[{},{},{"special_effect":"DOUBLE_LETTER"},{},{},{},{"tile":{"letter":"J","points":8},"special_effect":"DOUBLE_LETTER"},{"tile":{"letter":"E","points":1}},{"tile":{"letter":"T","points":1},"special_effect":"DOUBLE_LETTER"},{"tile":{"letter":"O","points":1}},{},{},{"special_effect":"DOUBLE_LETTER"},{},{}],[{},{"special_effect":"TRIPLE_LETTER"},{},{},{},{"special_effect":"TRIPLE_LETTER"},{},{},{},{"special_effect":"TRIPLE_LETTER"},{},{},{},{"special_effect":"TRIPLE_LETTER"},{}],[{},{},{},{},{"special_effect":"DOUBLE_WORD"},{},{},{},{},{},{"special_effect":"DOUBLE_WORD"},{},{},{},{}],[{"special_effect":"DOUBLE_LETTER"},{},{},{"special_effect":"DOUBLE_WORD"},{},{},{},{"special_effect":"DOUBLE_LETTER"},{},{},{},{"special_effect":"DOUBLE_WORD"},{},{},{"special_effect":"DOUBLE_LETTER"}],[{},{},{"special_effect":"DOUBLE_WORD"},{},{},{},{"special_effect":"DOUBLE_LETTER"},{},{"special_effect":"DOUBLE_LETTER"},{},{},{},{"special_effect":"DOUBLE_WORD"},{},{}],[{},{"special_effect":"DOUBLE_WORD"},{},{},{},{"special_effect":"TRIPLE_LETTER"},{},{},{},{"special_effect":"TRIPLE_LETTER"},{},{},{},{"special_effect":"DOUBLE_WORD"},{}],[{"special_effect":"TRIPLE_WORD"},{},{},{"special_effect":"DOUBLE_LETTER"},{},{},{},{"special_effect":"TRIPLE_WORD"},{},{},{},{"special_effect":"DOUBLE_LETTER"},{},{},{"special_effect":"TRIPLE_WORD"}]]},"current_turn":1,"game_players":{"players":[{"tiles":[{"letter":"Q","points":10},{"letter":"A","points":1},{"letter":"Y","points":4},{"letter":"I","points":1},{"letter":"I","points":1},{"letter":"T","points":1},{"letter":"O","points":1}],"total_points":4,"name":"Pedro"},{"tiles":[{"letter":"E","points":1},{"letter":"M","points":3},{"letter":"X","points":8},{"letter":"E","points":1},{"letter":"N","points":1},{"letter":"O","points":1},{"letter":"V","points":4}],"total_points":4,"name":"Pablo"},{"tiles":[{"letter":"E","points":1},{"letter":"U","points":1},{"letter":"H","points":4},{"letter":"S","points":1},{"letter":"S","points":1},{"letter":"C","points":3},{"letter":"I","points":1}],"total_points":26,"name":"Maria"},{"tiles":[{"letter":"V","points":4},{"letter":"P","points":3},{"letter":"E","points":1},{"letter":"Y","points":4},{"letter":"R","points":1},{"letter":"N","points":1},{"letter":"L","points":1}],"total_points":20,"name":"Teresa"}]}}
+{
+  "consecutive_turns_passed": 0,
+  "current_turn": 1,
+  "game_board": {
+    "board": [
+      [
+        { "special_effect": "TRIPLE_WORD" },
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "TRIPLE_WORD" },
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        { "special_effect": "TRIPLE_WORD" }
+      ],
+      [
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {},
+        {},
+        { "special_effect": "TRIPLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "TRIPLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {}
+      ],
+      [
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {}
+      ],
+      [
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" }
+      ],
+      [
+        {},
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {},
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {},
+        {},
+        {}
+      ],
+      [
+        {},
+        { "special_effect": "TRIPLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "TRIPLE_LETTER" },
+        {},
+        {
+          "tile": {
+            "letter": "L",
+            "points": 1
+          }
+        },
+        {},
+        { "special_effect": "TRIPLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "TRIPLE_LETTER" },
+        {}
+      ],
+      [
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        {},
+        {
+          "tile": {
+            "letter": "Z",
+            "points": 10
+          },
+          "special_effect": "DOUBLE_LETTER"
+        },
+        {
+          "tile": {
+            "letter": "A",
+            "points": 1
+          }
+        },
+        {
+          "tile": {
+            "letter": "G",
+            "points": 2
+          },
+          "special_effect": "DOUBLE_LETTER"
+        },
+        {
+          "tile": {
+            "letter": "A",
+            "points": 1
+          }
+        },
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {}
+      ],
+      [
+        { "special_effect": "TRIPLE_WORD" },
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        {},
+        {
+          "tile": {
+            "letter": "T",
+            "points": 1
+          },
+          "special_effect": "CENTRE"
+        },
+        {
+          "tile": {
+            "letter": "U",
+            "points": 1
+          }
+        },
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        { "special_effect": "TRIPLE_WORD" }
+      ],
+      [
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        {},
+        {
+          "tile": {
+            "letter": "J",
+            "points": 8
+          },
+          "special_effect": "DOUBLE_LETTER"
+        },
+        {
+          "tile": {
+            "letter": "E",
+            "points": 1
+          }
+        },
+        {
+          "tile": {
+            "letter": "T",
+            "points": 1
+          },
+          "special_effect": "DOUBLE_LETTER"
+        },
+        {
+          "tile": {
+            "letter": "O",
+            "points": 1
+          }
+        },
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {}
+      ],
+      [
+        {},
+        { "special_effect": "TRIPLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "TRIPLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "TRIPLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "TRIPLE_LETTER" },
+        {}
+      ],
+      [
+        {},
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {},
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {},
+        {},
+        {}
+      ],
+      [
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" }
+      ],
+      [
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {}
+      ],
+      [
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {},
+        {},
+        {},
+        { "special_effect": "TRIPLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "TRIPLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_WORD" },
+        {}
+      ],
+      [
+        { "special_effect": "TRIPLE_WORD" },
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        {},
+        { "special_effect": "TRIPLE_WORD" },
+        {},
+        {},
+        {},
+        { "special_effect": "DOUBLE_LETTER" },
+        {},
+        {},
+        { "special_effect": "TRIPLE_WORD" }
+      ]
+    ]
+  },
+  "game_finished": false,
+  "game_players": {
+    "players": [
+      {
+        "tiles": [
+          {
+            "letter": "Q",
+            "points": 10
+          },
+          {
+            "letter": "A",
+            "points": 1
+          },
+          {
+            "letter": "Y",
+            "points": 4
+          },
+          {
+            "letter": "I",
+            "points": 1
+          },
+          {
+            "letter": "I",
+            "points": 1
+          },
+          {
+            "letter": "T",
+            "points": 1
+          },
+          {
+            "letter": "O",
+            "points": 1
+          }
+        ],
+        "total_points": 4,
+        "name": "Pedro"
+      },
+      {
+        "tiles": [
+          {
+            "letter": "E",
+            "points": 1
+          },
+          {
+            "letter": "M",
+            "points": 3
+          },
+          {
+            "letter": "X",
+            "points": 8
+          },
+          {
+            "letter": "E",
+            "points": 1
+          },
+          {
+            "letter": "N",
+            "points": 1
+          },
+          {
+            "letter": "O",
+            "points": 1
+          },
+          {
+            "letter": "V",
+            "points": 4
+          }
+        ],
+        "total_points": 4,
+        "name": "Pablo"
+      },
+      {
+        "tiles": [
+          {
+            "letter": "E",
+            "points": 1
+          },
+          {
+            "letter": "U",
+            "points": 1
+          },
+          {
+            "letter": "H",
+            "points": 4
+          },
+          {
+            "letter": "S",
+            "points": 1
+          },
+          {
+            "letter": "S",
+            "points": 1
+          },
+          {
+            "letter": "C",
+            "points": 3
+          },
+          {
+            "letter": "I",
+            "points": 1
+          }
+        ],
+        "total_points": 26,
+        "name": "Maria"
+      },
+      {
+        "tiles": [
+          {
+            "letter": "V",
+            "points": 4
+          },
+          {
+            "letter": "P",
+            "points": 3
+          },
+          {
+            "letter": "E",
+            "points": 1
+          },
+          {
+            "letter": "Y",
+            "points": 4
+          },
+          {
+            "letter": "R",
+            "points": 1
+          },
+          {
+            "letter": "N",
+            "points": 1
+          },
+          {
+            "letter": "L",
+            "points": 1
+          }
+        ],
+        "total_points": 20,
+        "name": "Teresa"
+      }
+    ]
+  },
+  "game_tiles": {
+    "tiles": [
+      {
+        "letter": "A",
+        "points": 1
+      },
+      {
+        "letter": "A",
+        "points": 1
+      },
+      {
+        "letter": "A",
+        "points": 1
+      },
+      {
+        "letter": "A",
+        "points": 1
+      },
+      {
+        "letter": "A",
+        "points": 1
+      },
+      {
+        "letter": "A",
+        "points": 1
+      },
+      {
+        "letter": "B",
+        "points": 3
+      },
+      {
+        "letter": "B",
+        "points": 3
+      },
+      {
+        "letter": "C",
+        "points": 3
+      },
+      {
+        "letter": "D",
+        "points": 2
+      },
+      {
+        "letter": "D",
+        "points": 2
+      },
+      {
+        "letter": "D",
+        "points": 2
+      },
+      {
+        "letter": "D",
+        "points": 2
+      },
+      {
+        "letter": "E",
+        "points": 1
+      },
+      {
+        "letter": "E",
+        "points": 1
+      },
+      {
+        "letter": "E",
+        "points": 1
+      },
+      {
+        "letter": "E",
+        "points": 1
+      },
+      {
+        "letter": "E",
+        "points": 1
+      },
+      {
+        "letter": "E",
+        "points": 1
+      },
+      {
+        "letter": "E",
+        "points": 1
+      },
+      {
+        "letter": "F",
+        "points": 4
+      },
+      {
+        "letter": "F",
+        "points": 4
+      },
+      {
+        "letter": "G",
+        "points": 2
+      },
+      {
+        "letter": "G",
+        "points": 2
+      },
+      {
+        "letter": "H",
+        "points": 4
+      },
+      {
+        "letter": "I",
+        "points": 1
+      },
+      {
+        "letter": "I",
+        "points": 1
+      },
+      {
+        "letter": "I",
+        "points": 1
+      },
+      {
+        "letter": "I",
+        "points": 1
+      },
+      {
+        "letter": "I",
+        "points": 1
+      },
+      {
+        "letter": "I",
+        "points": 1
+      },
+      {
+        "letter": "K",
+        "points": 5
+      },
+      {
+        "letter": "L",
+        "points": 1
+      },
+      {
+        "letter": "L",
+        "points": 1
+      },
+      {
+        "letter": "M",
+        "points": 3
+      },
+      {
+        "letter": "N",
+        "points": 1
+      },
+      {
+        "letter": "N",
+        "points": 1
+      },
+      {
+        "letter": "N",
+        "points": 1
+      },
+      {
+        "letter": "N",
+        "points": 1
+      },
+      {
+        "letter": "O",
+        "points": 1
+      },
+      {
+        "letter": "O",
+        "points": 1
+      },
+      {
+        "letter": "O",
+        "points": 1
+      },
+      {
+        "letter": "O",
+        "points": 1
+      },
+      {
+        "letter": "O",
+        "points": 1
+      },
+      {
+        "letter": "P",
+        "points": 3
+      },
+      {
+        "letter": "R",
+        "points": 1
+      },
+      {
+        "letter": "R",
+        "points": 1
+      },
+      {
+        "letter": "R",
+        "points": 1
+      },
+      {
+        "letter": "R",
+        "points": 1
+      },
+      {
+        "letter": "R",
+        "points": 1
+      },
+      {
+        "letter": "S",
+        "points": 1
+      },
+      {
+        "letter": "S",
+        "points": 1
+      },
+      {
+        "letter": "T",
+        "points": 1
+      },
+      {
+        "letter": "T",
+        "points": 1
+      },
+      {
+        "letter": "T",
+        "points": 1
+      },
+      {
+        "letter": "U",
+        "points": 1
+      },
+      {
+        "letter": "U",
+        "points": 1
+      },
+      {
+        "letter": "W",
+        "points": 4
+      },
+      {
+        "letter": "W",
+        "points": 4
+      }
+    ]
+  },
+  "turns_without_tiles": -1,
+  "used_words": { "words": [ "jeto", "late", "te", "tu", "zaga" ] },
+  "words_in_board": true
+}
