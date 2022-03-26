@@ -2,6 +2,8 @@ package gameObjects;
 
 import java.util.List;
 
+import gameLogic.Game;
+
 public class HumanPlayer extends Player{
 
 	public HumanPlayer(String name, int totalPoints, List<Tile> tiles) {
@@ -9,7 +11,7 @@ public class HumanPlayer extends Player{
 	}
 
 	@Override
-	public void play() {
+	public void play(Game game) {
 		// TODO Auto-generated method stub
 		
 	}

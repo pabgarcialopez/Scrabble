@@ -100,4 +100,8 @@ public class GamePlayers {
 	public boolean humanIsPlaying(int currentTurn) {
 		return players.get(currentTurn).isHuman();
 	}
+
+	public void automaticPlay(int player, Game game) {
+		this.players.get(player).play(game);
+	}
 }

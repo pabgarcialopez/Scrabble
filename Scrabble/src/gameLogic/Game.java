@@ -249,7 +249,7 @@ public class Game {
 	}
 
 	public void addUsedWord(String word) {
-		this.usedWords.add(Collections.binarySearch(this.usedWords, word), word);
+		this.usedWords.add(-1 - Collections.binarySearch(this.usedWords, word), word);
 	}
 	
 	public GamePlayers getPlayers() {
@@ -314,7 +314,7 @@ public class Game {
 		return jo;
 	}
 
-	
-
-	
+	public void automaticPlay() {
+		this.players.automaticPlay(this.currentTurn, this);
+	}
 }

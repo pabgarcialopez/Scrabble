@@ -52,9 +52,19 @@ public class Controller {
 					System.out.println(ex.getMessage());
 				}
 			}
-			
+			else {
+				game.automaticPlay();
+				game.update();
+				refreshDisplay = true;
+				pausa();
+			}
 		}
 		
 		printer.showEndMessage();
+	}
+	
+	public void pausa() {
+		System.out.println("Pulse enter para continuar ");
+		this.scanner.nextLine();
 	}
 }

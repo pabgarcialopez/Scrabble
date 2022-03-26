@@ -2,6 +2,8 @@ package gameObjects;
 
 import java.util.List;
 
+import gameLogic.Game;
+
 public class MediumPlayer extends Player {
 	
 	private static int numMediumPlayers = 0;
@@ -11,7 +13,7 @@ public class MediumPlayer extends Player {
 	}
 
 	@Override
-	public void play() {
+	public void play(Game game) {
 		// TODO Auto-generated method stub
 		
 	}

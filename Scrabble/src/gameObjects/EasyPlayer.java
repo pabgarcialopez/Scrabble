@@ -2,6 +2,10 @@ package gameObjects;
 
 import java.util.List;
 
+import exceptions.CommandExecuteException;
+import gameLogic.Game;
+import gameUtils.Pair;
+
 public class EasyPlayer extends Player {
 
 	private static int numEasyPlayers = 0;
@@ -11,13 +15,64 @@ public class EasyPlayer extends Player {
 	}
 
 	@Override
-	public void play() {
-		// TODO Auto-generated method stub
+	public void play(Game game) {
 		
+		boolean played = false;
+		
+		if(game.getWordsInBoard()) {
+			
+			for(int tileNumber = 0; tileNumber < this.getNumTiles() && !played; ++tileNumber)
+				for(int i = 0; i < game.getBoardSize() && !played; ++i)
+					for(int j = 0; j < game.getBoardSize() && !played; ++j)
+						played = tryWritingAWord(i, j, this.getTile(tileNumber), game);
+		}
+		
+		if(!played && !game.swapTile())
+			game.passTurn();
 	}
 
 	@Override
 	public boolean isHuman() {
+		return false;
+	}
+	
+	private boolean tryWritingAWord(int posX, int posY, Tile tile, Game game) {
+		
+		Box box = game.getBoxAt(posX, posY);
+		
+		if(box.getTile() != null) {
+			
+			for(Pair<Integer, Integer> move : movingBoxes) {
+				
+				String word = "", direction;
+				
+				word += box.getTile().getLetter();
+				
+				if(move.getFirst().equals(-1) || move.getSecond().equals(-1)) {
+					word = tile.getLetter() + word;
+					posX += move.getFirst();
+					posY += move.getSecond();
+				}
+				else {
+					word += tile.getLetter();
+				}
+				
+				
+				if(move.getFirst().equals(0))
+					direction = "H";
+				else 
+					direction = "V";
+				
+				try {
+					game.checkArguments(word, posX, posY, direction);
+					game.writeAWord(word, posX, posY, direction);
+					return true;
+				}
+				catch(CommandExecuteException iae) {}
+			}
+			
+		}
+		
 		return false;
 	}
 

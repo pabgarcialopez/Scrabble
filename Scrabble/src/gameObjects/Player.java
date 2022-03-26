@@ -1,19 +1,36 @@
 package gameObjects;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import gameLogic.Game;
+import gameUtils.Pair;
 import gameUtils.StringUtils;
 
 public abstract class Player {
 	
 	private String name;
-	private List<Tile> tiles;
+	protected List<Tile> tiles;
 	private int totalPoints;
-	
+	protected static final List<Pair<Integer, Integer>> movingBoxes = 
+			Collections.unmodifiableList(
+					new ArrayList<Pair<Integer, Integer>>() {/**
+						 * 
+						 */
+						private static final long serialVersionUID = 1L;
+
+					{
+						add(new Pair<Integer, Integer>(0, -1));
+						add(new Pair<Integer, Integer>(-1, 0));
+						add(new Pair<Integer, Integer>(0, 1));
+						add(new Pair<Integer, Integer>(1, 0));
+					}}
+			);
+
 	// Constructor para cuando se carga partida
 	public Player(String name, int totalPoints, List<Tile> tiles) {
 		this.name = name;
@@ -128,7 +145,7 @@ public abstract class Player {
 		return jo;
 	}
 
-	public abstract void play();
+	public abstract void play(Game game);
 	
 	public abstract boolean isHuman();
 

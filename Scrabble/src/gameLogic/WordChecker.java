@@ -73,8 +73,7 @@ public final class WordChecker {
 		
 		Map<String, Integer> lettersNeeded = new HashMap<String, Integer>();
 		for (int i = 0; i < word.length(); ++i) {
-			String letter = "";
-			letter += word.charAt(i);
+			String letter = String.valueOf(word.charAt(i));
 			if (lettersNeeded.containsKey(letter)) lettersNeeded.put(letter, lettersNeeded.get(letter) + 1);
 			else lettersNeeded.put(letter, 1);
 		}
