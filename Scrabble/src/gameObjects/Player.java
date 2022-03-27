@@ -7,13 +7,14 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import exceptions.CommandExecuteException;
 import gameLogic.Game;
 import gameUtils.Pair;
 import gameUtils.StringUtils;
 
 public abstract class Player {
 	
-	private String name;
+	protected String name;
 	protected List<Tile> tiles;
 	private int totalPoints;
 	protected static final List<Pair<Integer, Integer>> movingBoxes = 
@@ -148,5 +149,129 @@ public abstract class Player {
 	public abstract void play(Game game);
 	
 	public abstract boolean isHuman();
-
+	
+	protected boolean tryWritingInBoardWithWords(int wordLength, List<Tile> tilesForWord, Game game) {
+		
+		if(wordLength > tilesForWord.size() + 1)
+			return false;
+		
+		boolean played = false;
+		List<Boolean> marcaje = createMarcaje(tilesForWord.size() + 1);
+		
+		for(int i = 0; i < game.getBoardSize() && !played; ++i)
+			for(int j = 0; j < game.getBoardSize() && !played; ++j) 
+				if(game.getBoard().getTile(i, j) != null) {
+					tilesForWord.add(game.getBoard().getTile(i, j));
+					played = tryWritingAWord("", wordLength, tilesForWord, marcaje, i, j, -1, game, game.getWordsInBoard());
+					tilesForWord.remove(tilesForWord.size() - 1);
+				}
+		
+		return played;
+	}
+	
+	protected boolean tryWritingInBoardWithoutWords(int wordLength, List<Tile> tilesForWord, Game game) {
+		
+		if(wordLength > tilesForWord.size())
+			return false;
+		
+		boolean played = false;
+		
+		List<Boolean> marcaje = createMarcaje(tilesForWord.size());
+		
+		played = tryWritingAWord("", wordLength, tilesForWord, marcaje, -1, -1, -1, game, game.getWordsInBoard());
+		
+		return played;
+	}
+	
+	private boolean tryWritingAWord(String word, int length, List<Tile> tiles, List<Boolean> marcaje, int posX, int posY, int posBoardTile, Game game, boolean wordsInBoard) {
+		
+		for(int i = 0; i < tiles.size(); ++i) {
+			
+			if(!marcaje.get(i)) {
+				marcaje.remove(i);
+				marcaje.add(i, Boolean.TRUE);
+				
+				if(i == tiles.size() - 1) {
+					posBoardTile = word.length();
+				}
+				
+				word += tiles.get(i).getLetter();
+				
+				boolean played = false;
+				
+				if(word.length() == length) {
+					played = tryDirectionsForWord(word, posX, posY, posBoardTile, game, wordsInBoard);
+				}
+				else {
+					played = tryWritingAWord(word, length, tiles, marcaje, posX, posY, posBoardTile, game, wordsInBoard);
+				}
+				
+				if(played) return true;
+				
+				word = word.substring(0, word.length() - 1);
+				
+				marcaje.remove(i);
+				marcaje.add(i, Boolean.FALSE);
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean tryDirectionsForWord(String word, int posX, int posY, int posBoardTile, Game game, boolean wordsInBoard) {
+		
+		if(wordsInBoard && posBoardTile == -1)
+			return false;
+		
+		if(!wordsInBoard) {
+			
+			int newPosX = 7, newPosY = 7;
+			String direction = "V";
+			
+			try {
+				game.checkArguments(word, newPosX, newPosY, "V");
+				System.out.println(String.format("El jugador %s escribe la palabra \"%s\" en la casilla (%s, %s) con dirección \"%s\".%n", this.name, word, newPosX, newPosY, direction));
+				game.writeAWord(word, newPosX, newPosY, direction);
+				return true;
+			}
+			catch(CommandExecuteException iae) {}
+		}
+		
+		else if(posBoardTile != -1){
+			
+			for(Pair<Integer, Integer> move : movingBoxes) {
+				
+				int newPosX = posX, newPosY = posY;
+				
+				String direction;
+				if(move.getFirst().equals(0)) {
+					direction = "H";
+					newPosY -= posBoardTile;
+				}
+				else {
+					direction = "V";
+					newPosX -= posBoardTile;
+				}
+				
+				try {
+					game.checkArguments(word, newPosX, newPosY, direction);
+					System.out.println(String.format("El jugador %s escribe la palabra \"%s\" en la casilla (%s, %s) con dirección \"%s\".%n", this.name, word, newPosX, newPosY, direction));
+					game.writeAWord(word, newPosX, newPosY, direction);
+					return true;
+				}
+				catch(CommandExecuteException iae) {}
+			}
+		}
+		
+		return false;
+	}
+	
+	private List<Boolean> createMarcaje(int size) {
+		
+		List<Boolean> marcaje = new ArrayList<Boolean>();
+		for(int i = 0; i < size; ++i)
+			marcaje.add(Boolean.FALSE);
+		
+		return marcaje;
+	}
 }

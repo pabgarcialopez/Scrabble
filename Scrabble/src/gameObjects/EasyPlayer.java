@@ -1,10 +1,9 @@
 package gameObjects;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import exceptions.CommandExecuteException;
 import gameLogic.Game;
-import gameUtils.Pair;
 
 public class EasyPlayer extends Player {
 
@@ -19,63 +18,25 @@ public class EasyPlayer extends Player {
 		
 		boolean played = false;
 		
-		if(game.getWordsInBoard()) {
-			
-			for(int tileNumber = 0; tileNumber < this.getNumTiles() && !played; ++tileNumber)
-				for(int i = 0; i < game.getBoardSize() && !played; ++i)
-					for(int j = 0; j < game.getBoardSize() && !played; ++j)
-						played = tryWritingAWord(i, j, this.getTile(tileNumber), game);
-		}
+		if(!game.getWordsInBoard())
+			played = tryWritingInBoardWithoutWords(2, new ArrayList<Tile>(this.tiles), game);
+		else
+			played = tryWritingInBoardWithWords(2, new ArrayList<Tile>(this.tiles), game);
 		
-		if(!played && !game.swapTile())
-			game.passTurn();
+		
+		if(!played) {
+			if(game.swapTile()) {
+				System.out.println(String.format("El jugador %s intercambia una ficha.%n", this.name));
+			}
+			else {
+				game.passTurn();
+				System.out.println(String.format("El jugador %s pasa de turno.%n", this.name));
+			}
+		}
 	}
 
 	@Override
 	public boolean isHuman() {
 		return false;
 	}
-	
-	private boolean tryWritingAWord(int posX, int posY, Tile tile, Game game) {
-		
-		Box box = game.getBoxAt(posX, posY);
-		
-		if(box.getTile() != null) {
-			
-			for(Pair<Integer, Integer> move : movingBoxes) {
-				
-				int newPosX = posX, newPosY = posY;
-				
-				String word = "", direction;
-				
-				word += box.getTile().getLetter();
-				
-				if(move.getFirst().equals(-1) || move.getSecond().equals(-1)) {
-					word = tile.getLetter() + word;
-					newPosX += move.getFirst();
-					newPosY += move.getSecond();
-				}
-				else {
-					word += tile.getLetter();
-				}
-				
-				
-				if(move.getFirst().equals(0))
-					direction = "H";
-				else 
-					direction = "V";
-				
-				try {
-					game.checkArguments(word, newPosX, newPosY, direction);
-					game.writeAWord(word, newPosX, newPosY, direction);
-					return true;
-				}
-				catch(CommandExecuteException iae) {}
-			}
-			
-		}
-		
-		return false;
-	}
-
 }

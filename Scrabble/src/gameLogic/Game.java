@@ -249,7 +249,8 @@ public class Game {
 	}
 
 	public void addUsedWord(String word) {
-		this.usedWords.add(-1 - Collections.binarySearch(this.usedWords, word), word);
+		this.usedWords.add(word);
+		Collections.sort(this.usedWords);
 	}
 	
 	public GamePlayers getPlayers() {
@@ -276,9 +277,6 @@ public class Game {
 		return this.usedWords;
 	}
 
-	
-	
-	
 	public Board getBoard() {
 		return this.board;
 	}

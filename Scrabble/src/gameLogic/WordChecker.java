@@ -180,15 +180,15 @@ public final class WordChecker {
 	
 	private void checkWordUnionVertical(String word, int posX, int posY) throws CommandExecuteException {
 		
-		if((posX != 0 && game.getBoard().getTile(posX - 1, posY) != null) 
-				|| ((posX + word.length() - 1) != game.getBoardSize() - 1 && game.getBoard().getTile(posX + word.length(), posY) != null))
+		if((posX > 0 && game.getBoard().getTile(posX - 1, posY) != null) 
+				|| ((posX + word.length() - 1) < game.getBoardSize() - 1 && game.getBoard().getTile(posX + word.length(), posY) != null))
 			throw new CommandExecuteException("La palabra introducida debe ser la que se forma en total en el tablero");
 	}
 	
 	private void checkWordUnionHorizontal(String word, int posX, int posY) throws CommandExecuteException {
 		
-		if((posY != 0 && game.getBoard().getTile(posX, posY - 1) != null) 
-				|| ((posY + word.length() - 1) != game.getBoardSize() - 1 && game.getBoard().getTile(posX, posY + word.length()) != null))
+		if((posY > 0 && game.getBoard().getTile(posX, posY - 1) != null) 
+				|| ((posY + word.length() - 1) < game.getBoardSize() - 1 && game.getBoard().getTile(posX, posY + word.length()) != null))
 			throw new CommandExecuteException("La palabra introducida debe ser la que se forma en total en el tablero");
 	
 	}
@@ -242,7 +242,7 @@ public final class WordChecker {
 		int auxPosX = posX - 1;
 		String word = letter;
 		
-		while(auxPosX > 0 && game.getBoard().getTile(auxPosX, posY) != null) {
+		while(auxPosX >= 0 && game.getBoard().getTile(auxPosX, posY) != null) {
 			word = game.getBoard().getTile(auxPosX, posY).getLetter() + word;
 			auxPosX--;
 		}
@@ -265,7 +265,7 @@ public final class WordChecker {
 		int auxPosY = posY - 1;
 		String word = letter;
 		
-		while(auxPosY > 0 && game.getBoard().getTile(posX, auxPosY) != null) {
+		while(auxPosY >= 0 && game.getBoard().getTile(posX, auxPosY) != null) {
 			word = game.getBoard().getTile(posX, auxPosY).getLetter() + word;
 			auxPosY--;
 		}
