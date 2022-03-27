@@ -44,14 +44,16 @@ public class EasyPlayer extends Player {
 			
 			for(Pair<Integer, Integer> move : movingBoxes) {
 				
+				int newPosX =  posX, newPosY = posY;
+				
 				String word = "", direction;
 				
 				word += box.getTile().getLetter();
 				
 				if(move.getFirst().equals(-1) || move.getSecond().equals(-1)) {
 					word = tile.getLetter() + word;
-					posX += move.getFirst();
-					posY += move.getSecond();
+					newPosX += move.getFirst();
+					newPosY += move.getSecond();
 				}
 				else {
 					word += tile.getLetter();
@@ -64,8 +66,8 @@ public class EasyPlayer extends Player {
 					direction = "V";
 				
 				try {
-					game.checkArguments(word, posX, posY, direction);
-					game.writeAWord(word, posX, posY, direction);
+					game.checkArguments(word, newPosX, newPosY, direction);
+					game.writeAWord(word, newPosX, newPosY, direction);
 					return true;
 				}
 				catch(CommandExecuteException iae) {}
