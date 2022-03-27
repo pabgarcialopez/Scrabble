@@ -44,7 +44,7 @@ public class EasyPlayer extends Player {
 			
 			for(Pair<Integer, Integer> move : movingBoxes) {
 				
-				int newPosX =  posX, newPosY = posY;
+				int newPosX = posX, newPosY = posY;
 				
 				String word = "", direction;
 				

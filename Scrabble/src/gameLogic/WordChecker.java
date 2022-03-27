@@ -41,12 +41,12 @@ public final class WordChecker {
 	}
 	
 	private void checkWordExists(String word) throws CommandExecuteException {
-		if(Collections.binarySearch(game.getWordsList(), word) < 0)
-			throw new CommandExecuteException("La palabra " + "\"" + word.toUpperCase() + "\" introducida no existe.");
+		if(Collections.binarySearch(game.getWordsList(), word.toLowerCase()) < 0)
+			throw new CommandExecuteException("La palabra " + "\"" + word.toUpperCase() + "\" no existe.");
 	}
 
 	private void checkWordNotUsed(String word) throws CommandExecuteException {
-		if(Collections.binarySearch(game.getUsedWords(), word) >= 0)
+		if(Collections.binarySearch(game.getUsedWords(), word.toLowerCase()) >= 0)
 			throw new CommandExecuteException("La palabra " + "\"" + word.toUpperCase() + "\" ya se encuentra en el tablero.");
 	}
 	

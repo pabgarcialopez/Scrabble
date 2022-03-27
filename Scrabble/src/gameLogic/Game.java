@@ -207,7 +207,7 @@ public class Game {
 
 	public boolean writeAWord(String word, int posX, int posY, String direction) {
 		
-		addUsedWord(word);
+		addUsedWord(word.toLowerCase());
 		assignTiles(word, posX, posY, direction);
 		this.wordsInBoard = true;
 		players.givePoints(currentTurn, getPoints(word, posX, posY, direction));
