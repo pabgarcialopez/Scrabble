@@ -46,6 +46,7 @@ public class Controller {
 				try {
 					Command command = Command.getCommand(parameters);
 					refreshDisplay = command.execute(game);
+					pausa();
 				}
 				
 				catch (GameException ex) {

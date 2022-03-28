@@ -2,15 +2,20 @@ package gameObjects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import org.json.JSONObject;
 
 import gameLogic.Game;
 
 public class EasyPlayer extends Player {
 
 	private static int numEasyPlayers = 0;
+	private Random rdm;
 	
 	public EasyPlayer(String name, int totalPoints, List<Tile> tiles) {
 		super(name + " Easy " + ++numEasyPlayers, totalPoints, tiles);
+		this.rdm = new Random();
 	}
 
 	@Override
@@ -25,7 +30,8 @@ public class EasyPlayer extends Player {
 		
 		
 		if(!played) {
-			if(game.swapTile()) {
+			int i = (int) (this.rdm.nextDouble() * 4);
+			if(i == 0 && game.swapTile()) {
 				System.out.println(String.format("El jugador %s intercambia una ficha.%n", this.name));
 			}
 			else {
@@ -38,5 +44,14 @@ public class EasyPlayer extends Player {
 	@Override
 	public boolean isHuman() {
 		return false;
+	}
+	
+	@Override
+	public JSONObject report() {
+		
+		JSONObject jo = super.report();
+		jo.put("type", "easy_player");
+		
+		return jo;
 	}
 }

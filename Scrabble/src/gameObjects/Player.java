@@ -127,6 +127,7 @@ public abstract class Player {
 	}
 
 	public void givePoints(int points) {
+		System.out.println(String.format("¡El jugador %s gana %s puntos!%n", this.name, points));
 		this.totalPoints += points;
 	}
 	
@@ -134,7 +135,6 @@ public abstract class Player {
 		
 		JSONObject jo = new JSONObject();
 		
-		jo.put("name", this.name);
 		jo.put("total_points", this.totalPoints);
 		
 		JSONArray tiles = new JSONArray();
