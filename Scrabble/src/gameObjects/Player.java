@@ -14,9 +14,8 @@ import gameUtils.StringUtils;
 
 public abstract class Player {
 	
-	protected String name;
-	protected List<Tile> tiles;
-	private int totalPoints;
+	private static final int EXTRA_POINTS = 50;
+	
 	protected static final List<Pair<Integer, Integer>> movingBoxes = 
 			Collections.unmodifiableList(
 					new ArrayList<Pair<Integer, Integer>>() {/**
@@ -31,7 +30,11 @@ public abstract class Player {
 						add(new Pair<Integer, Integer>(1, 0));
 					}}
 			);
-
+	
+	protected String name;
+	protected List<Tile> tiles;
+	private int totalPoints;
+	
 	// Constructor para cuando se carga partida
 	public Player(String name, int totalPoints, List<Tile> tiles) {
 		this.name = name;
@@ -77,8 +80,6 @@ public abstract class Player {
 		}
 		
 		buffer.append(StringUtils.LINE_SEPARATOR);
-		
-		
 		
 		return buffer.toString();
 	}
@@ -129,6 +130,11 @@ public abstract class Player {
 	public void givePoints(int points) {
 		System.out.println(String.format("¡El jugador %s gana %s puntos!%n", this.name, points));
 		this.totalPoints += points;
+	}
+	
+	public void giveExtraPoints() {
+		System.out.println(String.format("¡El jugador %s gana %s puntos extra!%n", this.name, EXTRA_POINTS));
+		this.totalPoints += EXTRA_POINTS;
 	}
 	
 	public JSONObject report() {
@@ -187,9 +193,10 @@ public abstract class Player {
 		
 		for(int i = 0; i < tiles.size(); ++i) {
 			
+			// Si la letra ya se ha usado, no entra.
 			if(!marcaje.get(i)) {
-				marcaje.remove(i);
-				marcaje.add(i, Boolean.TRUE);
+				
+				marcaje.set(i, Boolean.TRUE);
 				
 				if(i == tiles.size() - 1) {
 					posBoardTile = word.length();
@@ -199,6 +206,7 @@ public abstract class Player {
 				
 				boolean played = false;
 				
+				// Hay posible solucion
 				if(word.length() == length) {
 					played = tryDirectionsForWord(word, posX, posY, posBoardTile, game, wordsInBoard);
 				}
@@ -206,12 +214,12 @@ public abstract class Player {
 					played = tryWritingAWord(word, length, tiles, marcaje, posX, posY, posBoardTile, game, wordsInBoard);
 				}
 				
-				if(played) return true;
+				if(played) 
+					return true;
 				
 				word = word.substring(0, word.length() - 1);
 				
-				marcaje.remove(i);
-				marcaje.add(i, Boolean.FALSE);
+				marcaje.set(i, Boolean.FALSE);
 			}
 		}
 		
@@ -225,11 +233,13 @@ public abstract class Player {
 		
 		if(!wordsInBoard) {
 			
-			int newPosX = 7, newPosY = 7;
+			Pair<Integer, Integer> center = game.getBoard().getCenter();
+			
+			int newPosX = center.getFirst(), newPosY = center.getSecond();
 			String direction = "V";
 			
 			try {
-				game.checkArguments(word, newPosX, newPosY, "V");
+				game.checkArguments(word, newPosX, newPosY, direction);
 				System.out.println(String.format("El jugador %s escribe la palabra \"%s\" en la casilla (%s, %s) con dirección \"%s\".%n", this.name, word, newPosX, newPosY, direction));
 				game.writeAWord(word, newPosX, newPosY, direction);
 				return true;

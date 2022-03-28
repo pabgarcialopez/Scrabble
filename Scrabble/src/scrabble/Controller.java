@@ -65,7 +65,7 @@ public class Controller {
 	}
 	
 	public void pausa() {
-		System.out.println("Pulse enter para continuar ");
+		System.out.println("Pulse enter para continuar...");
 		this.scanner.nextLine();
 	}
 }

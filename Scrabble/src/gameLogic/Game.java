@@ -24,7 +24,6 @@ public class Game {
 	
 	private int currentTurn;
 	private int numConsecutivePassedTurns;
-	private int numTurnsWithoutTiles;
 	
 	private boolean wordsInBoard;
 	private boolean gameFinished;
@@ -36,20 +35,19 @@ public class Game {
 
 	private WordChecker wordChecker;
 	
-	public Game(int currentTurn, int numConsecutivePassedTurns, int numTurnsWithoutTiles, boolean wordsInBoard,
+	public Game(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
 			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
 		
-		reset(currentTurn, numConsecutivePassedTurns, numTurnsWithoutTiles, wordsInBoard, 
+		reset(currentTurn, numConsecutivePassedTurns, wordsInBoard, 
 				gameFinished, players, tiles, board, usedWords);
 		
 		this.wordChecker = new WordChecker(this);
 	}
 	
-	public void reset(int currentTurn, int numConsecutivePassedTurns, int numTurnsWithoutTiles, boolean wordsInBoard,
+	public void reset(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
 			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
 		
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
-		this.numTurnsWithoutTiles = numTurnsWithoutTiles;
 		this.wordsInBoard = wordsInBoard;
 		this.gameFinished = gameFinished;
 		this.players = players;
@@ -193,24 +191,24 @@ public class Game {
 	
 	public void update() {
 		
-		if (this.getRemainingTiles() == 0) 
-			++numTurnsWithoutTiles;
+		if(this.getRemainingTiles() == 0 && this.players.getNumPlayerTiles(this.currentTurn) == 0)
+			this.gameFinished = true;
 		
 		nextTurn();
 		
 		if(this.numConsecutivePassedTurns == this.getNumPlayers()*2)
-			this.gameFinished = true;
-		
-		if (this.numTurnsWithoutTiles == this.getNumPlayers())
 			this.gameFinished = true;
 	}
 
 	public boolean writeAWord(String word, int posX, int posY, String direction) {
 		
 		addUsedWord(word.toLowerCase());
+		int numPlayerTilesBefore = this.players.getNumPlayerTiles(this.currentTurn);
 		assignTiles(word, posX, posY, direction);
 		this.wordsInBoard = true;
 		players.givePoints(currentTurn, getPoints(word, posX, posY, direction));
+		if(numPlayerTilesBefore == 7 && this.players.getNumPlayerTiles(this.currentTurn) == 0)
+			players.giveExtraPoints(currentTurn);
 		players.drawTiles(this, currentTurn);
 		numConsecutivePassedTurns = 0;
 		
@@ -293,7 +291,6 @@ public class Game {
 		
 		jo.put("current_turn", this.currentTurn);
 		jo.put("consecutive_turns_passed", this.numConsecutivePassedTurns);
-		jo.put("turns_without_tiles", this.numTurnsWithoutTiles);
 		jo.put("words_in_board", this.wordsInBoard);
 		jo.put("game_finished", this.gameFinished);
 		

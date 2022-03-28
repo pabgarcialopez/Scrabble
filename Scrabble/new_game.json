@@ -4,8 +4,6 @@
 
 	"current_turn": -1,
 
-	"turns_without_tiles" : -1,
-
 	"words_in_board" : false,
 
 	"game_finished" : false,

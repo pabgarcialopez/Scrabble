@@ -59,7 +59,6 @@ public class GameLoader {
 		
 		int currentTurn = json.getInt("current_turn"); // -1 si es partida nueva
 		int numConsecutivePassedTurns = json.getInt("consecutive_turns_passed");
-		int numTurnsWithoutTiles = json.getInt("turns_without_tiles"); // -1 si es partida nueva
 		boolean wordsInBoard = json.getBoolean("words_in_board");
 		boolean gameFinished = json.getBoolean("game_finished");
 		
@@ -74,11 +73,11 @@ public class GameLoader {
 		List<String> usedWords = wordsBuilder.createInstance(json.getJSONObject("used_words"));
 		
 		if(game == null)
-			return new Game(currentTurn, numConsecutivePassedTurns, numTurnsWithoutTiles, wordsInBoard, gameFinished, 
+			return new Game(currentTurn, numConsecutivePassedTurns, wordsInBoard, gameFinished, 
 				players, tiles, board, usedWords);
 		
 		else {
-			game.reset(currentTurn, numConsecutivePassedTurns, numTurnsWithoutTiles, wordsInBoard, gameFinished, 
+			game.reset(currentTurn, numConsecutivePassedTurns, wordsInBoard, gameFinished, 
 					players, tiles, board, usedWords);
 			
 			return game;
@@ -122,7 +121,7 @@ public class GameLoader {
 		// Carga de partida
 		else {
 			System.out.print("Introduce el nombre de fichero a cargar: ");
-			String file = _scanner.nextLine() + ".json";
+			String file = "partidas/" + _scanner.nextLine().trim() + ".json";
 			return loadGame(null, file);
 		}
 	}

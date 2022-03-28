@@ -23,10 +23,12 @@ public class EasyPlayer extends Player {
 		
 		boolean played = false;
 		
+		List<Tile> tilesForWord = new ArrayList<Tile>(this.tiles);
+		
 		if(!game.getWordsInBoard())
-			played = tryWritingInBoardWithoutWords(2, new ArrayList<Tile>(this.tiles), game);
+			played = tryWritingInBoardWithoutWords(2, tilesForWord, game);
 		else
-			played = tryWritingInBoardWithWords(2, new ArrayList<Tile>(this.tiles), game);
+			played = tryWritingInBoardWithWords(2, tilesForWord, game);
 		
 		
 		if(!played) {

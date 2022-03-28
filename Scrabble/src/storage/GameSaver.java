@@ -14,7 +14,7 @@ public class GameSaver {
 		if (file.equals(GameLoader.NEW_GAME))
 			throw new IllegalArgumentException("El fichero donde guardar la partida no puede ser el fichero de reseteo.");
 		
-		OutputStream out = new FileOutputStream(file);
+		OutputStream out = new FileOutputStream("partidas/" + file);
 		
 		@SuppressWarnings("resource")
 		PrintStream p = new PrintStream(out);
