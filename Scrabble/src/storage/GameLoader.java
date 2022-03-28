@@ -32,7 +32,7 @@ import gameUtils.StringUtils;
 public class GameLoader {
 	
 	private static final String wordsFile = "words.json";
-	public static final String NEW_GAME = "new_game.json";
+	public static final String NEW_GAME = "partidas/new_game.json";
 
 	private static Scanner _scanner;
 	
