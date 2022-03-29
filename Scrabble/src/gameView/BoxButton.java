@@ -1,8 +1,10 @@
 package gameView;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -40,6 +42,8 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 		
 		setToolTipText(String.format("Casilla (%s, %s)", this.x, this.y));
 		setIcon(new ImageIcon("box_default_icon"));
+		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		this.box = new Box(null);
 		
 		addActionListener(new ActionListener() {
 			@Override

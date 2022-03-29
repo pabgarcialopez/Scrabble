@@ -25,6 +25,8 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 		this.chooseWordDialog = new ChooseWordDialog(this);
 		
 		setVisible(true);
+		
+		this.controller.addObserver(this);
 	}
 
 	@Override

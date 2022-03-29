@@ -71,7 +71,7 @@ public class ChooseWordDialog extends JDialog {
 		
 		wordOption.add(new JLabel("Word: "));
 		this.wordField = new JTextField();
-		this.wordField.setPreferredSize(new Dimension(60, 20));
+		this.wordField.setPreferredSize(new Dimension(60, 30));
 		wordOption.add(this.wordField);
 		
 		JPanel directionsOption = new JPanel();
@@ -102,7 +102,7 @@ public class ChooseWordDialog extends JDialog {
 		ok.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(wordField.getSelectedText() != null && directionsCombo.getSelectedItem() != null) status = 1;
+				if(wordField.getText() != null && directionsCombo.getSelectedItem() != null) status = 1;
 				else  {
 					status = 0;
 					JOptionPane.showMessageDialog(ChooseWordDialog.this, "Los valores escogidos no son válidos", "ERROR", JOptionPane.ERROR_MESSAGE);
