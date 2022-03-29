@@ -20,7 +20,6 @@ public class PassTurnCommand extends Command {
 	public boolean execute(Game game) {
 		
 		game.passTurn();
-		game.update();
 		
 		return true;
 	}

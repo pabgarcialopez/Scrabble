@@ -239,8 +239,6 @@ public abstract class Player {
 			String direction = "V";
 			
 			try {
-				game.checkArguments(word, newPosX, newPosY, direction);
-				System.out.println(String.format("El jugador %s escribe la palabra \"%s\" en la casilla (%s, %s) con dirección \"%s\".%n", this.name, word, newPosX, newPosY, direction));
 				game.writeAWord(word, newPosX, newPosY, direction);
 				return true;
 			}
@@ -263,9 +261,7 @@ public abstract class Player {
 					newPosX -= posBoardTile;
 				}
 				
-				try {
-					game.checkArguments(word, newPosX, newPosY, direction);
-					System.out.println(String.format("El jugador %s escribe la palabra \"%s\" en la casilla (%s, %s) con dirección \"%s\".%n", this.name, word, newPosX, newPosY, direction));
+				try{
 					game.writeAWord(word, newPosX, newPosY, direction);
 					return true;
 				}

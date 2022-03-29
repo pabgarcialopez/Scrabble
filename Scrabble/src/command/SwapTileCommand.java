@@ -22,8 +22,6 @@ public class SwapTileCommand extends Command {
 		if (!game.swapTile())
 			return false;
 		
-		game.update();
-		
 		return true;
 	}
 }

@@ -30,15 +30,13 @@ public class WriteWordCommand extends Command {
 	public boolean execute(Game game) {
 		
 		try {
-			game.checkArguments(word, posX, posY, direction);
+			game.writeAWord(word, posX, posY, direction);
 		}
 		catch (CommandExecuteException cee) {
 			System.out.println(cee.getMessage());
 			return false;
 		}
 		
-		game.writeAWord(word, posX, posY, direction);
-		game.update();
 		return true;
 	}
 	

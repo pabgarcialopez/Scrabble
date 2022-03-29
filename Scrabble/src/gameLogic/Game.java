@@ -1,5 +1,6 @@
 package gameLogic;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -15,6 +16,7 @@ import gameObjects.Box;
 import gameObjects.Tile;
 import gameUtils.StringUtils;
 import gameView.GamePrinter;
+import gameView.ScrabbleObserver;
 import storage.GameLoader;
 
 public class Game {
@@ -35,6 +37,8 @@ public class Game {
 
 	private WordChecker wordChecker;
 	
+	private List<ScrabbleObserver> observers;
+	
 	public Game(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
 			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
 		
@@ -42,6 +46,8 @@ public class Game {
 				gameFinished, players, tiles, board, usedWords);
 		
 		this.wordChecker = new WordChecker(this);
+		
+		this.observers = new ArrayList<ScrabbleObserver>();
 	}
 	
 	public void reset(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
@@ -200,23 +206,34 @@ public class Game {
 			this.gameFinished = true;
 	}
 
-	public boolean writeAWord(String word, int posX, int posY, String direction) {
+	public boolean writeAWord(String word, int posX, int posY, String direction) throws CommandExecuteException {
+		
+		this.wordChecker.checkArguments(word, posX, posY, direction);
 		
 		addUsedWord(word.toLowerCase());
+		
 		int numPlayerTilesBefore = this.players.getNumPlayerTiles(this.currentTurn);
 		assignTiles(word, posX, posY, direction);
-		this.wordsInBoard = true;
+		System.out.println(String.format("El jugador %s escribe la palabra \"%s\" en la casilla (%s, %s) con dirección \"%s\".%n", this.players.getPlayerName(this.currentTurn), word.toUpperCase(), posX, posY, direction.toUpperCase()));
+		
 		players.givePoints(currentTurn, getPoints(word, posX, posY, direction));
+		
 		if(numPlayerTilesBefore == 7 && this.players.getNumPlayerTiles(this.currentTurn) == 0)
 			players.giveExtraPoints(currentTurn);
-		players.drawTiles(this, currentTurn);
+		
+		this.wordsInBoard = true;
 		numConsecutivePassedTurns = 0;
+		
+		players.drawTiles(this, currentTurn);
+		
+		update();
 		
 		return true;
 	}
 	
 	public void passTurn() {
 		++this.numConsecutivePassedTurns;
+		update();
 	}
 	
 	public boolean swapTile() {
@@ -238,14 +255,12 @@ public class Game {
 		players.drawTiles(this, currentTurn);
 		
 		++this.numConsecutivePassedTurns;
+
+		update();
 		
 		return true;
 	}
 	
-	public void checkArguments(String word, int posX, int posY, String direction) throws CommandExecuteException {
-		this.wordChecker.checkArguments(word, posX, posY, direction);
-	}
-
 	public void addUsedWord(String word) {
 		this.usedWords.add(word);
 		Collections.sort(this.usedWords);
@@ -311,5 +326,17 @@ public class Game {
 
 	public void automaticPlay() {
 		this.players.automaticPlay(this.currentTurn, this);
+	}
+	
+	public void addObserver(ScrabbleObserver o) {
+		if(o != null && !this.observers.contains(o)) {
+			this.observers.add(o);
+			o.onRegister(this);
+		}
+	}
+	
+	public void removeObserver(ScrabbleObserver o) {
+		if(o != null && !this.observers.contains(o))
+			this.observers.remove(o);
 	}
 }
