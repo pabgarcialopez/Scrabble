@@ -18,17 +18,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class ChooseWordDialog extends JDialog {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
+	
+	private static final String[] directions = { "V", "H" };
 	
 	private Component parent;
 	
 	private DefaultComboBoxModel<String> directionsModel;
 	private JComboBox<String> directionsCombo;
-	private String[] directions = { "V", "H" };
+	
 	
 	private JTextField wordField;
 	

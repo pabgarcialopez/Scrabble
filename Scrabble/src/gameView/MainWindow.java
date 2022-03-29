@@ -9,9 +9,6 @@ import scrabble.Controller;
 
 public class MainWindow extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private Controller controller;
@@ -19,9 +16,7 @@ public class MainWindow extends JFrame {
 	MainWindow(Controller controller) {
 		
 		super("SCRABBLE");
-		
 		this.controller = controller;
-		
 		initGUI();
 	}
 	

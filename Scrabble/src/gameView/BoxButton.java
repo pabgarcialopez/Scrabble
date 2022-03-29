@@ -16,9 +16,6 @@ import scrabble.Controller;
 
 public class BoxButton extends JButton implements ScrabbleObserver {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private int x;
@@ -34,6 +31,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 		this.box = null;
 		this.chooseWordDialog = chooseWordDialog;
 		this.controller = controller;
+		
 		initGUI();
 		this.controller.addObserver(this);
 	}
@@ -53,16 +51,18 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 					if(status == 1) {
 						String word = chooseWordDialog.getSelectedWord();
 						String direction = chooseWordDialog.getSelectedDirection();
+						
 						try {
 							controller.writeAWord(word, x, y, direction);
 						}
+						
 						catch (CommandExecuteException cee) {
 							JOptionPane.showMessageDialog(BoxButton.this, cee.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				}
 			}
-		});		
+		});	
 	}
 
 	@Override
@@ -86,6 +86,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	}
 	
 	private void setImage() {
+		
 		if(box.getTile() != null)
 			this.setIcon(new ImageIcon("letters/" + box.getTile().getLetter().toUpperCase() + ".png"));
 		else if(box.getSpecialEffect() != null)

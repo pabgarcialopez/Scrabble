@@ -9,9 +9,6 @@ import scrabble.Controller;
 
 public class BoardPanel extends JPanel implements ScrabbleObserver {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private Controller controller;
@@ -40,8 +37,6 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 			for(int j = 0; j < game.getBoardSize(); ++j) {
 				this.add(new BoxButton(this.controller, i, j, this.chooseWordDialog));
 			}
-		
-		
 	}
 
 	@Override

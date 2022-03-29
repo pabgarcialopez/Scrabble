@@ -1,5 +1,6 @@
 package storage;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -120,51 +121,81 @@ public class GameLoader {
 		
 		// Carga de partida
 		else {
-			System.out.print("Introduce el nombre de fichero a cargar: ");
-			String file = "partidas/" + _scanner.nextLine().trim() + ".json";
+			
+			File dir = new File("partidas");
+			File[] files = dir.listFiles();
+			
+			if(files.length != 0) {
+				System.out.print(StringUtils.LINE_SEPARATOR);
+				System.out.print("Las partidas disponibles son:" + StringUtils.LINE_SEPARATOR);
+				
+				
+				for(File file: files) {
+					String fileName = file.getName();
+					String[] fileComponents = fileName.split("\\.");
+					System.out.println("|--> " + fileComponents[0]);
+				}
+			}
+				
+			System.out.print(StringUtils.LINE_SEPARATOR);
+			System.out.print("Introduce el nombre de la partida a cargar: ");
+			String fileWithNoExtension = _scanner.nextLine().trim();
+			String file = "partidas/" + fileWithNoExtension + ".json";
+			
+			while(!(new File(file)).exists()) {
+				System.out.print(StringUtils.LINE_SEPARATOR);
+				System.out.println("No existe una partida con el nombre " + "\"" + fileWithNoExtension + "\"");
+				
+				System.out.print("Introduce el nombre de la partida a cargar: ");
+				fileWithNoExtension = _scanner.nextLine().trim();
+				file = "partidas/" + fileWithNoExtension + ".json";
+			}
+		
+			
 			return loadGame(null, file);
 		}
 	}
 	
+		
 	private static GamePlayers createPlayers() {
+	
+	int numPlayers = selectNumPlayers();
+	
+	JSONArray players = new JSONArray();
+	
+	while(players.length() < numPlayers) {
 		
-		int numPlayers = selectNumPlayers();
+		System.out.print("Tipo del jugador " + (players.length() + 1) + " [facil, medio, dificil o humano]: ");
+		String type = takeType(_scanner.nextLine().trim());
 		
-		JSONArray players = new JSONArray();
-		
-		while(players.length() < numPlayers) {
+		if(type != null) {
 			
-			System.out.print("Tipo del jugador " + (players.length() + 1) + " [facil, medio, dificil o humano]: ");
-			String type = takeType(_scanner.nextLine().trim());
+			JSONObject player = new JSONObject();
+			player.put("type", type);
+			player.put("total_points", 0);
 			
-			if(type != null) {
+			if(type.equalsIgnoreCase("human_player")) {
+				System.out.print("Nombre del jugador " + (players.length() + 1) + ": ");
+				String name = _scanner.nextLine().trim();
 				
-				JSONObject player = new JSONObject();
-				player.put("type", type);
-				player.put("total_points", 0);
-				
-				if(type.equalsIgnoreCase("human_player")) {
-					System.out.print("Nombre del jugador " + (players.length() + 1) + ": ");
-					String name = _scanner.nextLine().trim();
-					
-					if(checkPlayerNames(name, players)) {
-						player.put("name", name);
-						players.put(player);
-					}
-					else 
-						System.out.println("Ya hay un jugador con el nombre " + name);
+				if(checkPlayerNames(name, players)) {
+					player.put("name", name);
+					players.put(player);
 				}
-				else players.put(player);
+				else 
+					System.out.println("Ya hay un jugador con el nombre " + name);
 			}
-			else
-				System.out.println("El tipo introducido no es válido.");
+			else players.put(player);
 		}
-		
+		else
+			System.out.println("El tipo introducido no es válido.");
+		}
+	
 		System.out.println();
 		
 		JSONObject data = new JSONObject();
 		data.put("players", players);
-		
+	
 		return gamePlayersBuilder.createInstance(data);
 	}
 	
