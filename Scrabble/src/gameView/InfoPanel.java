@@ -66,7 +66,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	@Override
 	public void onReset(Game game) {
 		currentTurnLabel.setText("Turno del jugador: " + this.currentTurnName);
-		infoLabel.setText("Se acaba de resetear el juego");
+		infoLabel.setText("Nueva partida iniciada");
 	}
 
 	@Override
@@ -77,6 +77,11 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	@Override
 	public void onUpdate(Game game) {
 		this.currentTurnName = game.getPlayers().getPlayerName(game.getCurrentTurn());
+		this.currentTurnLabel.setText("Turno del jugador: " + this.currentTurnName);
+		
+		this.infoLabel.setText("");
+		
+		this.pointsLabel.setText("");
 	}
 
 	@Override
