@@ -21,32 +21,34 @@ public class Controller {
 		this.game = game;
 		this.scanner = scanner;
 	}
+	
+	Controller(Game game) {
+		this.game = game;
+		this.scanner = null;
+	}
 
-	public void run() {
+	public void runConsole() {
 		
-		while(!game.gameIsFinished()) {
+		if(game.humanIsPlaying()) {
+			System.out.print(PROMPT);
+			String s = scanner.nextLine();
 
-			if(game.humanIsPlaying()) {
-				System.out.print(PROMPT);
-				String s = scanner.nextLine();
-
-				String[] parameters = s.toLowerCase().trim().split(" ");
-				
-				try {
-					Command command = Command.getCommand(parameters);
-					command.execute(game);
-					pausa();
-					game.update();
-				}
-				catch (GameException ex) {
-					System.out.println(ex.getMessage());
-				}
-			}
-			else {
-				game.automaticPlay();
+			String[] parameters = s.toLowerCase().trim().split(" ");
+			
+			try {
+				Command command = Command.getCommand(parameters);
+				command.execute(game);
 				pausa();
 				game.update();
 			}
+			catch (GameException ex) {
+				System.out.println(ex.getMessage());
+			}
+		}
+		else {
+			game.automaticPlay();
+			pausa();
+			game.update();
 		}
 	}
 	

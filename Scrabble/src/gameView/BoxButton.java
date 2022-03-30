@@ -95,4 +95,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 
 	@Override
 	public void onUpdate(Game game) {}
+
+	@Override
+	public void onEnd() {}
 }

@@ -217,6 +217,11 @@ public class Game {
 		
 		for(ScrabbleObserver o : this.observers)
 			o.onUpdate(this);
+		
+		if(gameIsFinished()) {
+			for(ScrabbleObserver o : this.observers)
+				o.onEnd();
+		}
 	}
 
 	public void addUsedWord(String word) {
@@ -354,5 +359,14 @@ public class Game {
 
 	public boolean humanIsPlaying() {
 		return players.humanIsPlaying(currentTurn);
+	}
+	
+	public void userExits() {
+		this.setGameFinished(true);
+		
+		if(gameIsFinished()) {
+			for(ScrabbleObserver o : this.observers)
+				o.onEnd();
+		}
 	}
 }

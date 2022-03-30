@@ -36,6 +36,19 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		barra = new JToolBar();
 		this.add(barra);
 		
+		JButton newGame = new JButton();
+		newGame.setActionCommand("newGame");
+		newGame.setToolTipText("Iniciar una partida nueva");
+		newGame.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+			}
+		});
+		newGame.setIcon(new ImageIcon("resources/icons/new_game.png"));
+		barra.add(newGame);
+		barra.addSeparator();
+		
 		JButton load = new JButton();
 		load.setActionCommand("load");
 		load.setToolTipText("Load a file");
@@ -170,4 +183,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 
 	@Override
 	public void onError(String error) {}
+
+	@Override
+	public void onEnd() {}
 }

@@ -15,8 +15,11 @@ public class ConsoleView implements ScrabbleObserver {
 	private static final String TRIPLE_LETTER_SYMBOL = "▒";
 	private static final String TRIPLE_WORD_SYMBOL = "█";
 	
+	private Controller controller;
+	
 	public ConsoleView(Controller controller) {
-		controller.addObserver(this);
+		this.controller = controller;
+		this.controller.addObserver(this);
 	}
 
 	public void showStatus(Game game) {
@@ -145,6 +148,7 @@ public class ConsoleView implements ScrabbleObserver {
 	public void onRegister(Game game) {
 		showBoard(game);
 		showStatus(game);
+		controller.runConsole();
 	}
 
 	@Override
@@ -158,7 +162,17 @@ public class ConsoleView implements ScrabbleObserver {
 	@Override
 	public void onUpdate(Game game) {
 		showBoard(game);
-		showStatus(game);
+		
+		if(!game.gameIsFinished()) {
+			showStatus(game);
+			controller.runConsole();
+		}
+	}
+
+	@Override
+	public void onEnd() {
+		showEndMessage();
+		System.exit(0);
 	}
 
 }

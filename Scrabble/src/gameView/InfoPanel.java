@@ -78,4 +78,10 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	public void onUpdate(Game game) {
 		this.currentTurnName = game.getPlayers().getPlayerName(game.getCurrentTurn());
 	}
+
+	@Override
+	public void onEnd() {
+		JOptionPane.showMessageDialog(this, "¡Gracias por jugar!", "Scrabble", JOptionPane.INFORMATION_MESSAGE);
+		System.exit(0);
+	}
 }

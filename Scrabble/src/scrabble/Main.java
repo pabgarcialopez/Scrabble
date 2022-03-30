@@ -16,12 +16,12 @@ public class Main {
 			
 			Controller controller = new Controller(GameLoader.initGame(scanner), scanner);
 			new ConsoleView(controller);
-			controller.run();
+			controller.runConsole();
 		}
 		
 		catch(Exception e) {
 			
 			e.printStackTrace();
-		}		
+		}
 	}
 }

@@ -17,4 +17,6 @@ public interface ScrabbleObserver {
 	void onError(String error);
 	
 	void onUpdate(Game game);
+	
+	void onEnd();
 }
