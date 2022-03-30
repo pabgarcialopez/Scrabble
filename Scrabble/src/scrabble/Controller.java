@@ -1,5 +1,6 @@
 package scrabble;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import command.Command;
@@ -8,6 +9,7 @@ import exceptions.GameException;
 import gameLogic.Game;
 import gameView.GamePrinter;
 import gameView.ScrabbleObserver;
+import storage.GameLoader;
 
 public class Controller {
 	
@@ -80,5 +82,25 @@ public class Controller {
 	
 	public void writeAWord(String word, int posX, int posY, String direction) throws CommandExecuteException {
 		this.game.writeAWord(word, posX, posY, direction);
+	}
+	
+	public void reset() throws FileNotFoundException {
+		GameLoader.reset(game);
+	}
+	
+	public void passTurn() {
+		this.game.passTurn();
+	}
+	
+	public boolean swapTile() {
+		return this.game.swapTile();
+	}
+	
+	public void update() {
+		this.game.update();
+	}
+	
+	public void loadGame(String file) throws FileNotFoundException {
+		GameLoader.loadGame(game, file);
 	}
 }

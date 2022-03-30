@@ -1,5 +1,6 @@
 package gameLogic;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -61,8 +62,7 @@ public class Game {
 		this.currentTurn = currentTurn;
 		decideFirstTurn();
 		this.initializePlayerTiles();
-		
-		// Inicializar observables aqui????
+		this.observers = new ArrayList<ScrabbleObserver>();
 	}
 
 	

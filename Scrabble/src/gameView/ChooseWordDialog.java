@@ -121,7 +121,7 @@ public class ChooseWordDialog extends JDialog {
 	public int open(int posX, int posY) {
 		
 		this.directionsModel.removeAllElements();
-		for(String x : this.directions)
+		for(String x : directions)
 			this.directionsModel.addElement(x);
 		
 		this.position.setText(String.format("(%s, %s)", posX, posY));

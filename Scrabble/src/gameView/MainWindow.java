@@ -24,8 +24,9 @@ public class MainWindow extends JFrame {
 		
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		
-		BoardPanel boardPanel = new BoardPanel(this.controller);
-		mainPanel.add(boardPanel, BorderLayout.CENTER);
+		mainPanel.add(new ControlPanel(this.controller), BorderLayout.NORTH);
+		mainPanel.add(new BoardPanel(this.controller), BorderLayout.CENTER);
+		
 		
 		setContentPane(mainPanel);
 		this.pack();
