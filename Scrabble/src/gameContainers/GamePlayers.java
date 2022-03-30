@@ -104,10 +104,4 @@ public class GamePlayers {
 	public void automaticPlay(int player, Game game) {
 		this.players.get(player).play(game);
 	}
-
-	public void giveExtraPoints(int currentTurn) {
-		
-		players.get(currentTurn).giveExtraPoints();
-		
-	}
 }

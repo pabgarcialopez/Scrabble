@@ -33,14 +33,10 @@ public class EasyPlayer extends Player {
 		
 		if(!played) {
 			int i = (int) (this.rdm.nextDouble() * 4);
-			if(i == 0 && game.swapTile()) {
-				System.out.println(String.format("El jugador %s intercambia una ficha.%n", this.name));
-			}
-			else {
+			if(i == 0 && !game.swapTile()) {
 				game.passTurn();
-				System.out.println(String.format("El jugador %s pasa de turno.%n", this.name));
 			}
-		}
+		}		
 	}
 
 	@Override

@@ -39,6 +39,9 @@ public class Game {
 	
 	private List<ScrabbleObserver> observers; // Hay que ver como y cuando se inicializa.
 	
+	private static final int EXTRA_POINTS = 50;
+	
+	
 	public Game(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
 			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
 		
@@ -72,28 +75,38 @@ public class Game {
 		this.wordChecker.checkArguments(word, posX, posY, direction);
 	}
 	
-	public boolean writeAWord(String word, int posX, int posY, String direction) throws CommandExecuteException {
+	public boolean writeAWord(String word, int posX, int posY, String direction) {
 		
-		this.wordChecker.checkArguments(word, posX, posY, direction);
+		try {
+			this.wordChecker.checkArguments(word, posX, posY, direction);
+		}
+		catch(CommandExecuteException cee) {
+			if(humanIsPlaying()) {
+				for(ScrabbleObserver o : this.observers)
+					o.onError(cee.getMessage());
+			}
+			return false;
+		}
 		
 		addUsedWord(word.toLowerCase());
 		
 		int numPlayerTilesBefore = this.players.getNumPlayerTiles(this.currentTurn);
 		assignTiles(word, posX, posY, direction);
-		System.out.println(String.format("El jugador %s escribe la palabra \"%s\" en la casilla (%s, %s) con dirección \"%s\".%n", 
-				this.players.getPlayerName(this.currentTurn), word.toUpperCase(), posX, posY, direction.toUpperCase()));
 		
-		players.givePoints(currentTurn, getPoints(word, posX, posY, direction));
+		int points = getPoints(word, posX, posY, direction), extraPoints = 0;
 		
 		if(numPlayerTilesBefore == 7 && this.players.getNumPlayerTiles(this.currentTurn) == 0)
-			players.giveExtraPoints(currentTurn);
+			extraPoints = EXTRA_POINTS;
+		
+		players.givePoints(this.currentTurn, points + extraPoints);
 		
 		this.wordsInBoard = true;
 		numConsecutivePassedTurns = 0;
 		
 		players.drawTiles(this, currentTurn);
-		
-		update();
+	
+		for(ScrabbleObserver o : this.observers)
+			o.onWordWritten(this, word, posX, posY, direction, points, extraPoints);
 		
 		return true;
 	}
@@ -120,6 +133,9 @@ public class Game {
 	
 	public void passTurn() {
 		++this.numConsecutivePassedTurns;
+		
+		for(ScrabbleObserver o : this.observers)
+			o.onPassed(this);
 	}
 	
 	private void nextTurn() {
@@ -133,7 +149,11 @@ public class Game {
 	public boolean swapTile() {
 		
 		if(tiles.getSize() <= 0) {
-			System.out.println("No hay fichas para robar.");
+			if(humanIsPlaying()) {
+				for(ScrabbleObserver o : this.observers)
+					o.onError("No hay fichas para robar.");
+			}
+			
 			return false;
 		}
 		
@@ -149,6 +169,9 @@ public class Game {
 		players.drawTiles(this, currentTurn);
 		
 		++this.numConsecutivePassedTurns;
+		
+		for(ScrabbleObserver o : this.observers)
+			o.onSwapped(this);
 		
 		return true;
 	}
@@ -191,6 +214,9 @@ public class Game {
 			setGameFinished(true);
 		
 		nextTurn();
+		
+		for(ScrabbleObserver o : this.observers)
+			o.onUpdate(this);
 	}
 
 	public void addUsedWord(String word) {

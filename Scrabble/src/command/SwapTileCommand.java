@@ -19,9 +19,6 @@ public class SwapTileCommand extends Command {
 	@Override
 	public boolean execute(Game game) {
 		
-		if (!game.swapTile())
-			return false;
-		
-		return true;
+		return game.swapTile();
 	}
 }

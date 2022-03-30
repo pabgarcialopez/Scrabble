@@ -32,14 +32,8 @@ public class HardPlayer extends Player{
 		}
 		
 		
-		if(!played) {
-			if(game.swapTile()) {
-				System.out.println(String.format("El jugador %s intercambia una ficha.%n", this.name));
-			}
-			else {
-				game.passTurn();
-				System.out.println(String.format("El jugador %s pasa de turno.%n", this.name));
-			}
+		if(!played && !game.swapTile()) {
+			game.passTurn();
 		}
 	}
 

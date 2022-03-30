@@ -1,6 +1,5 @@
 package command;
 
-import exceptions.CommandExecuteException;
 import exceptions.CommandParseException;
 import gameLogic.Game;
 
@@ -28,16 +27,7 @@ public class WriteWordCommand extends Command {
 	
 	@Override
 	public boolean execute(Game game) {
-		
-		try {
-			game.writeAWord(word, posX, posY, direction);
-		}
-		catch (CommandExecuteException cee) {
-			System.out.println(cee.getMessage());
-			return false;
-		}
-		
-		return true;
+		return game.writeAWord(word, posX, posY, direction);
 	}
 	
 	@Override

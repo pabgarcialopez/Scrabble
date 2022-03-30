@@ -27,7 +27,7 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onWordWritten(Game game) {}
+	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points, int extraPoints) {}
 
 	@Override
 	public void onRegister(Game game) {
@@ -48,5 +48,17 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 				this.add(new BoxButton(this.controller, i, j, this.chooseWordDialog));
 			}
 	}
+
+	@Override
+	public void onPassed(Game game) {}
+
+	@Override
+	public void onSwapped(Game game) {}
+
+	@Override
+	public void onError(String error) {}
+
+	@Override
+	public void onUpdate(Game game) {}
 	
 }

@@ -5,8 +5,9 @@ import gameLogic.Game;
 import gameObjects.Box;
 import gameObjects.SpecialEffects;
 import gameUtils.StringUtils;
+import scrabble.Controller;
 
-public class GamePrinter {
+public class GamePrinter implements ScrabbleObserver {
 	
 	private static final String CENTRE_SYMBOL = "*";
 	private static final String DOUBLE_LETTER_SYMBOL = "•";
@@ -14,13 +15,12 @@ public class GamePrinter {
 	private static final String TRIPLE_LETTER_SYMBOL = "▒";
 	private static final String TRIPLE_WORD_SYMBOL = "█";
 	
-	private Game game;
-	public GamePrinter(Game game) {
-		this.game = game;
+	public GamePrinter(Controller controller) {
+		controller.addObserver(this);
 	}
 
-	public void showStatus() {
-		System.out.println(this.game.getStatus());
+	public void showStatus(Game game) {
+		System.out.println(game.getStatus());
 	}
 
 	// Funcion para mostrar como ha sido la decision de quien empieza a jugar
@@ -47,7 +47,7 @@ public class GamePrinter {
 		System.out.println(buffer);
 	}
 
-	public void showBoard() {
+	public void showBoard(Game game) {
 		
 		System.out.print("   "); // Espacio de indentacion
 		// Imprimimos linea de coordenadas del lado superior
@@ -116,6 +116,49 @@ public class GamePrinter {
 
 	public void showEndMessage() {
 		System.out.println("Gracias por jugar!");
+	}
+
+	@Override
+	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points,
+			int extraPoints) {
+		System.out.println(String.format(
+				"El jugador %s escribe la palabra \"%s\" en la posicion (%s, %s) en dirección \"%s\".%n",
+				game.getPlayers().getPlayerName(game.getCurrentTurn()), word.toUpperCase(), posX, posY, direction.toUpperCase()));
+		System.out.print(String.format("¡Gana %s puntos!", points));
+		if(extraPoints != 0)
+			System.out.println(String.format(" Además, ¡gana %s puntos extra!%n", extraPoints));
+		else
+			System.out.println(StringUtils.LINE_SEPARATOR);
+	}
+
+	@Override
+	public void onPassed(Game game) {
+		System.out.println(String.format("El jugador %s pasa de turno.", game.getPlayers().getPlayerName(game.getCurrentTurn())));
+	}
+
+	@Override
+	public void onSwapped(Game game) {
+		System.out.println(String.format("El jugador %s intercambia una ficha.", game.getPlayers().getPlayerName(game.getCurrentTurn())));
+	}
+
+	@Override
+	public void onRegister(Game game) {
+		showBoard(game);
+		showStatus(game);
+	}
+
+	@Override
+	public void onReset(Game game) {}
+
+	@Override
+	public void onError(String error) {
+		System.out.println(error);
+	}
+
+	@Override
+	public void onUpdate(Game game) {
+		showBoard(game);
+		showStatus(game);
 	}
 
 }

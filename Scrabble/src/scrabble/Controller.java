@@ -4,10 +4,8 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import command.Command;
-import exceptions.CommandExecuteException;
 import exceptions.GameException;
 import gameLogic.Game;
-import gameView.GamePrinter;
 import gameView.ScrabbleObserver;
 import storage.GameLoader;
 
@@ -19,28 +17,15 @@ public class Controller {
 	
 	private Scanner scanner;
 	
-	private GamePrinter printer;
-	
 	Controller(Game game, Scanner scanner) throws Exception {
-	
 		this.game = game;
 		this.scanner = scanner;
-		this.printer = new GamePrinter(this.game);
 	}
 
 	public void run() {
 		
-		boolean refreshDisplay = true;
-		
 		while(!game.gameIsFinished()) {
-			
-			if (refreshDisplay) {
-				printer.showBoard();
-				printer.showStatus();
-			}
-			
-			refreshDisplay = false;
-			
+
 			if(game.humanIsPlaying()) {
 				System.out.print(PROMPT);
 				String s = scanner.nextLine();
@@ -49,22 +34,20 @@ public class Controller {
 				
 				try {
 					Command command = Command.getCommand(parameters);
-					refreshDisplay = command.execute(game);
+					command.execute(game);
 					pausa();
+					game.update();
 				}
-				
 				catch (GameException ex) {
 					System.out.println(ex.getMessage());
 				}
 			}
 			else {
 				game.automaticPlay();
-				refreshDisplay = true;
 				pausa();
+				game.update();
 			}
 		}
-		
-		printer.showEndMessage();
 	}
 	
 	public void pausa() {
@@ -80,7 +63,7 @@ public class Controller {
 		this.game.removeObserver(o);
 	}
 	
-	public void writeAWord(String word, int posX, int posY, String direction) throws CommandExecuteException {
+	public void writeAWord(String word, int posX, int posY, String direction) {
 		this.game.writeAWord(word, posX, posY, direction);
 	}
 	
@@ -92,8 +75,8 @@ public class Controller {
 		this.game.passTurn();
 	}
 	
-	public boolean swapTile() {
-		return this.game.swapTile();
+	public void swapTile() {
+		this.game.swapTile();
 	}
 	
 	public void update() {

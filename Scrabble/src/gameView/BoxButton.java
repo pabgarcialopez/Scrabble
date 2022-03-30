@@ -7,9 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 
-import exceptions.CommandExecuteException;
 import gameLogic.Game;
 import gameObjects.Box;
 import scrabble.Controller;
@@ -51,14 +49,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 					if(status == 1) {
 						String word = chooseWordDialog.getSelectedWord();
 						String direction = chooseWordDialog.getSelectedDirection();
-						
-						try {
-							controller.writeAWord(word, x, y, direction);
-						}
-						
-						catch (CommandExecuteException cee) {
-							JOptionPane.showMessageDialog(BoxButton.this, cee.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-						}
+						controller.writeAWord(word, x, y, direction);
 					}
 				}
 			}
@@ -66,7 +57,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onWordWritten(Game game) {
+	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points, int extraPoints) {
 		if(this.box != game.getBoxAt(this.x, this.y)) {
 			this.box = game.getBoxAt(this.x, this.y);
 			setImage();
@@ -92,4 +83,16 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 		else if(box.getSpecialEffect() != null)
 			this.setIcon(new ImageIcon("special_effects/" + box.getSpecialEffect() + ".png"));
 	}
+
+	@Override
+	public void onPassed(Game game) {}
+
+	@Override
+	public void onSwapped(Game game) {}
+
+	@Override
+	public void onError(String error) {}
+
+	@Override
+	public void onUpdate(Game game) {}
 }

@@ -12,9 +12,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
+import gameLogic.Game;
 import scrabble.Controller;
 
-public class ControlPanel extends JPanel {
+public class ControlPanel extends JPanel implements ScrabbleObserver {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -47,7 +48,7 @@ public class ControlPanel extends JPanel {
 					try {
 						controller.loadGame(fc.getSelectedFile().getAbsolutePath());
 					} catch (Exception exc) {
-						error("El fichero seleccionado no es válido");
+						JOptionPane.showMessageDialog(ControlPanel.this, "El fichero seleccionado no es válido", "ERROR", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -66,7 +67,7 @@ public class ControlPanel extends JPanel {
 					controller.reset();
 				}
 				catch (FileNotFoundException fnfe) {
-					error("El fichero de reseteo no es válido");
+					JOptionPane.showMessageDialog(ControlPanel.this, "El fichero de reseteo no es válido", "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -95,8 +96,7 @@ public class ControlPanel extends JPanel {
 		swap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!controller.swapTile())
-					error("No quedan fichas para robar");
+				controller.swapTile();
 			}
 		});
 		swap.setIcon(new ImageIcon("resources/icons/swap.png"));
@@ -135,7 +135,39 @@ public class ControlPanel extends JPanel {
 		barra.add(exit);	
 	}
 	
-	private void error(String message) {
-		JOptionPane.showMessageDialog(ControlPanel.this, message, "ERROR", JOptionPane.ERROR_MESSAGE);
+	@Override
+	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points, int extraPoints) {
+		// TODO Auto-generated method stub
+		
 	}
+
+	@Override
+	public void onPassed(Game game) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSwapped(Game game) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRegister(Game game) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onReset(Game game) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onUpdate(Game game) {}
+
+	@Override
+	public void onError(String error) {}
 }

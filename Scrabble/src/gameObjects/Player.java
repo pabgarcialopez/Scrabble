@@ -7,14 +7,11 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import exceptions.CommandExecuteException;
 import gameLogic.Game;
 import gameUtils.Pair;
 import gameUtils.StringUtils;
 
 public abstract class Player {
-	
-	private static final int EXTRA_POINTS = 50;
 	
 	protected static final List<Pair<Integer, Integer>> movingBoxes = 
 			Collections.unmodifiableList(
@@ -128,13 +125,7 @@ public abstract class Player {
 	}
 
 	public void givePoints(int points) {
-		System.out.println(String.format("¡El jugador %s gana %s puntos!%n", this.name, points));
 		this.totalPoints += points;
-	}
-	
-	public void giveExtraPoints() {
-		System.out.println(String.format("¡El jugador %s gana %s puntos extra!%n", this.name, EXTRA_POINTS));
-		this.totalPoints += EXTRA_POINTS;
 	}
 	
 	public JSONObject report() {
@@ -238,11 +229,8 @@ public abstract class Player {
 			int newPosX = center.getFirst(), newPosY = center.getSecond();
 			String direction = "V";
 			
-			try {
-				game.writeAWord(word, newPosX, newPosY, direction);
+			if(game.writeAWord(word, newPosX, newPosY, direction))
 				return true;
-			}
-			catch(CommandExecuteException iae) {}
 		}
 		
 		else if(posBoardTile != -1){
@@ -261,11 +249,8 @@ public abstract class Player {
 					newPosX -= posBoardTile;
 				}
 				
-				try{
-					game.writeAWord(word, newPosX, newPosY, direction);
+				if(game.writeAWord(word, newPosX, newPosY, direction))
 					return true;
-				}
-				catch(CommandExecuteException iae) {}
 			}
 		}
 		
