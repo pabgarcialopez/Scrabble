@@ -7,7 +7,7 @@ import gameObjects.SpecialEffects;
 import gameUtils.StringUtils;
 import scrabble.Controller;
 
-public class GamePrinter implements ScrabbleObserver {
+public class ConsoleView implements ScrabbleObserver {
 	
 	private static final String CENTRE_SYMBOL = "*";
 	private static final String DOUBLE_LETTER_SYMBOL = "•";
@@ -15,7 +15,7 @@ public class GamePrinter implements ScrabbleObserver {
 	private static final String TRIPLE_LETTER_SYMBOL = "▒";
 	private static final String TRIPLE_WORD_SYMBOL = "█";
 	
-	public GamePrinter(Controller controller) {
+	public ConsoleView(Controller controller) {
 		controller.addObserver(this);
 	}
 

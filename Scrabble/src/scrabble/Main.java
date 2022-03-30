@@ -2,7 +2,7 @@ package scrabble;
 
 import java.util.Scanner;
 
-import gameView.GamePrinter;
+import gameView.ConsoleView;
 import storage.GameLoader;
 
 public class Main {
@@ -15,7 +15,7 @@ public class Main {
 			Scanner scanner = new Scanner(System.in);
 			
 			Controller controller = new Controller(GameLoader.initGame(scanner), scanner);
-			new GamePrinter(controller);
+			new ConsoleView(controller);
 			controller.run();
 		}
 		

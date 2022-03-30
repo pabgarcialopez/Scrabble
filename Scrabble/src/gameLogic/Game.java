@@ -16,7 +16,7 @@ import gameObjects.Box;
 import gameObjects.Tile;
 import gameUtils.StringUtils;
 import gameView.ScrabbleObserver;
-import gameView.GamePrinter;
+import gameView.ConsoleView;
 import storage.GameLoader;
 
 public class Game {
@@ -128,7 +128,7 @@ public class Game {
 			if (lettersObtained[i].compareTo(lettersObtained[this.currentTurn]) < 0) 
 				this.currentTurn = i;
 		
-		GamePrinter.showFirstTurn(lettersObtained, this.players, this.currentTurn);
+		ConsoleView.showFirstTurn(lettersObtained, this.players, this.currentTurn);
 	}
 	
 	public void passTurn() {
