@@ -1,7 +1,7 @@
 package command;
 
-import gameLogic.Game;
 import gameUtils.StringUtils;
+import scrabble.Controller;
 
 public class HelpCommand extends Command {
 
@@ -18,7 +18,7 @@ public class HelpCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(Game game) {
+	public boolean execute(Controller controller) {
 		
 		StringBuilder buffer = new StringBuilder("Comandos disponibles:").append(StringUtils.LINE_SEPARATOR);
 		
@@ -30,6 +30,6 @@ public class HelpCommand extends Command {
 
 		System.out.print(buffer.toString());
 		
-		return false;
+		return true;
 	}
 }

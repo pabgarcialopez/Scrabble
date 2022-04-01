@@ -1,11 +1,13 @@
 package gameLogic;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import exceptions.CommandExecuteException;
@@ -16,10 +18,11 @@ import gameObjects.Box;
 import gameObjects.Tile;
 import gameUtils.StringUtils;
 import gameView.ScrabbleObserver;
-import gameView.ConsoleView;
 import storage.GameLoader;
 
 public class Game {
+	
+	private boolean gameInitiated;
 	
 	private GamePlayers players;
 	private Random random;
@@ -33,7 +36,7 @@ public class Game {
 	private GameTiles tiles;
 	private Board board;
 	private List<String> usedWords;
-	private static List<String> words = GameLoader.loadWordList();
+	private static List<String> words;
 
 	private WordChecker wordChecker;
 	
@@ -41,19 +44,26 @@ public class Game {
 	
 	private static final int EXTRA_POINTS = 50;
 	
+	public Game() {
+		this.gameInitiated = false;
+		this.observers = new ArrayList<ScrabbleObserver>();
+		this.wordChecker = new WordChecker(this);
+	}
 	
 	public Game(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
 			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
 		
+		this.observers = new ArrayList<ScrabbleObserver>();
+		this.wordChecker = new WordChecker(this);
+		
 		reset(currentTurn, numConsecutivePassedTurns, wordsInBoard, 
 				gameFinished, players, tiles, board, usedWords);
-		
-		this.wordChecker = new WordChecker(this);
 	}
 	
 	public void reset(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
 			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
 		
+		this.gameInitiated = true;
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
 		this.wordsInBoard = wordsInBoard;
 		this.gameFinished = gameFinished;
@@ -63,9 +73,17 @@ public class Game {
 		this.usedWords = usedWords;
 		this.random = new Random();
 		this.currentTurn = currentTurn;
-		decideFirstTurn();
-		this.initializePlayerTiles();
-		this.observers = new ArrayList<ScrabbleObserver>();
+		
+		if(players.getNumPlayers() != 0) {
+			addPlayers(players);
+		}
+		else {
+			for(ScrabbleObserver o : this.observers)
+				o.onPlayersNotAdded(this);
+		}
+		
+		for(ScrabbleObserver o : this.observers)
+			o.onReset(this);
 	}
 
 	
@@ -108,6 +126,8 @@ public class Game {
 		for(ScrabbleObserver o : this.observers)
 			o.onWordWritten(this, word, posX, posY, direction, points, extraPoints);
 		
+		nextTurn();
+		
 		return true;
 	}
 	
@@ -128,7 +148,8 @@ public class Game {
 			if (lettersObtained[i].compareTo(lettersObtained[this.currentTurn]) < 0) 
 				this.currentTurn = i;
 		
-		ConsoleView.showFirstTurn(lettersObtained, this.players, this.currentTurn);
+		for(ScrabbleObserver o : this.observers)
+			o.onFirstTurnDecided(this, lettersObtained);
 	}
 	
 	public void passTurn() {
@@ -136,6 +157,8 @@ public class Game {
 		
 		for(ScrabbleObserver o : this.observers)
 			o.onPassed(this);
+		
+		nextTurn();
 	}
 	
 	private void nextTurn() {
@@ -172,6 +195,8 @@ public class Game {
 		
 		for(ScrabbleObserver o : this.observers)
 			o.onSwapped(this);
+		
+		nextTurn();
 		
 		return true;
 	}
@@ -212,8 +237,6 @@ public class Game {
 		
 		if(this.numConsecutivePassedTurns == this.getNumPlayers()*2)
 			setGameFinished(true);
-		
-		nextTurn();
 		
 		for(ScrabbleObserver o : this.observers)
 			o.onUpdate(this);
@@ -368,5 +391,19 @@ public class Game {
 			for(ScrabbleObserver o : this.observers)
 				o.onEnd();
 		}
+	}
+
+	public void addPlayers(GamePlayers players) {
+		this.players = players;
+		this.initializePlayerTiles();
+		decideFirstTurn();	
+	}
+
+	public boolean getGameInitiated() {
+		return this.gameInitiated;
+	}
+	
+	public static void initWordList() throws JSONException, FileNotFoundException {
+		words = GameLoader.loadWordList();
 	}
 }

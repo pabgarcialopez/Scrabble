@@ -19,4 +19,8 @@ public interface ScrabbleObserver {
 	void onUpdate(Game game);
 	
 	void onEnd();
+	
+	void onFirstTurnDecided(Game game, String[] lettersObtained);
+	
+	void onPlayersNotAdded(Game game);
 }

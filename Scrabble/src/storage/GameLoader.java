@@ -1,15 +1,12 @@
 package storage;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Scanner;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -28,14 +25,11 @@ import gameContainers.Board;
 import gameContainers.GamePlayers;
 import gameContainers.GameTiles;
 import gameLogic.Game;
-import gameUtils.StringUtils;
 
 public class GameLoader {
 	
 	private static final String wordsFile = "words.json";
 	public static final String NEW_GAME = "partidas/new_game.json";
-
-	private static Scanner _scanner;
 	
 	private static BoardBuilder boardBuilder;
 	private static GameTilesBuilder gameTilesBuilder;
@@ -49,8 +43,7 @@ public class GameLoader {
 	public static Game loadGame(Game game, String file) throws FileNotFoundException {
 		
 		Game _game = createGame(new FileInputStream(file), game);
-		System.out.println(StringUtils.LINE_SEPARATOR + "La partida se ha cargado con exito." + StringUtils.LINE_SEPARATOR);
-			
+		
 		return _game;
 	}
 	
@@ -64,9 +57,6 @@ public class GameLoader {
 		boolean gameFinished = json.getBoolean("game_finished");
 		
 		GamePlayers players = gamePlayersBuilder.createInstance(json.getJSONObject("game_players"));
-		
-		if(players.getNumPlayers() == 0)
-			players = createPlayers();
 		
 		GameTiles tiles = gameTilesBuilder.createInstance(json.getJSONObject("game_tiles"));
 		Board board = boardBuilder.createInstance(json.getJSONObject("game_board"));
@@ -84,160 +74,15 @@ public class GameLoader {
 			return game;
 		}
 	}
-	
-	public static Game initGame(Scanner scanner) throws FileNotFoundException {
 		
-		_scanner = scanner;
-		
-		System.out.println("¡Bienvenido a Scrabble!" + StringUtils.LINE_SEPARATOR);
-
-		System.out.println("Opciones de inicio:");
-		System.out.println("1. Nueva partida.");
-		System.out.println("2. Cargar partida de fichero.");
-		
-		int option = 0;
-		
-		while(option != 1 && option != 2) {
-			
-			try {
-				System.out.print(StringUtils.LINE_SEPARATOR + "Selecciona opcion: ");
-				option = scanner.nextInt();
-				
-				if(option != 1 && option != 2)
-					System.out.println("Opcion no valida.");
-			}
-			
-			catch(InputMismatchException ime) {
-				scanner.nextLine();
-				System.out.println("Opcion no valida.");
-			}
-		}
-		
-		scanner.nextLine();
-		
-		// Nueva partida
-		if(option == 1)
-			return reset(null);
-		
-		// Carga de partida
-		else {
-			
-			File dir = new File("partidas");
-			File[] files = dir.listFiles();
-			
-			if(files.length != 0) {
-				System.out.print(StringUtils.LINE_SEPARATOR);
-				System.out.print("Las partidas disponibles son:" + StringUtils.LINE_SEPARATOR);
-				
-				
-				for(File file: files) {
-					String fileName = file.getName();
-					String[] fileComponents = fileName.split("\\.");
-					System.out.println("|--> " + fileComponents[0]);
-				}
-			}
-				
-			System.out.print(StringUtils.LINE_SEPARATOR);
-			System.out.print("Introduce el nombre de la partida a cargar: ");
-			String fileWithNoExtension = _scanner.nextLine().trim();
-			String file = "partidas/" + fileWithNoExtension + ".json";
-			
-			while(!(new File(file)).exists()) {
-				System.out.print(StringUtils.LINE_SEPARATOR);
-				System.out.println("No existe una partida con el nombre " + "\"" + fileWithNoExtension + "\"");
-				
-				System.out.print("Introduce el nombre de la partida a cargar: ");
-				fileWithNoExtension = _scanner.nextLine().trim();
-				file = "partidas/" + fileWithNoExtension + ".json";
-			}
-		
-			
-			return loadGame(null, file);
-		}
-	}
-	
-		
-	private static GamePlayers createPlayers() {
-	
-	int numPlayers = selectNumPlayers();
-	
-	JSONArray players = new JSONArray();
-	
-	while(players.length() < numPlayers) {
-		
-		System.out.print("Tipo del jugador " + (players.length() + 1) + " [facil, medio, dificil o humano]: ");
-		String type = takeType(_scanner.nextLine().trim());
-		
-		if(type != null) {
-			
-			JSONObject player = new JSONObject();
-			player.put("type", type);
-			player.put("total_points", 0);
-			
-			if(type.equalsIgnoreCase("human_player")) {
-				System.out.print("Nombre del jugador " + (players.length() + 1) + ": ");
-				String name = _scanner.nextLine().trim();
-				
-				if(checkPlayerNames(name, players)) {
-					player.put("name", name);
-					players.put(player);
-				}
-				else 
-					System.out.println("Ya hay un jugador con el nombre " + name);
-			}
-			else players.put(player);
-		}
-		else
-			System.out.println("El tipo introducido no es válido.");
-		}
-	
-		System.out.println();
-		
-		JSONObject data = new JSONObject();
-		data.put("players", players);
-	
+	public static GamePlayers createPlayers(JSONObject data) {
 		return gamePlayersBuilder.createInstance(data);
 	}
-	
-	private static int selectNumPlayers() {
-		
-		int numPlayers = 0;
-		boolean done = false;
-		System.out.print("Selecciona el numero de jugadores (2-4): ");
-		
-		while (!done) {
-			try {
-				numPlayers = _scanner.nextInt();
-				
-				if (numPlayers < 2 || numPlayers > 4) {
-					System.out.println("El numero de jugadores debe estar entre 2 y 4.");
-					System.out.print("Selecciona el numero de jugadores (2-4): ");
-				}
-				else done = true;
-				
-			}
-			catch (InputMismatchException ime) {
-				System.out.println("¡La entrada debe ser un numero!");
-				System.out.print("Selecciona el numero de jugadores (2-4): ");
-				_scanner.nextLine();
-			}
-		}
-		
-		// Para que la entrada sea correcta.
-		_scanner.nextLine();  
-		
-		return numPlayers;
-	}
 
-	public static List<String> loadWordList() throws RuntimeException {
+	public static List<String> loadWordList() throws JSONException, FileNotFoundException {
 		
-		try {
-			JSONObject jo = new JSONObject(new JSONTokener(new FileInputStream(wordsFile)));
-			return wordsBuilder.createInstance(jo);
-		}
-		catch(FileNotFoundException fnfe) {
-			throw new RuntimeException("El fichero de las palabras no es válido");
-		}
+		JSONObject jo = new JSONObject(new JSONTokener(new FileInputStream(wordsFile)));
+		return wordsBuilder.createInstance(jo);
 	}
 	
 	public static void initBuilders() {
@@ -255,32 +100,5 @@ public class GameLoader {
 		playerBuilders.add(new HumanPlayerBuilder(tileBuilder));
 		
 		gamePlayersBuilder = new GamePlayersBuilder(playerBuilders);
-	}
-	
-	private static boolean checkPlayerNames(String name, JSONArray players) {
-		
-		int i = 0;
-		while(i < players.length()) {
-			if(players.getJSONObject(i).has("name") && players.getJSONObject(i).getString("name").equalsIgnoreCase(name))
-				return false;
-			++i;
-		}
-		
-		return true;
-	}
-	
-	private static String takeType(String type) {
-		switch(type.toLowerCase()) {
-		case "facil":
-			return "easy_player";
-		case "medio":
-			return "medium_player";
-		case "dificil":
-			return "hard_player";
-		case "humano":
-			return "human_player";
-		default:
-			return null;
-		}
 	}
 }

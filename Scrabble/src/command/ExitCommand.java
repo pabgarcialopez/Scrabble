@@ -1,6 +1,6 @@
 package command;
 
-import gameLogic.Game;
+import scrabble.Controller;
 
 public class ExitCommand extends Command {
 
@@ -17,8 +17,8 @@ public class ExitCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(Game game) {
-		game.userExits();
+	public boolean execute(Controller controller) {
+		controller.userExits();
 		return false;
 	}
 }

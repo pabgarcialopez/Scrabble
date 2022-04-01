@@ -1,7 +1,8 @@
 package command;
 
-import exceptions.*;
-import gameLogic.Game;
+import exceptions.CommandExecuteException;
+import exceptions.CommandParseException;
+import scrabble.Controller;
 
 public abstract class Command {
 	private static final String UNKNOWN_COMMAND_MSG = "Comando desconocido";
@@ -36,7 +37,7 @@ public abstract class Command {
 		this.help = help;
 	}
 
-	public abstract boolean execute(Game game) throws CommandExecuteException;
+	public abstract boolean execute(Controller controller) throws CommandExecuteException;
 
 	protected boolean matchCommandName(String name) {
 		return this.shortcut.equalsIgnoreCase(name) || this.name.equalsIgnoreCase(name);

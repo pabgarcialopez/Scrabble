@@ -3,8 +3,7 @@ package command;
 import java.io.FileNotFoundException;
 
 import exceptions.CommandExecuteException;
-import gameLogic.Game;
-import storage.GameLoader;
+import scrabble.Controller;
 
 public class ResetCommand extends Command {
 
@@ -21,15 +20,15 @@ public class ResetCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(Game game) throws CommandExecuteException {
+	public boolean execute(Controller controller) throws CommandExecuteException {
 		
 		try {
-			GameLoader.reset(game);
+			controller.reset();
 		}
 		catch(FileNotFoundException fnfe) {
 			throw new CommandExecuteException("El fichero de reseteo no se ha podido encontrar.", fnfe);
 		}
 		
-		return true;
+		return false;
 	}
 }

@@ -1,7 +1,6 @@
 package scrabble;
 
-import java.util.Scanner;
-
+import gameLogic.Game;
 import gameView.ConsoleView;
 import storage.GameLoader;
 
@@ -11,12 +10,10 @@ public class Main {
 
 		try {
 			GameLoader.initBuilders();
+			Game.initWordList();
 			
-			Scanner scanner = new Scanner(System.in);
-			
-			Controller controller = new Controller(GameLoader.initGame(scanner), scanner);
-			new ConsoleView(controller);
-			controller.runConsole();
+			Controller controller = new Controller();
+			new ConsoleView(controller, System.in, System.out);
 		}
 		
 		catch(Exception e) {

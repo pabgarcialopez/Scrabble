@@ -89,4 +89,16 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 		JOptionPane.showMessageDialog(this, "¡Gracias por jugar!", "Scrabble", JOptionPane.INFORMATION_MESSAGE);
 		System.exit(0);
 	}
+
+	@Override
+	public void onFirstTurnDecided(Game game, String[] lettersObtained) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPlayersNotAdded(Game game) {
+		// TODO Auto-generated method stub
+		
+	}
 }

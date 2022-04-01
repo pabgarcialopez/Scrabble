@@ -6,9 +6,8 @@ import org.json.JSONException;
 
 import exceptions.CommandExecuteException;
 import exceptions.CommandParseException;
-import gameLogic.Game;
 import gameUtils.StringUtils;
-import storage.GameLoader;
+import scrabble.Controller;
 
 public class LoadCommand extends Command {
 
@@ -27,10 +26,10 @@ public class LoadCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(Game game) throws CommandExecuteException {
+	public boolean execute(Controller controller) throws CommandExecuteException {
 		
 		try {
-			GameLoader.loadGame(game, this.file);
+			controller.loadGame(this.file);
 		}
 		catch(FileNotFoundException fnfe) {
 			throw new CommandExecuteException("El fichero introducido no se ha podido encontrar." + StringUtils.LINE_SEPARATOR, fnfe);
@@ -39,7 +38,7 @@ public class LoadCommand extends Command {
 			throw new CommandExecuteException("El formato JSON del fichero introducido no es válido." + StringUtils.LINE_SEPARATOR, je);
 		}
 		
-		return true;
+		return false;
 	}
 	
 	@Override

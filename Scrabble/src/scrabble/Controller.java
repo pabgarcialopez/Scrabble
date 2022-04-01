@@ -1,60 +1,19 @@
 package scrabble;
 
 import java.io.FileNotFoundException;
-import java.util.Scanner;
 
-import command.Command;
-import exceptions.GameException;
+import gameContainers.GamePlayers;
 import gameLogic.Game;
 import gameView.ScrabbleObserver;
 import storage.GameLoader;
+import storage.GameSaver;
 
 public class Controller {
 	
-	private static final String PROMPT = "Comando ([h]elp) > ";
-	
 	private Game game;
 	
-	private Scanner scanner;
-	
-	Controller(Game game, Scanner scanner) throws Exception {
-		this.game = game;
-		this.scanner = scanner;
-	}
-	
-	Controller(Game game) {
-		this.game = game;
-		this.scanner = null;
-	}
-
-	public void runConsole() {
-		
-		if(game.humanIsPlaying()) {
-			System.out.print(PROMPT);
-			String s = scanner.nextLine();
-
-			String[] parameters = s.toLowerCase().trim().split(" ");
-			
-			try {
-				Command command = Command.getCommand(parameters);
-				command.execute(game);
-				pausa();
-				game.update();
-			}
-			catch (GameException ex) {
-				System.out.println(ex.getMessage());
-			}
-		}
-		else {
-			game.automaticPlay();
-			pausa();
-			game.update();
-		}
-	}
-	
-	public void pausa() {
-		System.out.println("Pulse enter para continuar...");
-		this.scanner.nextLine();
+	Controller() throws Exception {
+		this.game = new Game();
 	}
 	
 	public void addObserver(ScrabbleObserver o) {
@@ -65,8 +24,8 @@ public class Controller {
 		this.game.removeObserver(o);
 	}
 	
-	public void writeAWord(String word, int posX, int posY, String direction) {
-		this.game.writeAWord(word, posX, posY, direction);
+	public boolean writeAWord(String word, int posX, int posY, String direction) {
+		return this.game.writeAWord(word, posX, posY, direction);
 	}
 	
 	public void reset() throws FileNotFoundException {
@@ -77,8 +36,8 @@ public class Controller {
 		this.game.passTurn();
 	}
 	
-	public void swapTile() {
-		this.game.swapTile();
+	public boolean swapTile() {
+		return this.game.swapTile();
 	}
 	
 	public void update() {
@@ -87,5 +46,21 @@ public class Controller {
 	
 	public void loadGame(String file) throws FileNotFoundException {
 		GameLoader.loadGame(game, file);
+	}
+
+	public void addPlayers(GamePlayers players) {
+		this.game.addPlayers(players);
+	}
+
+	public void userExits() {
+		game.userExits();
+	}
+
+	public void saveGame(String file) throws FileNotFoundException {
+		GameSaver.saveGame(this.game, file);
+	}
+
+	public void automaticPlay() {
+		game.automaticPlay();
 	}
 }

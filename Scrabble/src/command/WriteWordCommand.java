@@ -1,7 +1,7 @@
 package command;
 
 import exceptions.CommandParseException;
-import gameLogic.Game;
+import scrabble.Controller;
 
 public class WriteWordCommand extends Command {
 
@@ -26,8 +26,9 @@ public class WriteWordCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(Game game) {
-		return game.writeAWord(word, posX, posY, direction);
+	public boolean execute(Controller controller) {
+		
+		return !controller.writeAWord(word, posX, posY, direction);
 	}
 	
 	@Override

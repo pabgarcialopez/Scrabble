@@ -186,4 +186,16 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 
 	@Override
 	public void onEnd() {}
+
+	@Override
+	public void onFirstTurnDecided(Game game, String[] lettersObtained) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPlayersNotAdded(Game game) {
+		// TODO Auto-generated method stub
+		
+	}
 }

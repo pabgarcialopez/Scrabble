@@ -1,6 +1,6 @@
 package command;
 
-import gameLogic.Game;
+import scrabble.Controller;
 
 public class PassTurnCommand extends Command {
 
@@ -17,10 +17,10 @@ public class PassTurnCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(Game game) {
+	public boolean execute(Controller controller) {
 		
-		game.passTurn();
+		controller.passTurn();
 		
-		return true;
+		return false;
 	}
 }

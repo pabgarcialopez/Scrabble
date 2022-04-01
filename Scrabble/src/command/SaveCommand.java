@@ -4,9 +4,8 @@ import java.io.FileNotFoundException;
 
 import exceptions.CommandExecuteException;
 import exceptions.CommandParseException;
-import gameLogic.Game;
 import gameUtils.StringUtils;
-import storage.GameSaver;
+import scrabble.Controller;
 
 public class SaveCommand extends Command {
 
@@ -25,10 +24,10 @@ public class SaveCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(Game game) throws CommandExecuteException {
+	public boolean execute(Controller controller) throws CommandExecuteException {
 		
 		try {
-			GameSaver.saveGame(game, this.file);
+			controller.saveGame(this.file);
 			System.out.println(StringUtils.LINE_SEPARATOR + "La partida ha sido guardada con exito.");
 		}
 		catch(FileNotFoundException fnfe) {
@@ -38,7 +37,7 @@ public class SaveCommand extends Command {
 			throw new CommandExecuteException(iae.getMessage(), iae);
 		}
 		
-		return false;
+		return true;
 	}
 	
 	@Override

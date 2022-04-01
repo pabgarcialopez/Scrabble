@@ -1,6 +1,6 @@
 package command;
 
-import gameLogic.Game;
+import scrabble.Controller;
 
 public class SwapTileCommand extends Command {
 	
@@ -17,8 +17,8 @@ public class SwapTileCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(Game game) {
+	public boolean execute(Controller controller) {
 		
-		return game.swapTile();
+		return !controller.swapTile();
 	}
 }
