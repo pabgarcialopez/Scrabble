@@ -18,7 +18,8 @@ public abstract class Command {
 		new ExitCommand(),
 		new LoadCommand(),
 		new ResetCommand(),
-		new SaveCommand()
+		new SaveCommand(),
+		new NewGameCommand()
 	};
 	/* @formatter:on */
 

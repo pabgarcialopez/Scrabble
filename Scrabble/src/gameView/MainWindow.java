@@ -13,7 +13,7 @@ public class MainWindow extends JFrame {
 	
 	private Controller controller;
 
-	MainWindow(Controller controller) {
+	public MainWindow(Controller controller) {
 		
 		super("SCRABBLE");
 		this.controller = controller;
@@ -26,7 +26,7 @@ public class MainWindow extends JFrame {
 		
 		mainPanel.add(new ControlPanel(this.controller), BorderLayout.NORTH);
 		mainPanel.add(new BoardPanel(this.controller), BorderLayout.CENTER);
-		
+		mainPanel.add(new InfoPanel(this.controller), BorderLayout.SOUTH);
 		
 		setContentPane(mainPanel);
 		this.pack();

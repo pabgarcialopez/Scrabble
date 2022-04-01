@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import gameLogic.Game;
+import gameUtils.StringUtils;
 import scrabble.Controller;
 
 public class InfoPanel extends JPanel implements ScrabbleObserver {
@@ -58,13 +59,11 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onRegister(Game game) {
-		this.currentTurnName = game.getPlayers().getPlayerName(game.getCurrentTurn());
-		currentTurnLabel.setText("Turno del jugador: " + this.currentTurnName);
-	}
+	public void onRegister(Game game) {}
 
 	@Override
 	public void onReset(Game game) {
+		this.currentTurnName = game.getPlayers().getPlayerName(game.getCurrentTurn());
 		currentTurnLabel.setText("Turno del jugador: " + this.currentTurnName);
 		infoLabel.setText("Nueva partida iniciada");
 	}
@@ -92,13 +91,27 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 
 	@Override
 	public void onFirstTurnDecided(Game game, String[] lettersObtained) {
-		// TODO Auto-generated method stub
 		
+		StringBuilder buffer = new StringBuilder();
+		
+		for(int i = 0; i < game.getPlayers().getNumPlayers(); i++) {
+			buffer.append(game.getPlayers().getPlayerName(i)).append(" ha cogido una ")
+				  .append(lettersObtained[i]).append(StringUtils.LINE_SEPARATOR);
+		}
+		
+		buffer.append(StringUtils.LINE_SEPARATOR).append("El orden de juego es: ");
+		
+		for(int i = 0; i < game.getPlayers().getNumPlayers(); i++) {
+			buffer.append(game.getPlayers().getPlayerName((i + game.getCurrentTurn()) % game.getPlayers().getNumPlayers()));
+			if(i != game.getPlayers().getNumPlayers() - 1) buffer.append(" -> ");
+		}
+			
+		
+		buffer.append(StringUtils.LINE_SEPARATOR);
+		
+		JOptionPane.showMessageDialog(this, buffer.toString(), "Elección de Turnos", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	@Override
-	public void onPlayersNotAdded(Game game) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onPlayersNotAdded(Game game) {}
 }

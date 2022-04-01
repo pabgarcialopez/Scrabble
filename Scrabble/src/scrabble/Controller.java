@@ -12,8 +12,11 @@ public class Controller {
 	
 	private Game game;
 	
-	Controller() throws Exception {
+	private String lastFileUsed;
+	
+	Controller() {
 		this.game = new Game();
+		this.lastFileUsed = null;
 	}
 	
 	public void addObserver(ScrabbleObserver o) {
@@ -29,7 +32,20 @@ public class Controller {
 	}
 	
 	public void reset() throws FileNotFoundException {
-		GameLoader.reset(game);
+		if(this.lastFileUsed != null)
+			GameLoader.loadGame(game, this.lastFileUsed);
+		else
+			GameLoader.newGame(game);
+	}
+	
+	public void newGame() throws FileNotFoundException {
+		GameLoader.newGame(game);
+	}
+	
+	
+	public void loadGame(String file) throws FileNotFoundException {
+		GameLoader.loadGame(game, file);
+		this.lastFileUsed = file;
 	}
 	
 	public void passTurn() {
@@ -42,10 +58,6 @@ public class Controller {
 	
 	public void update() {
 		this.game.update();
-	}
-	
-	public void loadGame(String file) throws FileNotFoundException {
-		GameLoader.loadGame(game, file);
 	}
 
 	public void addPlayers(GamePlayers players) {

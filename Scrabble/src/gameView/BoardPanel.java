@@ -30,14 +30,7 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points, int extraPoints) {}
 
 	@Override
-	public void onRegister(Game game) {
-
-		this.setLayout(new GridLayout(game.getBoardSize(), game.getBoardSize()));
-		for(int i = 0; i < game.getBoardSize(); ++i)
-			for(int j = 0; j < game.getBoardSize(); ++j) {
-				this.add(new BoxButton(this.controller, i, j, this.chooseWordDialog));
-			}
-	}
+	public void onRegister(Game game) {}
 
 	@Override
 	public void onReset(Game game) {

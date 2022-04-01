@@ -36,7 +36,7 @@ public class GameLoader {
 	private static GamePlayersBuilder gamePlayersBuilder;
 	private static WordsBuilder wordsBuilder = new WordsBuilder();
 	
-	public static Game reset(Game game) throws FileNotFoundException {
+	public static Game newGame(Game game) throws FileNotFoundException {
 		return createGame(new FileInputStream(NEW_GAME), game);
 	}
 	

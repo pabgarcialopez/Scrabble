@@ -408,7 +408,7 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		// Nueva partida
 		if(option == 1)
-			this.controller.reset();
+			this.controller.newGame();
 		else {
 			
 			File dir = new File("partidas");
