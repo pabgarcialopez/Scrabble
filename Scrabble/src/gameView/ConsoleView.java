@@ -236,15 +236,14 @@ public class ConsoleView implements ScrabbleObserver {
 				makeAnotherTurn = command.execute(this.controller);
 			}
 			catch(CommandExecuteException cee) {
-				this.out.println(cee.getMessage());
+				this.out.println(cee.getMessage() + StringUtils.LINE_SEPARATOR);
 			}
-			
-			pausa();
 			
 			if(makeAnotherTurn) {
 				makeTurn();
 			}
-			else {
+			else {				
+				pausa();
 				controller.update();
 			}
 		}
