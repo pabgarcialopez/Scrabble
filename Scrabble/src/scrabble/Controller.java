@@ -40,6 +40,7 @@ public class Controller {
 	
 	public void newGame() throws FileNotFoundException {
 		GameLoader.newGame(game);
+		this.lastFileUsed = null;
 	}
 	
 	
