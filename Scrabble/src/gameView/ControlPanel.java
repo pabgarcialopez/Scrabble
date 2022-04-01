@@ -1,5 +1,7 @@
 package gameView;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -23,7 +25,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	
 	private Controller controller;
 	
-	private JToolBar barra;
+	private JToolBar bar;
 	
 	private List<JButton> buttonsToBlockGameNotInitiated;
 	
@@ -44,13 +46,18 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	
 	private void initGUI() {
 		
-		barra = new JToolBar();
-		this.add(barra);
+		this.bar = new JToolBar();
+		this.add(bar);
 		
-		JButton newGame = new JButton();
-		newGame.setActionCommand("newGame");
-		newGame.setToolTipText("Iniciar una partida nueva");
-		newGame.addActionListener(new ActionListener() {
+		int barWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+		this.bar.setPreferredSize(new Dimension(barWidth, 50));
+		
+		JButton newGameButton = new JButton();
+		newGameButton.setActionCommand("newGame");
+		newGameButton.setToolTipText("Iniciar una partida nueva");
+		newGameButton.setIcon(new ImageIcon("resources/icons/new_game.png"));
+		newGameButton.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -61,14 +68,15 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				}
 			}
 		});
-		newGame.setIcon(new ImageIcon("resources/icons/new_game.png"));
-		barra.add(newGame);
-		barra.addSeparator();
 		
-		JButton load = new JButton();
-		load.setActionCommand("load");
-		load.setToolTipText("Cargar una partida de fichero");
-		load.addActionListener(new ActionListener() {
+		bar.add(newGameButton);
+		bar.addSeparator();
+		
+		JButton loadButton = new JButton();
+		loadButton.setActionCommand("load");
+		loadButton.setToolTipText("Cargar una partida de fichero");
+		loadButton.setIcon(new ImageIcon("resources/icons/open.png"));
+		loadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = new JFileChooser();
@@ -82,14 +90,15 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				}
 			}
 		});
-		load.setIcon(new ImageIcon("resources/icons/open.png"));
-		barra.add(load);
-		barra.addSeparator();
+		bar.add(loadButton);
 		
-		JButton save = new JButton();
-		save.setActionCommand("save");
-		save.setToolTipText("Guardar la partida actual en un fichero");
-		save.addActionListener(new ActionListener() {
+		bar.addSeparator();
+		
+		JButton saveButton = new JButton();
+		saveButton.setActionCommand("save");
+		saveButton.setToolTipText("Guardar la partida actual en un fichero");
+		saveButton.setIcon(new ImageIcon("resources/icons/save.png"));
+		saveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = new JFileChooser();
@@ -103,13 +112,16 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				}
 			}
 		});
-		save.setIcon(new ImageIcon("resources/icons/save.png"));
-		this.buttonsToBlockGameNotInitiated.add(save);
+		bar.add(saveButton);
+		this.buttonsToBlockGameNotInitiated.add(saveButton);
 		
-		JButton reset = new JButton();
-		reset.setActionCommand("reset");
-		reset.setToolTipText("Resetear el juego");
-		reset.addActionListener(new ActionListener() {
+		bar.addSeparator();
+		
+		JButton resetButton = new JButton();
+		resetButton.setActionCommand("reset");
+		resetButton.setToolTipText("Resetear el juego");
+		resetButton.setIcon(new ImageIcon("resources/icons/reset.png"));
+		resetButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -120,64 +132,61 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				}
 			}
 		});
-		reset.setIcon(new ImageIcon("resources/icons/reset.png"));
-		barra.add(reset);
-		this.buttonsToBlockGameNotInitiated.add(reset);
+		bar.add(resetButton);
+		this.buttonsToBlockGameNotInitiated.add(resetButton);
 		
-		barra.addSeparator();
+		bar.addSeparator();
 		
-		barra.add(Box.createGlue());
-		
-		JButton pass = new JButton();
-		pass.setActionCommand("pass");
-		pass.setToolTipText("Pasar de turno");
-		pass.addActionListener(new ActionListener() {
+		JButton passButton = new JButton();
+		passButton.setActionCommand("pass");
+		passButton.setToolTipText("Pasar de turno");
+		passButton.setIcon(new ImageIcon("resources/icons/pass.png"));
+		passButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.passTurn();
 			}
 		});
-		pass.setIcon(new ImageIcon("resources/icons/pass.png"));
-		barra.add(pass);
-		barra.addSeparator();
-		this.buttonsToBlockCPUTurn.add(pass);
-		this.buttonsToBlockGameNotInitiated.add(pass);
+		bar.add(passButton);
+		bar.addSeparator();
+		this.buttonsToBlockCPUTurn.add(passButton);
+		this.buttonsToBlockGameNotInitiated.add(passButton);
 		
-		JButton swap = new JButton();
-		swap.setActionCommand("swap");
-		swap.setToolTipText("Intercambiar una ficha");
-		swap.addActionListener(new ActionListener() {
+		JButton swapButton = new JButton();
+		swapButton.setActionCommand("swap");
+		swapButton.setToolTipText("Intercambiar una ficha por otra aleatoriamente");
+		swapButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.swapTile();
 			}
 		});
-		swap.setIcon(new ImageIcon("resources/icons/swap.png"));
-		barra.add(swap);
-		this.buttonsToBlockCPUTurn.add(swap);
-		this.buttonsToBlockGameNotInitiated.add(swap);
+		swapButton.setIcon(new ImageIcon("resources/icons/swap.png"));
+		bar.add(swapButton);
+		this.buttonsToBlockCPUTurn.add(swapButton);
+		this.buttonsToBlockGameNotInitiated.add(swapButton);
 		
-		barra.addSeparator();
+		bar.addSeparator();
 		
-		JButton continuar = new JButton();
-		continuar.setActionCommand("continue");
-		continuar.setToolTipText("Continuar el juego");
-		continuar.addActionListener(new ActionListener() {
+		JButton continueButton = new JButton();
+		continueButton.setActionCommand("continue");
+		continueButton.setToolTipText("Continuar el juego");
+		continueButton.setIcon(new ImageIcon("resources/icons/continue.png"));
+		continueButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.update();
 			}
 		});
-		continuar.setIcon(new ImageIcon("resources/icons/continue.png"));
-		barra.add(continuar);
-		this.buttonsToBlockGameNotInitiated.add(continuar);
+		bar.add(continueButton);
+		this.buttonsToBlockGameNotInitiated.add(continueButton);
 		
-		barra.addSeparator();
+		bar.add(Box.createGlue());
 		
-		JButton exit = new JButton();
-		exit.setActionCommand("exit");
-		exit.setToolTipText("Exit from the simulator");
-		exit.addActionListener(new ActionListener() {
+		JButton exitButton = new JButton();
+		exitButton.setActionCommand("exit");
+		exitButton.setToolTipText("Exit from the simulator");
+		exitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String[] options = {"No", "Sí"};
@@ -189,8 +198,8 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				if(n == 1) System.exit(0);
 			}
 		});
-		exit.setIcon(new ImageIcon("resources/icons/exit.png"));
-		barra.add(exit);	
+		exitButton.setIcon(new ImageIcon("resources/icons/exit.png"));
+		bar.add(exitButton);	
 	}
 	
 	@Override

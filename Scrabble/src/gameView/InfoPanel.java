@@ -1,5 +1,9 @@
 package gameView;
 
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,12 +31,16 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	
 	private void initGUI() {
 		
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
+		this.add(Box.createRigidArea(new Dimension(10, 30)));
+
 		currentTurnLabel = new JLabel("Turno del jugador: ");
 		add(currentTurnLabel);
 		
-		infoLabel = new JLabel();
+		this.add(Box.createRigidArea(new Dimension(200, 30)));
+		
+		infoLabel = new JLabel("¡Bienvenido al Scrabble!");
 		add(infoLabel);
 		
 		pointsLabel = new JLabel();

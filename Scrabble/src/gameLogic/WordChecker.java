@@ -97,22 +97,11 @@ public final class WordChecker {
 	
 	private void checkWordInPosAndDirection(String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded) throws CommandExecuteException {
 		
-		if ("V".equalsIgnoreCase(direction)) checkWordInPosVertical(word, posX, posY, lettersNeeded);
-		else checkWordInPosHorizontal(word, posX, posY, lettersNeeded);
-	}
-	
-	private void checkWordInPosVertical(String word, int posX, int posY, Map<String, Integer> lettersNeeded) throws CommandExecuteException {
+		int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
+		int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
 		
-		for (int i = 0; i < word.length(); ++i) {
-			checkLetterInPos(String.valueOf(word.charAt(i)), posX + i, posY, lettersNeeded);
-		}
-	}
-	
-	private void checkWordInPosHorizontal(String word, int posX, int posY, Map<String, Integer> lettersNeeded) throws CommandExecuteException {
-		
-		for (int i = 0; i < word.length(); ++i) {
-			checkLetterInPos(String.valueOf(word.charAt(i)), posX, posY + i, lettersNeeded);
-		}
+		for (int i = 0; i < word.length(); ++i)
+			checkLetterInPos(String.valueOf(word.charAt(i)), posX + i*vertical, posY + i*horizontal, lettersNeeded);
 	}
 	
 	private void checkEnoughLetters(Map<String, Integer> lettersNeeded) throws CommandExecuteException {
@@ -126,48 +115,25 @@ public final class WordChecker {
 	
 	private void checkWordInCentre(String word, int posX, int posY, String direction) throws CommandExecuteException {
 		
-		if ("V".equalsIgnoreCase(direction)) checkWordInCentreVertical(word, posX, posY);
-		else checkWordInCentreHorizontal(word, posX, posY);
-	}
-	
-	private void checkWordInCentreVertical(String word, int posX, int posY) throws CommandExecuteException {
-
-		for (int i = 0; i < word.length(); ++i) {
-			if (game.getBoard().isCentre(posX + i, posY)) return;
-		}
+		int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
+		int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
 		
-		throw new CommandExecuteException("La primera palabra introducida en el tablero debe situarse en la casilla central.");
-	}
-	
-	private void checkWordInCentreHorizontal(String word, int posX, int posY) throws CommandExecuteException {
-
-		for (int i = 0; i < word.length(); ++i) {
-			if (game.getBoard().isCentre(posX, posY + i)) return;
-		}
+		for (int i = 0; i < word.length(); ++i)
+			if (game.getBoard().isCentre(posX + i*vertical, posY + i*horizontal)) return;
+		
 		
 		throw new CommandExecuteException("La primera palabra introducida en el tablero debe situarse en la casilla central.");
 	}
 	
 	private void checkWordNextToOther(String word, int posX, int posY, String direction) throws CommandExecuteException {
 		
-		if ("V".equalsIgnoreCase(direction)) checkWordNextToOtherVertical(word, posX, posY);
-		else checkWordNextToOtherHorizontal(word, posX, posY);
-	}
-	
-	private void checkWordNextToOtherVertical(String word, int posX, int posY) throws CommandExecuteException {
+		int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
+		int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
 		
-		for (int i = 0; i < word.length(); ++i) {
-			if (game.getBoard().getTile(i + posX, posY) != null) return;
-		}
+		for (int i = 0; i < word.length(); ++i)
+			if (game.getBoard().getTile(posX + i*vertical, posY + i*horizontal) != null) 
+				return;
 		
-		throw new CommandExecuteException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
-	}
-	
-	private void checkWordNextToOtherHorizontal(String word, int posX, int posY) throws CommandExecuteException {
-		
-		for (int i = 0; i < word.length(); ++i) {
-			if (game.getBoard().getTile(posX, i + posY) != null) return;
-		}
 		
 		throw new CommandExecuteException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
 	}
@@ -194,15 +160,12 @@ public final class WordChecker {
 	}
 
 	private void checkNewFormedWords(String word, int posX, int posY, String direction) throws CommandExecuteException {
-		if("V".equalsIgnoreCase(direction)) checkNewFormedWordsVertical(word, posX, posY);
-		else checkNewFormedWordsHorizontal(word, posX, posY);
 		
-	}
-	
-	private void checkNewFormedWordsVertical(String word, int posX, int posY) throws CommandExecuteException {
+		int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
+		int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
 		
 		for(int i = 0; i < word.length(); i++) {
-			String newWord = getWordHorizontal(String.valueOf(word.charAt(i)), posX + i, posY);
+			String newWord = getWordFormed(String.valueOf(word.charAt(i)), posX + i*vertical, posY + i*horizontal, horizontal, vertical);
 			if(newWord != null && newWord.length() != 1) {
 				
 				try {
@@ -215,66 +178,32 @@ public final class WordChecker {
 				}
 			}
 		}
+		
 	}
 	
-	private void checkNewFormedWordsHorizontal(String word, int posX, int posY) throws CommandExecuteException {
-		for(int i = 0; i < word.length(); i++) {
-			String newWord = getWordVertical(String.valueOf(word.charAt(i)), posX, posY + i);
-			if(newWord != null && newWord.length() != 1) {
-				
-				try {
-					checkWordExists(newWord);
-					checkWordNotUsed(newWord);
-					game.addUsedWord(newWord);
-				}
-				catch(CommandExecuteException cee) {
-					throw new CommandExecuteException("Se forma la palabra adicional " + "\"" + newWord.toUpperCase() + "\".\n" + cee.getMessage(), cee);
-				}
-			}
-		}
-	}
-	
-	private String getWordVertical(String letter, int posX, int posY) {
+	private String getWordFormed(String letter, int posX, int posY, int vertical, int horizontal) {
 		
 		if(game.getBoard().getTile(posX, posY) != null)
 			return null;
 		
-		int auxPosX = posX - 1;
+		int auxPosX = posX - vertical;
+		int auxPosY = posY - horizontal;
+		
 		String word = letter;
 		
-		while(auxPosX >= 0 && game.getBoard().getTile(auxPosX, posY) != null) {
-			word = game.getBoard().getTile(auxPosX, posY).getLetter() + word;
-			auxPosX--;
+		while(auxPosX >= 0 && auxPosY >= 0 && game.getBoard().getTile(auxPosX, auxPosY) != null) {
+			word = game.getBoard().getTile(auxPosX, auxPosY).getLetter() + word;
+			auxPosX -= vertical;
+			auxPosY -= horizontal;
 		}
 		
-		auxPosX = posX + 1;
+		auxPosX = posX + vertical;
+		auxPosY = posY + horizontal;
 		
-		while(auxPosX < game.getBoardSize() && game.getBoard().getTile(auxPosX, posY) != null) {
-			word += game.getBoard().getTile(auxPosX, posY).getLetter();
-			auxPosX++;
-		}
-		
-		return word;
-	}
-	
-	private String getWordHorizontal(String letter, int posX, int posY) {
-		
-		if(game.getBoard().getTile(posX, posY) != null)
-			return null;
-		
-		int auxPosY = posY - 1;
-		String word = letter;
-		
-		while(auxPosY >= 0 && game.getBoard().getTile(posX, auxPosY) != null) {
-			word = game.getBoard().getTile(posX, auxPosY).getLetter() + word;
-			auxPosY--;
-		}
-		
-		auxPosY = posY + 1;
-		
-		while(auxPosY < game.getBoardSize() && game.getBoard().getTile(posX, auxPosY) != null) {
-			word += game.getBoard().getTile(posX, auxPosY).getLetter();
-			auxPosY++;
+		while(auxPosX < game.getBoardSize() && auxPosY < game.getBoardSize() && game.getBoard().getTile(auxPosX, auxPosY) != null) {
+			word += game.getBoard().getTile(auxPosX, auxPosY).getLetter();
+			auxPosX += vertical;
+			auxPosY += horizontal;
 		}
 		
 		return word;

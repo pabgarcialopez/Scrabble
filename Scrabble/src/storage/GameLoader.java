@@ -41,10 +41,7 @@ public class GameLoader {
 	}
 	
 	public static Game loadGame(Game game, String file) throws FileNotFoundException {
-		
-		Game _game = createGame(new FileInputStream(file), game);
-		
-		return _game;
+		return createGame(new FileInputStream(file), game);
 	}
 	
 	private static Game createGame(InputStream input, Game game) {
@@ -63,16 +60,18 @@ public class GameLoader {
 		
 		List<String> usedWords = wordsBuilder.createInstance(json.getJSONObject("used_words"));
 		
-		if(game == null)
-			return new Game(currentTurn, numConsecutivePassedTurns, wordsInBoard, gameFinished, 
-				players, tiles, board, usedWords);
 		
-		else {
+		// Creo que este game nunca va a ser nulo.
+//		if(game == null)
+//			return new Game(currentTurn, numConsecutivePassedTurns, wordsInBoard, gameFinished, 
+//				players, tiles, board, usedWords);
+//		
+//		else {
 			game.reset(currentTurn, numConsecutivePassedTurns, wordsInBoard, gameFinished, 
 					players, tiles, board, usedWords);
 			
 			return game;
-		}
+//		}
 	}
 		
 	public static GamePlayers createPlayers(JSONObject data) {

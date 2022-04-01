@@ -22,10 +22,17 @@ import storage.GameLoader;
 
 public class Game {
 	
-	private boolean gameInitiated;
+	private static final int EXTRA_POINTS = 50;
+	private static boolean gameInitiated;
 	
 	private GamePlayers players;
 	private Random random;
+	private GameTiles tiles;
+	private Board board;
+	private List<String> usedWords;
+	private static List<String> words;
+	private WordChecker wordChecker;
+	private List<ScrabbleObserver> observers;
 	
 	private int currentTurn;
 	private int numConsecutivePassedTurns;
@@ -33,19 +40,8 @@ public class Game {
 	private boolean wordsInBoard;
 	private boolean gameFinished;
 	
-	private GameTiles tiles;
-	private Board board;
-	private List<String> usedWords;
-	private static List<String> words;
-
-	private WordChecker wordChecker;
-	
-	private List<ScrabbleObserver> observers; // Hay que ver como y cuando se inicializa.
-	
-	private static final int EXTRA_POINTS = 50;
-	
 	public Game() {
-		this.gameInitiated = false;
+		gameInitiated = false;
 		this.observers = new ArrayList<ScrabbleObserver>();
 		this.wordChecker = new WordChecker(this);
 	}
@@ -60,10 +56,13 @@ public class Game {
 				gameFinished, players, tiles, board, usedWords);
 	}
 	
+	
+	// LOGICA DEL JUEGO
+	
 	public void reset(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
 			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
 		
-		this.gameInitiated = true;
+		gameInitiated = true;
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
 		this.wordsInBoard = wordsInBoard;
 		this.gameFinished = gameFinished;
@@ -87,8 +86,6 @@ public class Game {
 	}
 
 	
-	// LOGICA DEL JUEGO
-	
 	public void checkArguments(String word, int posX, int posY, String direction) throws CommandExecuteException {
 		this.wordChecker.checkArguments(word, posX, posY, direction);
 	}
@@ -111,7 +108,7 @@ public class Game {
 		int numPlayerTilesBefore = this.players.getNumPlayerTiles(this.currentTurn);
 		assignTiles(word, posX, posY, direction);
 		
-		int points = getPoints(word, posX, posY, direction), extraPoints = 0;
+		int points = calculatePoints(word, posX, posY, direction), extraPoints = 0;
 		
 		if(numPlayerTilesBefore == 7 && this.players.getNumPlayerTiles(this.currentTurn) == 0)
 			extraPoints = EXTRA_POINTS;
@@ -211,6 +208,29 @@ public class Game {
 		}
 	}
 	
+	private int calculatePoints(String word, int posX, int posY, String direction) {
+		
+		int points = 0;
+		int wordMultiplier = 1;
+		
+		if ("V".equalsIgnoreCase(direction)) {
+			for (int i = 0; i < word.length(); ++i) {
+				points += this.board.getPoints(posX + i, posY);
+				wordMultiplier *= this.board.getWordMultiplier(posX + i, posY);
+			}
+		}
+		else {
+			for (int i = 0; i < word.length(); ++i) {
+				points += this.board.getPoints(posX, posY + i);
+				wordMultiplier *= this.board.getWordMultiplier(posX, posY + i);
+			}
+		}
+		
+		points *= wordMultiplier;
+		
+		return points;
+	}
+
 	public void assignTiles(String word, int posX, int posY, String direction) {
 		
 		int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
@@ -233,10 +253,10 @@ public class Game {
 		
 		// Si no quedan fichas en el saco, y el jugador actual no tiene fichas
 		if(this.getRemainingTiles() == 0 && this.players.getNumPlayerTiles(this.currentTurn) == 0)
-			setGameFinished(true);
+			this.gameFinished = true;
 		
 		if(this.numConsecutivePassedTurns == this.getNumPlayers()*2)
-			setGameFinished(true);
+			this.gameFinished = true;
 		
 		for(ScrabbleObserver o : this.observers)
 			o.onUpdate(this);
@@ -252,6 +272,16 @@ public class Game {
 		Collections.sort(this.usedWords);
 	}
 	
+	public static void initWordList() throws JSONException, FileNotFoundException {
+		words = GameLoader.loadWordList();
+	}
+	
+	public void addPlayers(GamePlayers players) {
+		this.players = players;
+		this.initializePlayerTiles();
+		decideFirstTurn();	
+	}
+
 	public void addObserver(ScrabbleObserver o) {
 		if(o != null && !this.observers.contains(o)) {
 			this.observers.add(o);
@@ -298,29 +328,6 @@ public class Game {
 	public int getRemainingTiles() {
 		return this.tiles.getNumTiles();
 	}
-	
-	private int getPoints(String word, int posX, int posY, String direction) {
-		
-		int points = 0;
-		int wordMultiplier = 1;
-		
-		if ("V".equalsIgnoreCase(direction)) {
-			for (int i = 0; i < word.length(); ++i) {
-				points += this.board.getPoints(posX + i, posY);
-				wordMultiplier *= this.board.getWordMultiplier(posX + i, posY);
-			}
-		}
-		else {
-			for (int i = 0; i < word.length(); ++i) {
-				points += this.board.getPoints(posX, posY + i);
-				wordMultiplier *= this.board.getWordMultiplier(posX, posY + i);
-			}
-		}
-		
-		points *= wordMultiplier;
-		
-		return points;
-	}
 
 	public int getBoardSize() {
 		return board.getBoardSize();
@@ -352,10 +359,6 @@ public class Game {
 		return status;
 	}
 	
-	public void setGameFinished(boolean b) {
-		this.gameFinished = b;
-	}
-	
 	public GamePlayers getPlayers() {
 		return this.players;
 	}
@@ -385,7 +388,8 @@ public class Game {
 	}
 	
 	public void userExits() {
-		this.setGameFinished(true);
+		
+		this.gameFinished = true;
 		
 		if(gameIsFinished()) {
 			for(ScrabbleObserver o : this.observers)
@@ -393,17 +397,7 @@ public class Game {
 		}
 	}
 
-	public void addPlayers(GamePlayers players) {
-		this.players = players;
-		this.initializePlayerTiles();
-		decideFirstTurn();	
-	}
-
 	public boolean getGameInitiated() {
-		return this.gameInitiated;
-	}
-	
-	public static void initWordList() throws JSONException, FileNotFoundException {
-		words = GameLoader.loadWordList();
+		return gameInitiated;
 	}
 }

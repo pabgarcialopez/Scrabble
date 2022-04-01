@@ -184,13 +184,13 @@ public class ConsoleView implements ScrabbleObserver {
 		this.humanIsPlaying = game.humanIsPlaying();
 		showBoard(game);
 		showStatus(game);
-		makeTurn();
+		playTurn();
 	}
 
 	@Override
 	public void onError(String error) {
 		this.out.println(error);
-		makeTurn();
+		playTurn();
 	}
 
 	@Override
@@ -201,7 +201,7 @@ public class ConsoleView implements ScrabbleObserver {
 		if(!game.gameIsFinished()) {
 			this.humanIsPlaying = game.humanIsPlaying();
 			showStatus(game);
-			makeTurn();
+			playTurn();
 		}
 	}
 
@@ -221,11 +221,12 @@ public class ConsoleView implements ScrabbleObserver {
 		this.controller.addPlayers(createPlayers());
 	}
 	
-	private void makeTurn() {
+	private void playTurn() {
 		
 		Command command = null;
 		
 		if(this.humanIsPlaying) {
+			
 			while (command == null) {
 				command = askCommand();
 			}
@@ -235,13 +236,15 @@ public class ConsoleView implements ScrabbleObserver {
 			try {
 				makeAnotherTurn = command.execute(this.controller);
 			}
+			
 			catch(CommandExecuteException cee) {
 				this.out.println(cee.getMessage() + StringUtils.LINE_SEPARATOR);
 			}
 			
 			if(makeAnotherTurn) {
-				makeTurn();
+				playTurn();
 			}
+			
 			else {				
 				pausa();
 				controller.update();
@@ -409,6 +412,7 @@ public class ConsoleView implements ScrabbleObserver {
 		// Nueva partida
 		if(option == 1)
 			this.controller.newGame();
+		
 		else {
 			
 			File dir = new File("partidas");
