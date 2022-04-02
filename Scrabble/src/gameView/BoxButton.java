@@ -23,6 +23,8 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	private ChooseWordDialog chooseWordDialog;
 	
 	private Controller controller;
+	
+	private boolean humanIsPlaying;
 
 	BoxButton(Controller controller, int x, int y, ChooseWordDialog chooseWordDialog) {
 		this.posX = x;
@@ -46,7 +48,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 		addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(box != null && box.getTile() == null) {
+				if(box != null && box.getTile() == null && humanIsPlaying) {
 					int status = chooseWordDialog.open(posX, posY);
 					if(status == 1) {
 						String word = chooseWordDialog.getSelectedWord();
@@ -67,12 +69,14 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	public void onRegister(Game game) {
 		this.box = game.getBoxAt(this.posX, this.posY);
 		if(box != null) setImage();
+		this.humanIsPlaying = game.humanIsPlaying();
 	}
 
 	@Override
 	public void onReset(Game game) {
 		this.box = game.getBoxAt(this.posX, this.posY);
 		setImage();
+		this.humanIsPlaying = game.humanIsPlaying();
 	}
 	
 	private void setImage() {
@@ -94,7 +98,9 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	public void onError(String error) {}
 
 	@Override
-	public void onUpdate(Game game) {}
+	public void onUpdate(Game game) {
+		this.humanIsPlaying = game.humanIsPlaying();
+	}
 
 	@Override
 	public void onEnd() {}
