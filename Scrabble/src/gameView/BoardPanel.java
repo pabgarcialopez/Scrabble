@@ -22,7 +22,8 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 		
 		this.chooseWordDialog = new ChooseWordDialog(this);
 		
-		setPreferredSize(new Dimension(700, 700));
+		this.setPreferredSize(new Dimension(700, 700));
+		this.setMaximumSize(new Dimension(700, 700));
 		
 		setVisible(true);
 		

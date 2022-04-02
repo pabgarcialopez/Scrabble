@@ -16,6 +16,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 
 import gameLogic.Game;
 import scrabble.Controller;
@@ -57,7 +58,8 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		this.add(bar);
 		
 		int barWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-		this.bar.setPreferredSize(new Dimension(barWidth, 50));
+		//this.bar.setPreferredSize(new Dimension(barWidth, 50));
+		this.bar.setPreferredSize(new Dimension(975, 50));
 		
 		JButton newGameButton = new JButton();
 		newGameButton.setActionCommand("newGame");
@@ -183,7 +185,12 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.update();
-				controller.automaticPlay();
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						controller.automaticPlay();
+					}
+				});
 			}
 		});
 		bar.add(continueButton);
@@ -230,7 +237,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 
 	@Override
 	public void onRegister(Game game) {
-		if(!game.getGameInitiated())
+		if(!Game.getGameInitiated())
 			enableButtons(this.buttonsToBlockGameNotInitiated, false);
 		else
 			if(game.humanIsPlaying()) continueButton.setEnabled(false);
@@ -240,7 +247,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	public void onReset(Game game) {
 		enableButtons(this.buttonsToBlockGameNotInitiated, true);
 		enableButtons(this.buttonsToBlockCPUTurn, game.humanIsPlaying());
-		if(!game.humanIsPlaying()) continueButton.setEnabled(false);
+		if(game.humanIsPlaying()) continueButton.setEnabled(false);
 	}
 
 	@Override

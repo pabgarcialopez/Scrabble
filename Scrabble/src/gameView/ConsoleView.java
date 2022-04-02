@@ -167,7 +167,7 @@ public class ConsoleView implements ScrabbleObserver {
 
 	@Override
 	public void onRegister(Game game) {
-		if (!game.getGameInitiated()) {
+		if (!Game.getGameInitiated()) {
 			try {
 				initGame();
 			} catch (FileNotFoundException fnfe) {

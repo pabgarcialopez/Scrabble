@@ -1,6 +1,7 @@
 package gameView;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
@@ -23,18 +24,17 @@ public class MainWindow extends JFrame {
 	
 	private void initGUI() {
 		
-		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		//this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		this.setSize(new Dimension(1000, 1000));
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		
 		mainPanel.add(new ControlPanel(this.controller, this), BorderLayout.NORTH);
 		
-		JPanel boardWithPlayersPanel = new JPanel(new BorderLayout());
 		mainPanel.add(new BoardPanel(this.controller), BorderLayout.CENTER);
 		mainPanel.add(new InfoPanel(this.controller, this), BorderLayout.SOUTH);
 		
 		setContentPane(mainPanel);
-		//this.pack();
 		this.setVisible(true);
 	}
 }

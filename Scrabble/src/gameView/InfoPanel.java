@@ -41,12 +41,15 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 		currentTurnLabel = new JLabel("Turno del jugador: ");
 		add(currentTurnLabel);
 		
-		this.add(Box.createRigidArea(new Dimension(200, 30)));
+		this.add(Box.createRigidArea(new Dimension(40, 30)));
 		
 		infoLabel = new JLabel("¡Bienvenido al Scrabble!");
 		add(infoLabel);
 		
+		this.add(Box.createRigidArea(new Dimension(40, 30)));
+		
 		pointsLabel = new JLabel();
+		add(pointsLabel);
 	}
 	
 	@Override
@@ -89,7 +92,8 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 		this.currentTurnName = game.getPlayers().getPlayerName(game.getCurrentTurn());
 		this.currentTurnLabel.setText("Turno del jugador: " + this.currentTurnName);
 		
-		this.infoLabel.setText("");
+		if(!game.humanIsPlaying()) this.infoLabel.setText("Eligiendo movimiento...");
+		else this.infoLabel.setText("Elige tu siguiente movimiento");
 		
 		this.pointsLabel.setText("");
 	}

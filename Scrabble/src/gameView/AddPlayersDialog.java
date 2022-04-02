@@ -135,6 +135,9 @@ private static final long serialVersionUID = 1L;
 		
 		this.numberOfPlayersCombo.setSelectedItem(null);
 		
+		for(PlayerPanel p : this.playerPanelList)
+			p.reset();
+		
 		setLocationRelativeTo(parent);
 		pack();
 		setVisible(true);

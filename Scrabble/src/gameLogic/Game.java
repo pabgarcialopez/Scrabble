@@ -398,7 +398,7 @@ public class Game {
 		}
 	}
 
-	public boolean getGameInitiated() {
+	public static boolean getGameInitiated() {
 		return gameInitiated;
 	}
 }
