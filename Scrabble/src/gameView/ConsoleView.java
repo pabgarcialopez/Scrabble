@@ -50,7 +50,6 @@ public class ConsoleView implements ScrabbleObserver {
 		this.out.println(game.getStatus());
 	}
 
-	// Funcion para mostrar como ha sido la decision de quien empieza a jugar
 	private void showFirstTurn(String[] lettersObtained, GamePlayers players, int turn) {
 		
 		StringBuilder buffer = new StringBuilder();

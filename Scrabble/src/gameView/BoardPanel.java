@@ -1,5 +1,6 @@
 package gameView;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
@@ -21,6 +22,8 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 		
 		this.chooseWordDialog = new ChooseWordDialog(this);
 		
+		setPreferredSize(new Dimension(700, 700));
+		
 		setVisible(true);
 		
 		this.controller.addObserver(this);
@@ -35,11 +38,14 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	@Override
 	public void onReset(Game game) {
 		
+		this.removeAll();
+		
 		this.setLayout(new GridLayout(game.getBoardSize(), game.getBoardSize()));
 		for(int i = 0; i < game.getBoardSize(); ++i)
 			for(int j = 0; j < game.getBoardSize(); ++j) {
 				this.add(new BoxButton(this.controller, i, j, this.chooseWordDialog));
 			}
+		setPreferredSize(new Dimension(700, 700));
 	}
 
 	@Override

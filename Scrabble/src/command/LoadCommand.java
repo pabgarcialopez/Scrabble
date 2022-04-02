@@ -49,7 +49,7 @@ public class LoadCommand extends Command {
 		if (words.length != 2)
 			throw new CommandParseException(String.format("[ERROR]: Comando %s: %s%n", words[0] ,INCORRECT_NUMBER_OF_ARGS_MSG));
 
-		this.file = words[1] + ".json";
+		this.file = words[1];
 		
 		return this;
 	}

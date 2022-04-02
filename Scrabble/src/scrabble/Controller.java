@@ -76,6 +76,6 @@ public class Controller {
 	}
 
 	public void automaticPlay() {
-		game.automaticPlay();
+		if(!game.humanIsPlaying()) game.automaticPlay();
 	}
 }

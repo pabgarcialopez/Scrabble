@@ -54,9 +54,9 @@ public class ChooseWordDialog extends JDialog {
 		mainPanel.add(northPanel, BorderLayout.NORTH);
 		northPanel.setPreferredSize(new Dimension(400, 60));
 		
-		JLabel label1 = new JLabel("Choose a word to write in the position ");
+		JLabel label1 = new JLabel("Elige una palabra para escribir en la posición ");
 		this.position = new JLabel();
-		JLabel label2 = new JLabel("and choose a direction.");
+		JLabel label2 = new JLabel("y elige una dirección.");
 		northPanel.add(label1);
 		northPanel.add(this.position);
 		northPanel.add(label2);
@@ -68,7 +68,7 @@ public class ChooseWordDialog extends JDialog {
 		wordOption.setLayout(new BoxLayout(wordOption, BoxLayout.X_AXIS));
 		writingAWordOption.add(wordOption);
 		
-		wordOption.add(new JLabel("Word: "));
+		wordOption.add(new JLabel("Palabra: "));
 		this.wordField = new JTextField();
 		this.wordField.setPreferredSize(new Dimension(60, 30));
 		wordOption.add(this.wordField);
@@ -77,7 +77,7 @@ public class ChooseWordDialog extends JDialog {
 		directionsOption.setLayout(new BoxLayout(directionsOption, BoxLayout.X_AXIS));
 		writingAWordOption.add(directionsOption);
 		
-		directionsOption.add(new JLabel("Direction: "));
+		directionsOption.add(new JLabel("Dirección: "));
 		this.directionsModel = new DefaultComboBoxModel<String>();
 		this.directionsCombo = new JComboBox<String>(this.directionsModel);
 		directionsOption.add(this.directionsCombo);
@@ -87,7 +87,7 @@ public class ChooseWordDialog extends JDialog {
 		mainPanel.add(buttonsPanel, BorderLayout.SOUTH);
 		
 		JButton cancel = new JButton();
-		cancel.setText("Cancel");
+		cancel.setText("Cancelar");
 		cancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -124,6 +124,8 @@ public class ChooseWordDialog extends JDialog {
 		for(String x : directions)
 			this.directionsModel.addElement(x);
 		
+		this.wordField.setText(null);
+		
 		this.position.setText(String.format("(%s, %s)", posX, posY));
 		
 		setLocationRelativeTo(parent);
@@ -134,7 +136,7 @@ public class ChooseWordDialog extends JDialog {
 	}
 
 	String getSelectedWord() {
-		return this.wordField.getSelectedText();
+		return this.wordField.getText();
 	}
 
 	String getSelectedDirection() {

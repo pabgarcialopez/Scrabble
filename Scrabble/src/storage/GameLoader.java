@@ -41,6 +41,10 @@ public class GameLoader {
 	}
 	
 	public static Game loadGame(Game game, String file) throws FileNotFoundException {
+		
+		if(!file.endsWith(".json"))
+			file += ".json";
+		
 		return createGame(new FileInputStream(file), game);
 	}
 	

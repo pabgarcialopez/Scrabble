@@ -1,5 +1,6 @@
 package gameView;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -31,13 +32,19 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	
 	private List<JButton> buttonsToBlockCPUTurn;
 	
-	ControlPanel(Controller controller) {
+	private JButton continueButton;
+	
+	private AddPlayersDialog addPlayersDialog;;
+	
+	ControlPanel(Controller controller, Component parent) {
 		
 		this.controller = controller;
 		
 		this.buttonsToBlockCPUTurn = new ArrayList<JButton>();
 		
 		this.buttonsToBlockGameNotInitiated = new ArrayList<JButton>();
+		
+		this.addPlayersDialog = new AddPlayersDialog(parent);
 		
 		initGUI();
 		
@@ -83,7 +90,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				int ret = fc.showOpenDialog(ControlPanel.this);
 				if (ret == JFileChooser.APPROVE_OPTION) {
 					try {
-						controller.loadGame(fc.getSelectedFile().getName());
+						controller.loadGame(fc.getSelectedFile().getAbsolutePath());
 					} catch (Exception exc) {
 						JOptionPane.showMessageDialog(ControlPanel.this, "El fichero seleccionado no es válido", "ERROR", JOptionPane.ERROR_MESSAGE);
 					}
@@ -168,7 +175,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		
 		bar.addSeparator();
 		
-		JButton continueButton = new JButton();
+		continueButton = new JButton();
 		continueButton.setActionCommand("continue");
 		continueButton.setToolTipText("Continuar el juego");
 		continueButton.setIcon(new ImageIcon("resources/icons/continue.png"));
@@ -176,6 +183,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.update();
+				controller.automaticPlay();
 			}
 		});
 		bar.add(continueButton);
@@ -205,34 +213,42 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	@Override
 	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points, int extraPoints) {
 		enableButtons(this.buttonsToBlockCPUTurn, false);
+		continueButton.setEnabled(true);
 	}
 
 	@Override
 	public void onPassed(Game game) {
 		enableButtons(this.buttonsToBlockCPUTurn, false);
+		continueButton.setEnabled(true);
 	}
 
 	@Override
 	public void onSwapped(Game game) {
 		enableButtons(this.buttonsToBlockCPUTurn, false);
+		continueButton.setEnabled(true);
 	}
 
 	@Override
 	public void onRegister(Game game) {
 		if(!game.getGameInitiated())
 			enableButtons(this.buttonsToBlockGameNotInitiated, false);
-	}
+		else
+			if(game.humanIsPlaying()) continueButton.setEnabled(false);
+	} 
 
 	@Override
 	public void onReset(Game game) {
-		enableButtons(this.buttonsToBlockCPUTurn, game.humanIsPlaying());
 		enableButtons(this.buttonsToBlockGameNotInitiated, true);
+		enableButtons(this.buttonsToBlockCPUTurn, game.humanIsPlaying());
+		if(!game.humanIsPlaying()) continueButton.setEnabled(false);
 	}
 
 	@Override
 	public void onUpdate(Game game) {
-		if(game.humanIsPlaying())
+		if(game.humanIsPlaying()) {
 			enableButtons(this.buttonsToBlockCPUTurn, true);
+			continueButton.setEnabled(false);
+		}
 	}
 
 	@Override
@@ -245,7 +261,9 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	public void onFirstTurnDecided(Game game, String[] lettersObtained) {}
 
 	@Override
-	public void onPlayersNotAdded(Game game) {}
+	public void onPlayersNotAdded(Game game) {
+		controller.addPlayers(this.addPlayersDialog.open());
+	}
 	
 	private void enableButtons(List<JButton> buttons, boolean enable) {
 		

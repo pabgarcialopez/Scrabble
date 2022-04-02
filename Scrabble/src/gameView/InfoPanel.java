@@ -1,7 +1,7 @@
 package gameView;
 
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -22,9 +22,12 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	private JLabel currentTurnLabel;
 	private JLabel infoLabel;
 	private JLabel pointsLabel;
+	
+	private Component parent;
 
-	InfoPanel(Controller controller) {
+	InfoPanel(Controller controller, Component parent) {
 		
+		this.parent = parent;
 		initGUI();
 		controller.addObserver(this);
 	}
@@ -78,7 +81,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 
 	@Override
 	public void onError(String error) {
-		JOptionPane.showMessageDialog(this, error, "ERROR", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(parent, error, "ERROR", JOptionPane.ERROR_MESSAGE);
 	}
 
 	@Override
@@ -117,7 +120,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 		
 		buffer.append(StringUtils.LINE_SEPARATOR);
 		
-		JOptionPane.showMessageDialog(this, buffer.toString(), "Elección de Turnos", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(parent, buffer.toString(), "Elección de Turnos", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	@Override

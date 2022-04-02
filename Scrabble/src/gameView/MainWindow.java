@@ -1,7 +1,6 @@
 package gameView;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
@@ -28,9 +27,9 @@ public class MainWindow extends JFrame {
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		
-		mainPanel.add(new ControlPanel(this.controller), BorderLayout.NORTH);
+		mainPanel.add(new ControlPanel(this.controller, this), BorderLayout.NORTH);
 		mainPanel.add(new BoardPanel(this.controller), BorderLayout.CENTER);
-		mainPanel.add(new InfoPanel(this.controller), BorderLayout.SOUTH);
+		mainPanel.add(new InfoPanel(this.controller, this), BorderLayout.SOUTH);
 		
 		setContentPane(mainPanel);
 		//this.pack();
