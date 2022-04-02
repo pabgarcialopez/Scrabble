@@ -62,7 +62,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		JButton newGameButton = new JButton();
 		newGameButton.setActionCommand("newGame");
 		newGameButton.setToolTipText("Iniciar una partida nueva");
-		newGameButton.setIcon(new ImageIcon("resources/icons/new_game.png"));
+		newGameButton.setIcon(new ImageIcon("resources/icons/control_panel/new_game.png"));
 		newGameButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -82,7 +82,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		JButton loadButton = new JButton();
 		loadButton.setActionCommand("load");
 		loadButton.setToolTipText("Cargar una partida de fichero");
-		loadButton.setIcon(new ImageIcon("resources/icons/open.png"));
+		loadButton.setIcon(new ImageIcon("resources/icons/control_panel/open.png"));
 		loadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -104,7 +104,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		JButton saveButton = new JButton();
 		saveButton.setActionCommand("save");
 		saveButton.setToolTipText("Guardar la partida actual en un fichero");
-		saveButton.setIcon(new ImageIcon("resources/icons/save.png"));
+		saveButton.setIcon(new ImageIcon("resources/icons/control_panel/save.png"));
 		saveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -127,7 +127,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		JButton resetButton = new JButton();
 		resetButton.setActionCommand("reset");
 		resetButton.setToolTipText("Resetear el juego");
-		resetButton.setIcon(new ImageIcon("resources/icons/reset.png"));
+		resetButton.setIcon(new ImageIcon("resources/icons/control_panel/reset.png"));
 		resetButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -147,7 +147,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		JButton passButton = new JButton();
 		passButton.setActionCommand("pass");
 		passButton.setToolTipText("Pasar de turno");
-		passButton.setIcon(new ImageIcon("resources/icons/pass.png"));
+		passButton.setIcon(new ImageIcon("resources/icons/control_panel/pass.png"));
 		passButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -168,7 +168,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				controller.swapTile();
 			}
 		});
-		swapButton.setIcon(new ImageIcon("resources/icons/swap.png"));
+		swapButton.setIcon(new ImageIcon("resources/icons/control_panel/swap.png"));
 		bar.add(swapButton);
 		this.buttonsToBlockCPUTurn.add(swapButton);
 		this.buttonsToBlockGameNotInitiated.add(swapButton);
@@ -178,7 +178,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		continueButton = new JButton();
 		continueButton.setActionCommand("continue");
 		continueButton.setToolTipText("Continuar el juego");
-		continueButton.setIcon(new ImageIcon("resources/icons/continue.png"));
+		continueButton.setIcon(new ImageIcon("resources/icons/control_panel/continue.png"));
 		continueButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -206,7 +206,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				if(n == 1) System.exit(0);
 			}
 		});
-		exitButton.setIcon(new ImageIcon("resources/icons/exit.png"));
+		exitButton.setIcon(new ImageIcon("resources/icons/control_panel/exit.png"));
 		bar.add(exitButton);	
 	}
 	

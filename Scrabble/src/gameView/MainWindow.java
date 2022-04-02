@@ -28,6 +28,8 @@ public class MainWindow extends JFrame {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		
 		mainPanel.add(new ControlPanel(this.controller, this), BorderLayout.NORTH);
+		
+		JPanel boardWithPlayersPanel = new JPanel(new BorderLayout());
 		mainPanel.add(new BoardPanel(this.controller), BorderLayout.CENTER);
 		mainPanel.add(new InfoPanel(this.controller, this), BorderLayout.SOUTH);
 		

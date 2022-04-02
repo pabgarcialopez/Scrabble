@@ -124,6 +124,8 @@ public class ChooseWordDialog extends JDialog {
 		for(String x : directions)
 			this.directionsModel.addElement(x);
 		
+		this.directionsCombo.setSelectedItem(null);
+		
 		this.wordField.setText(null);
 		
 		this.position.setText(String.format("(%s, %s)", posX, posY));

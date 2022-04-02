@@ -79,9 +79,9 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	private void setImage() {
 		
 		if(box.getTile() != null)
-			this.setIcon(new ImageIcon("letters/" + box.getTile().getLetter().toUpperCase() + ".png"));
+			this.setIcon(new ImageIcon("resources/icons/letters/" + box.getTile().getLetter().toUpperCase() + ".png"));
 		else if(box.getSpecialEffect() != null)
-			this.setIcon(new ImageIcon("special_effects/" + box.getSpecialEffect() + ".png"));
+			this.setIcon(new ImageIcon("resources/icons/special_effects/" + box.getSpecialEffect() + ".png"));
 	}
 
 	@Override

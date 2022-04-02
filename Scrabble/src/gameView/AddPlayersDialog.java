@@ -133,6 +133,8 @@ private static final long serialVersionUID = 1L;
 		for(Integer i : numberOfPlayers)
 			this.numberOfPlayersModel.addElement(i);
 		
+		this.numberOfPlayersCombo.setSelectedItem(null);
+		
 		setLocationRelativeTo(parent);
 		pack();
 		setVisible(true);
@@ -235,6 +237,8 @@ private static final long serialVersionUID = 1L;
 			this.typesModel.removeAllElements();
 			for(String type : types)
 				this.typesModel.addElement(type);
+			
+			this.typesCombo.setSelectedItem(null);
 			
 			this.nameField.setText(null);
 		}
