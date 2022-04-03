@@ -41,7 +41,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 		
 		setToolTipText(String.format("Casilla (%s, %s)", this.posX, this.posY));
 		setIcon(new ImageIcon("resources/icons/letters/box_default_icon.png"));
-		setPreferredSize(new Dimension(67, 67));
+		setPreferredSize(new Dimension(49, 49));
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		this.box = new Box(null);
 		

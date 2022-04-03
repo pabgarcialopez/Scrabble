@@ -2,7 +2,6 @@ package gameView;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -57,9 +56,9 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		this.bar = new JToolBar();
 		this.add(bar);
 		
-		int barWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+		//int barWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		//this.bar.setPreferredSize(new Dimension(barWidth, 50));
-		this.bar.setPreferredSize(new Dimension(975, 50));
+		this.bar.setPreferredSize(new Dimension(1100, 50));
 		
 		JButton newGameButton = new JButton();
 		newGameButton.setActionCommand("newGame");
@@ -115,6 +114,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				if (ret == JFileChooser.APPROVE_OPTION) {
 					try {
 						controller.saveGame(fc.getSelectedFile().getName());
+						JOptionPane.showMessageDialog(ControlPanel.this, "La partida ha sido guardada con éxito", "GUARDAR", JOptionPane.INFORMATION_MESSAGE);
 					} catch (Exception exc) {
 						JOptionPane.showMessageDialog(ControlPanel.this, "El fichero seleccionado no es válido", "ERROR", JOptionPane.ERROR_MESSAGE);
 					}
@@ -197,6 +197,24 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		this.buttonsToBlockGameNotInitiated.add(continueButton);
 		
 		bar.add(Box.createGlue());
+		
+		JButton helpButton = new JButton();
+		helpButton.setActionCommand("help");
+		helpButton.setToolTipText("Ayuda sobre cómo jugar");
+		helpButton.setIcon(new ImageIcon("resources/icons/control_panel/info.png"));
+		helpButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String help = String.format("Para colocar una palabra se debe hacer click en la casilla "
+						+ "donde quieres que empiece y en el desplegable"
+						+ "que aparece escribir la palabra y la dirección.%n"
+						+ "Para pasar de turno se debe pulsar el botón situado en quinta posición empezando por la derecha.%n"
+						+ "Para intercambiar una ficha se debe pulsar el botón situado en quinta posición empezando por la derecha.");
+				JOptionPane.showMessageDialog(ControlPanel.this, help, "AYUDA", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		bar.add(helpButton);
+		bar.addSeparator();
 		
 		JButton exitButton = new JButton();
 		exitButton.setActionCommand("exit");

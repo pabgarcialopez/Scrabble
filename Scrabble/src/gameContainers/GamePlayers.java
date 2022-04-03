@@ -104,4 +104,9 @@ public class GamePlayers {
 	public void automaticPlay(int player, Game game) {
 		this.players.get(player).play(game);
 	}
+
+	public int getPlayerPoints(int player) {
+		
+		return this.players.get(player).getPoints();
+	}
 }

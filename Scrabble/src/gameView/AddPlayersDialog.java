@@ -138,6 +138,8 @@ private static final long serialVersionUID = 1L;
 		for(PlayerPanel p : this.playerPanelList)
 			p.reset();
 		
+		this.playersPanel.removeAll();
+		
 		setLocationRelativeTo(parent);
 		pack();
 		setVisible(true);

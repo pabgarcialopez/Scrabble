@@ -4,7 +4,7 @@ import javax.swing.SwingUtilities;
 
 import gameLogic.Game;
 import gameView.ConsoleView;
-import gameView.MainWindow;
+import gameView.GUIView;
 import storage.GameLoader;
 
 public class Main {
@@ -33,7 +33,7 @@ public class Main {
 
 				@Override
 				public void run() {
-					new MainWindow(new Controller());
+					new GUIView(new Controller());
 				}
 				
 			});

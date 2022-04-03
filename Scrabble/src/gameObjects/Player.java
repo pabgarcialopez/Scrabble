@@ -265,4 +265,8 @@ public abstract class Player {
 		
 		return marcaje;
 	}
+
+	public int getPoints() {
+		return this.totalPoints;
+	}
 }

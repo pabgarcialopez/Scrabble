@@ -22,8 +22,7 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 		
 		this.chooseWordDialog = new ChooseWordDialog(this);
 		
-		this.setPreferredSize(new Dimension(700, 700));
-		this.setMaximumSize(new Dimension(700, 700));
+		this.setPreferredSize(new Dimension(730, 730));
 		
 		setVisible(true);
 		
@@ -46,7 +45,7 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 			for(int j = 0; j < game.getBoardSize(); ++j) {
 				this.add(new BoxButton(this.controller, i, j, this.chooseWordDialog));
 			}
-		setPreferredSize(new Dimension(700, 700));
+		setPreferredSize(new Dimension(730, 730));
 	}
 
 	@Override

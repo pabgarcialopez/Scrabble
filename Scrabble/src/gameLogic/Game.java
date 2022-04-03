@@ -62,7 +62,6 @@ public class Game {
 	public void reset(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
 			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
 		
-		gameInitiated = true;
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
 		this.wordsInBoard = wordsInBoard;
 		this.gameFinished = gameFinished;
@@ -80,6 +79,8 @@ public class Game {
 			for(ScrabbleObserver o : this.observers)
 				o.onPlayersNotAdded(this);
 		}
+		
+		gameInitiated = true;
 		
 		for(int i = 0; i < this.observers.size(); ++i) {
 			this.observers.get(i).onReset(this);
@@ -119,11 +120,11 @@ public class Game {
 		this.wordsInBoard = true;
 		numConsecutivePassedTurns = 0;
 		
-		players.drawTiles(this, currentTurn);
-	
 		for(ScrabbleObserver o : this.observers)
 			o.onWordWritten(this, word, posX, posY, direction, points, extraPoints);
 		
+		players.drawTiles(this, currentTurn);
+	
 		nextTurn();
 		
 		return true;
