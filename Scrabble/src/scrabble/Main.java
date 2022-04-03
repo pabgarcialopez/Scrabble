@@ -3,7 +3,6 @@ package scrabble;
 import javax.swing.SwingUtilities;
 
 import gameLogic.Game;
-import gameView.ConsoleView;
 import gameView.GUIView;
 import storage.GameLoader;
 

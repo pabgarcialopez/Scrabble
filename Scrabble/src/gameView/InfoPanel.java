@@ -37,7 +37,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 		
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
-		add(Box.createRigidArea(new Dimension(10, 30)));
+		add(Box.createRigidArea(new Dimension(10, 50)));
 		
 		JPanel turnAndTilesPanel = new JPanel();
 		add(turnAndTilesPanel);
