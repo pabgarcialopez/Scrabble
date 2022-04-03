@@ -25,8 +25,13 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	private Controller controller;
 	
 	private boolean humanIsPlaying;
+	
+	private boolean turnAlreadyDone;
 
 	BoxButton(Controller controller, int x, int y, ChooseWordDialog chooseWordDialog) {
+		
+		this.turnAlreadyDone = false;
+		
 		this.posX = x;
 		this.posY = y;
 		this.box = null;
@@ -48,7 +53,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 		addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(box != null && box.getTile() == null && humanIsPlaying) {
+				if(box != null && box.getTile() == null && humanIsPlaying && !turnAlreadyDone) {
 					int status = chooseWordDialog.open(posX, posY);
 					if(status == 1) {
 						String word = chooseWordDialog.getSelectedWord();
@@ -63,6 +68,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	@Override
 	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points, int extraPoints) {
 		setImage();
+		turnAlreadyDone = true;
 	}
 
 	@Override
@@ -89,10 +95,14 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onPassed(Game game) {}
+	public void onPassed(Game game) {
+		turnAlreadyDone = true;
+	}
 
 	@Override
-	public void onSwapped(Game game) {}
+	public void onSwapped(Game game) {
+		turnAlreadyDone = true;
+	}
 
 	@Override
 	public void onError(String error) {}
@@ -100,6 +110,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	@Override
 	public void onUpdate(Game game) {
 		this.humanIsPlaying = game.humanIsPlaying();
+		turnAlreadyDone = false;
 	}
 
 	@Override

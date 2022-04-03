@@ -46,13 +46,13 @@ public class PlayerPanel extends JPanel implements ScrabbleObserver {
 			add(Box.createRigidArea(new Dimension(20, 120)));
 			this.tilesPanel.setLayout(new BoxLayout(this.tilesPanel, BoxLayout.Y_AXIS));
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-			this.tilesPanel.setPreferredSize(new Dimension(50, 350));
+			this.tilesPanel.setPreferredSize(new Dimension(45, 315));
 		}
 		else {
 			add(Box.createRigidArea(new Dimension(1, 70)));
 			this.tilesPanel.setLayout(new BoxLayout(this.tilesPanel, BoxLayout.X_AXIS));
 			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-			this.tilesPanel.setPreferredSize(new Dimension(350, 50));
+			this.tilesPanel.setPreferredSize(new Dimension(315, 45));
 		}
 		
 		JPanel nameAndPointsPanel = new JPanel();
@@ -85,8 +85,8 @@ public class PlayerPanel extends JPanel implements ScrabbleObserver {
 			for(int i = 0; i < game.getPlayers().getNumPlayerTiles(this.numJugador); ++i) {
 				JButton tileButton = new JButton();
 				tileButton.setIcon(new ImageIcon("resources/icons/letters/" + game.getPlayers().getPlayerTile(this.numJugador, i).getLetter() + ".png"));
-				tileButton.setPreferredSize(new Dimension(50, 50));
-				tileButton.setMaximumSize(new Dimension(50, 50));
+				tileButton.setPreferredSize(new Dimension(45, 45));
+				tileButton.setMaximumSize(new Dimension(45, 45));
 				tileButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 				this.tilesPanel.add(tileButton);
 			}
@@ -95,8 +95,8 @@ public class PlayerPanel extends JPanel implements ScrabbleObserver {
 			for(int i = 0; i < game.getPlayers().getNumPlayerTiles(this.numJugador); ++i) {
 				JButton tileButton = new JButton();
 				tileButton.setIcon(new ImageIcon("resources/icons/letters/reversed_tile.png"));
-				tileButton.setPreferredSize(new Dimension(50, 50));
-				tileButton.setMaximumSize(new Dimension(50, 50));
+				tileButton.setPreferredSize(new Dimension(45, 45));
+				tileButton.setMaximumSize(new Dimension(45, 45));
 				tileButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 				this.tilesPanel.add(tileButton);
 			}
