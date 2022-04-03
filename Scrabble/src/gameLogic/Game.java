@@ -82,8 +82,8 @@ public class Game {
 		
 		gameInitiated = true;
 		
-		for(int i = 0; i < this.observers.size(); ++i) {
-			this.observers.get(i).onReset(this);
+		for(ScrabbleObserver o : this.observers) {
+			o.onReset(this);
 		}
 	}
 
