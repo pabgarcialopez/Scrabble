@@ -73,9 +73,10 @@ public class Game {
 		this.random = new Random();
 		this.currentTurn = currentTurn;
 		
-		if(this.players.getNumPlayers() != 0) {
+		if(players.getNumPlayers() != 0) {
 			addPlayers(players);
 		}
+		
 		else {
 			for(ScrabbleObserver o : this.observers)
 				o.onPlayersNotAdded(this);

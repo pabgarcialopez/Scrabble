@@ -2,7 +2,6 @@ package gameObjects;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.json.JSONObject;
 
@@ -11,11 +10,9 @@ import gameLogic.Game;
 public class MediumPlayer extends Player {
 	
 	private static int numMediumPlayers = 0;
-	private Random rdm;
 
 	public MediumPlayer(String name, int totalPoints, List<Tile> tiles) {
 		super(name + " Medium " + ++numMediumPlayers, totalPoints, tiles);
-		this.rdm = new Random();
 	}
 
 	@Override

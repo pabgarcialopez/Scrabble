@@ -95,6 +95,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 		currentTurnLabel.setText("Turno de: " + this.currentTurnName);
 		infoLabel.setText("Nueva partida iniciada");
 		remainingTilesLabel.setText("Fichas restantes: " + game.getRemainingTiles());
+		pointsLabel.setText("");
 	}
 
 	@Override

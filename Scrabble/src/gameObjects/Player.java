@@ -3,6 +3,7 @@ package gameObjects;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,12 +32,14 @@ public abstract class Player {
 	protected String name;
 	protected List<Tile> tiles;
 	private int totalPoints;
+	protected Random rdm;
 	
 	// Constructor para cuando se carga partida
 	public Player(String name, int totalPoints, List<Tile> tiles) {
 		this.name = name;
 		this.tiles = tiles;
 		this.totalPoints = totalPoints;
+		this.rdm = new Random();
 	}
 	
 	// Constructor para cuando se crea nueva partida
@@ -155,13 +158,22 @@ public abstract class Player {
 		boolean played = false;
 		List<Boolean> marcaje = createMarcaje(tilesForWord.size() + 1);
 		
+		int randomRow = (int) this.rdm.nextDouble() * game.getBoardSize();
+		int randomColumn = (int) this.rdm.nextDouble() * game.getBoardSize();
+		
 		for(int i = 0; i < game.getBoardSize() && !played; ++i)
-			for(int j = 0; j < game.getBoardSize() && !played; ++j) 
-				if(game.getBoard().getTile(i, j) != null) {
-					tilesForWord.add(game.getBoard().getTile(i, j));
-					played = tryWritingAWord("", wordLength, tilesForWord, marcaje, i, j, -1, game, game.getWordsInBoard());
+			for(int j = 0; j < game.getBoardSize() && !played; ++j)  {
+				
+				int posX = (i + randomRow) % game.getBoardSize();
+				int posY = (j + randomColumn) % game.getBoardSize();
+				
+				if(game.getBoard().getTile(posX, posY) != null) {
+					tilesForWord.add(game.getBoard().getTile(posX, posY));
+					played = tryWritingAWord("", wordLength, tilesForWord, marcaje, posX, posY, -1, game, game.getWordsInBoard());
 					tilesForWord.remove(tilesForWord.size() - 1);
 				}
+			}
+				
 		
 		return played;
 	}
