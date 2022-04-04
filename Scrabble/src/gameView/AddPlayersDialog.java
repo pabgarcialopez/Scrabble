@@ -43,6 +43,9 @@ private static final long serialVersionUID = 1L;
 	
 	private JPanel playersPanel;
 	
+	private JButton ok;
+	private JPanel buttonsPanel;
+	
 	AddPlayersDialog(Component parent) {
 		this.parent = parent;
 		this.setModal(true);
@@ -72,6 +75,7 @@ private static final long serialVersionUID = 1L;
 		playersOkButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				if(numberOfPlayersCombo.getSelectedItem() == null)
 					JOptionPane.showMessageDialog(AddPlayersDialog.this, "Debes elegir un número de jugadores válido", "ERROR", JOptionPane.ERROR_MESSAGE);
 				else {
@@ -83,7 +87,8 @@ private static final long serialVersionUID = 1L;
 						playerPanelList.get(i).reset();
 						playersPanel.add(playerPanelList.get(i));
 					}
-						
+					
+					buttonsPanel.add(ok);
 					AddPlayersDialog.this.setLocationRelativeTo(parent);
 					AddPlayersDialog.this.pack();
 					AddPlayersDialog.this.setVisible(true);
@@ -101,11 +106,11 @@ private static final long serialVersionUID = 1L;
 			this.playerPanelList.add(p);
 		}
 		
-		JPanel buttonsPanel = new JPanel();
+		this.buttonsPanel = new JPanel();
 		buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		mainPanel.add(buttonsPanel, BorderLayout.SOUTH);
 		
-		JButton ok = new JButton();
+		this.ok = new JButton();
 		ok.setText("OK");
 		ok.setToolTipText("Añadir los jugadores seleccionados");
 		ok.addActionListener(new ActionListener() {
@@ -119,7 +124,6 @@ private static final long serialVersionUID = 1L;
 					setVisible(false);
 			}
 		});
-		buttonsPanel.add(ok);
 		
 		setContentPane(mainPanel);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -129,6 +133,8 @@ private static final long serialVersionUID = 1L;
 	
 	public GamePlayers open() {
 		
+		buttonsPanel.removeAll();
+
 		this.numberOfPlayersModel.removeAllElements();
 		for(Integer i : numberOfPlayers)
 			this.numberOfPlayersModel.addElement(i);
