@@ -264,8 +264,33 @@ public class Game {
 		
 		if(gameIsFinished()) {
 			for(ScrabbleObserver o : this.observers)
-				o.onEnd();
+				o.onEnd(getWinnerName());
 		}
+	}
+
+	private String getWinnerName() {
+		List<Integer> winners = this.players.getWinners();
+		String winnersMessage = null;
+		
+		if(winners.size() == 1) {
+			winnersMessage = "¡" + this.players.getPlayerName(winners.get(0)) + " gana la partida ";
+		}
+		else {
+			winnersMessage = "Ha habido un empate... ¡";
+			for(int i = 0; i < winners.size(); ++i) {
+				winnersMessage += this.players.getPlayerName(winners.get(i));
+				if(i < winners.size() - 2)
+					winnersMessage += ", ";
+				else if (i == winners.size() - 2)
+					winnersMessage += " y ";
+			}
+			
+			winnersMessage += " ganan la partida ";
+		}
+		
+		winnersMessage += String.format("con %s puntos!", this.players.getPlayerPoints(winners.get(0)));
+		
+		return winnersMessage;
 	}
 
 	public void addUsedWord(String word) {
@@ -394,7 +419,7 @@ public class Game {
 		
 		if(gameIsFinished()) {
 			for(ScrabbleObserver o : this.observers)
-				o.onEnd();
+				o.onEnd("¡Gracias por jugar!");
 		}
 	}
 

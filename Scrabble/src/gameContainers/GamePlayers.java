@@ -1,5 +1,6 @@
 package gameContainers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -108,5 +109,23 @@ public class GamePlayers {
 	public int getPlayerPoints(int player) {
 		
 		return this.players.get(player).getPoints();
+	}
+
+	public List<Integer> getWinners() {
+		List<Integer> winners = new ArrayList<Integer>();
+		for(int i = 0; i < this.getNumPlayers(); ++i) {
+			if(winners.size() == 0)
+				winners.add(i);
+			else {
+				if(this.players.get(winners.get(0)).getPoints() == this.players.get(i).getPoints())
+					winners.add(i);
+				else if (this.players.get(winners.get(0)).getPoints() < this.players.get(i).getPoints()) {
+					winners.clear();
+					winners.add(i);
+				}
+			}
+		}
+		
+		return winners;
 	}
 }

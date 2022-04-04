@@ -205,7 +205,7 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onEnd() {
+	public void onEnd(String message) {
 		showEndMessage();
 		System.exit(0);
 	}

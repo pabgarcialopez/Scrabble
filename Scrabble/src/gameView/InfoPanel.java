@@ -115,8 +115,8 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onEnd() {
-		JOptionPane.showMessageDialog(this, "¡Gracias por jugar!", "Scrabble", JOptionPane.INFORMATION_MESSAGE);
+	public void onEnd(String message) {
+		JOptionPane.showMessageDialog(this, message, "Scrabble", JOptionPane.INFORMATION_MESSAGE);
 		System.exit(0);
 	}
 
