@@ -33,20 +33,22 @@ public class Controller {
 	
 	public void reset() throws FileNotFoundException {
 		
-		// lastFileUsed == null --> Partida se cargo de cierto fichero.
+		// lastFileUsed != null --> Partida se cargo de cierto fichero.
 		if(this.lastFileUsed != null)
-			GameLoader.loadGame(game, this.lastFileUsed);
+			loadGame(this.lastFileUsed);
 		
-		else GameLoader.newGame(game);
+		else newGame();
 	}
 	
 	public void newGame() throws FileNotFoundException {
+		this.game.resetPlayers();
 		GameLoader.newGame(game);
 		this.lastFileUsed = null;
 	}
 	
 	
 	public void loadGame(String file) throws FileNotFoundException {
+		this.game.resetPlayers();
 		GameLoader.loadGame(game, file);
 		this.lastFileUsed = file;
 	}

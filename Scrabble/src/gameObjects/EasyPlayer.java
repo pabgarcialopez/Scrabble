@@ -49,7 +49,13 @@ public class EasyPlayer extends Player {
 		
 		JSONObject jo = super.report();
 		jo.put("type", "easy_player");
+		jo.put("name", name.substring(0, name.lastIndexOf(" Easy")));
 		
 		return jo;
+	}
+
+	@Override
+	public void reset() {
+		--numEasyPlayers;
 	}
 }

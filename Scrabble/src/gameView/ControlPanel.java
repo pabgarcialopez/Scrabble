@@ -55,9 +55,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		
 		this.bar = new JToolBar();
 		this.add(bar);
-		
-		//int barWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-		//this.bar.setPreferredSize(new Dimension(barWidth, 50));
 		this.bar.setPreferredSize(new Dimension(1100, 50));
 		
 		JButton newGameButton = new JButton();
@@ -110,7 +107,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = new JFileChooser();
-				int ret = fc.showOpenDialog(ControlPanel.this);
+				int ret = fc.showSaveDialog(ControlPanel.this);
 				if (ret == JFileChooser.APPROVE_OPTION) {
 					try {
 						controller.saveGame(fc.getSelectedFile().getName());
@@ -205,11 +202,10 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		helpButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String help = String.format("Para colocar una palabra se debe hacer click en la casilla "
-						+ "donde quieres que empiece y en el desplegable"
-						+ "que aparece escribir la palabra y la dirección.%n"
-						+ "Para pasar de turno se debe pulsar el botón situado en quinta posición empezando por la derecha.%n"
-						+ "Para intercambiar una ficha se debe pulsar el botón situado en quinta posición empezando por la derecha.");
+				String help = String.format("• Colocar palabra: hacer click en la casilla "
+						+ "donde quieres que empiece y escribir la palabra y la dirección.%n"
+						+ "• Pasar de turno: pulsar el botón situado en quinta posición desde la izquierda.%n"
+						+ "• Para intercambiar una ficha se debe pulsar el botón situado en sexta posición desde la izquierda.");
 				JOptionPane.showMessageDialog(ControlPanel.this, help, "AYUDA", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});

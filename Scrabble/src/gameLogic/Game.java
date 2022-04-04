@@ -44,6 +44,7 @@ public class Game {
 		gameInitiated = false;
 		this.observers = new ArrayList<ScrabbleObserver>();
 		this.wordChecker = new WordChecker(this);
+		this.players = new GamePlayers();
 	}
 	
 	public Game(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
@@ -65,14 +66,14 @@ public class Game {
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
 		this.wordsInBoard = wordsInBoard;
 		this.gameFinished = gameFinished;
-		this.players = players;
+		
 		this.tiles = tiles;
 		this.board = board;
 		this.usedWords = usedWords;
 		this.random = new Random();
 		this.currentTurn = currentTurn;
 		
-		if(players.getNumPlayers() != 0) {
+		if(this.players.getNumPlayers() != 0) {
 			addPlayers(players);
 		}
 		else {
@@ -303,6 +304,7 @@ public class Game {
 	}
 	
 	public void addPlayers(GamePlayers players) {
+
 		this.players = players;
 		this.initializePlayerTiles();
 		decideFirstTurn();	
@@ -425,5 +427,9 @@ public class Game {
 
 	public static boolean getGameInitiated() {
 		return gameInitiated;
+	}
+	
+	public void resetPlayers() {
+		this.players.reset();
 	}
 }

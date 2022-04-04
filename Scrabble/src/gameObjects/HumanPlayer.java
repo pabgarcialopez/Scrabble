@@ -29,4 +29,7 @@ public class HumanPlayer extends Player{
 		
 		return jo;
 	}
+
+	@Override
+	public void reset() {}
 }

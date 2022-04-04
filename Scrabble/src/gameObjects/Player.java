@@ -269,4 +269,6 @@ public abstract class Player {
 	public int getPoints() {
 		return this.totalPoints;
 	}
+
+	public abstract void reset();
 }

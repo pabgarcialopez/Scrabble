@@ -56,10 +56,17 @@ public class MediumPlayer extends Player {
 	}
 	
 	@Override
+	public void reset() {
+		--numMediumPlayers;
+	}
+	
+	@Override
 	public JSONObject report() {
 		
 		JSONObject jo = super.report();
 		jo.put("type", "medium_player");
+		
+		jo.put("name", name.substring(0, name.lastIndexOf(" Medium")));
 		
 		return jo;
 	}

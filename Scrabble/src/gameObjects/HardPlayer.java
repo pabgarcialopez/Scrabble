@@ -43,12 +43,20 @@ public class HardPlayer extends Player{
 	}
 	
 	@Override
+	public void reset() {
+		--numHardPlayers;
+	}
+	
+	@Override
 	public JSONObject report() {
 		
 		JSONObject jo = super.report();
 		jo.put("type", "hard_player");
+		jo.put("name", name.substring(0, name.lastIndexOf(" Hard")));
 		
 		return jo;
 	}
+	
+	
 
 }

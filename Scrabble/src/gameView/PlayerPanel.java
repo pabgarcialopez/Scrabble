@@ -43,15 +43,15 @@ public class PlayerPanel extends JPanel implements ScrabbleObserver {
 		
 		this.tilesPanel = new JPanel();
 		if(numJugador == 1 || numJugador == 3) {
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			add(Box.createRigidArea(new Dimension(20, 120)));
 			this.tilesPanel.setLayout(new BoxLayout(this.tilesPanel, BoxLayout.Y_AXIS));
-			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			this.tilesPanel.setPreferredSize(new Dimension(45, 315));
 		}
 		else {
+			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 			add(Box.createRigidArea(new Dimension(1, 70)));
 			this.tilesPanel.setLayout(new BoxLayout(this.tilesPanel, BoxLayout.X_AXIS));
-			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 			this.tilesPanel.setPreferredSize(new Dimension(315, 45));
 		}
 		
