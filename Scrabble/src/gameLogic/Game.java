@@ -253,7 +253,7 @@ public class Game {
 	public void update() {
 		
 		// Si no quedan fichas en el saco, y el jugador actual no tiene fichas
-		if(this.getRemainingTiles() == 0 && this.players.getNumPlayerTiles(this.currentTurn) == 0)
+		if(this.getRemainingTiles() == 0 && this.players.getNumPlayerTiles((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers()) == 0)
 			this.gameFinished = true;
 		
 		if(this.numConsecutivePassedTurns == this.getNumPlayers()*2)
