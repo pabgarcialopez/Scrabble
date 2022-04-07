@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,10 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	
 	private JButton continueButton;
 	
-	private AddPlayersDialog addPlayersDialog;;
+	private AddPlayersDialog addPlayersDialog;
+	
+	private JFileChooser fc;
+	
 	
 	ControlPanel(Controller controller, Component parent) {
 		
@@ -45,6 +49,10 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		this.buttonsToBlockGameNotInitiated = new ArrayList<JButton>();
 		
 		this.addPlayersDialog = new AddPlayersDialog(parent);
+		
+		this.fc = new JFileChooser();
+		
+		this.fc.setCurrentDirectory(new File("partidas"));
 		
 		initGUI();
 		
@@ -84,7 +92,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		loadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
+				
 				int ret = fc.showOpenDialog(ControlPanel.this);
 				if (ret == JFileChooser.APPROVE_OPTION) {
 					try {
@@ -106,7 +114,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		saveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
+				
 				int ret = fc.showSaveDialog(ControlPanel.this);
 				if (ret == JFileChooser.APPROVE_OPTION) {
 					try {
