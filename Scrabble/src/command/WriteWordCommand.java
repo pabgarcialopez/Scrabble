@@ -7,11 +7,11 @@ public class WriteWordCommand extends Command {
 
 	private static final String NAME = "palabra";
 
-	private static final String DETAILS = "[p]alabra [palabra a colocar] [dirección('V' o 'H')] [fila] [columna]";
+	private static final String DETAILS = "[p]alabra [palabra a colocar] [dirección('V'/'H')] [fila] [columna]";
 
 	private static final String SHORTCUT = "p";
 
-	private static final String HELP = "poner una palabra en el tablero";
+	private static final String HELP = "colocar palabra";
 	
 	private String word;
 	
@@ -46,7 +46,7 @@ public class WriteWordCommand extends Command {
 			this.posY = Integer.parseInt(words[4]);
 		}
 		catch(NumberFormatException nfe) {
-			throw new CommandParseException(String.format("[ERROR]: la posicion debe ser dos numeros"));
+			throw new CommandParseException(String.format("[ERROR]: la posición debe ser dos números"));
 		}
 		
 		return this;		

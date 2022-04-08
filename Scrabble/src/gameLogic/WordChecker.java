@@ -15,7 +15,7 @@ public final class WordChecker {
 	}
 
 	public void checkArguments(String word, int posX, int posY, String direction) throws CommandExecuteException {
-		
+				
 		checkWordExists(word);
 		
 		checkWordNotUsed(word);
@@ -119,7 +119,7 @@ public final class WordChecker {
 		int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
 		
 		for (int i = 0; i < word.length(); ++i)
-			if (game.getBoard().isCentre(posX + i*vertical, posY + i*horizontal)) return;
+			if (game.getBoard().isCenter(posX + i*vertical, posY + i*horizontal)) return;
 		
 		
 		throw new CommandExecuteException("La primera palabra introducida en el tablero debe situarse en la casilla central.");

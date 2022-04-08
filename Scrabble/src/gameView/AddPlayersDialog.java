@@ -55,7 +55,7 @@ private static final long serialVersionUID = 1L;
 	
 	private void initGUI() {
 		
-		setTitle("Añadir Jugadores");
+		setTitle("Añadir jugadores");
 		
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		
@@ -213,7 +213,7 @@ private static final long serialVersionUID = 1L;
 		
 		private DefaultComboBoxModel<String> typesModel;
 		private JComboBox<String> typesCombo;
-		private final String[] types = { "Facil", "Medio", "Dificil", "Humano" };
+		private final String[] types = { "Humano", "Fácil", "Medio", "Difícil" };
 		
 		private JTextField nameField;
 		
@@ -238,7 +238,7 @@ private static final long serialVersionUID = 1L;
 			
 			namePanel.add(new JLabel("Nombre: "));
 			nameField = new JTextField();
-			nameField.setToolTipText("Solo necesario para jugadores humanos. No se pueden repetir nombres");
+			nameField.setToolTipText("Solo necesario para jugadores humanos. No se pueden repetir nombres.");
 			nameField.setPreferredSize(new Dimension(60, 30));
 			namePanel.add(nameField);
 		}
@@ -260,16 +260,16 @@ private static final long serialVersionUID = 1L;
 			
 			String typeSelected = (String) this.typesCombo.getSelectedItem();
 			
-			if(typeSelected.equalsIgnoreCase("facil"))
+			if("facil".equalsIgnoreCase(typeSelected))
 				return "easy_player";
 			
-			else if(typeSelected.equalsIgnoreCase("medio"))
+			else if("medio".equalsIgnoreCase(typeSelected))
 				return "medium_player";
 			
-			else if(typeSelected.equalsIgnoreCase("dificil"))
+			else if("dificil".equalsIgnoreCase(typeSelected))
 				return "hard_player";
 			
-			else if(typeSelected.equalsIgnoreCase("humano"))
+			else if("humano".equalsIgnoreCase(typeSelected))
 				return "human_player";
 			
 			else

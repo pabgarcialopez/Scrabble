@@ -9,25 +9,34 @@ import gameObjects.Box;
 import gameObjects.Tile;
 import gameUtils.Pair;
 
+/* APUNTES GENERALES
+   
+   La clase Board es usada para modelizar el tablero de juego.
+   
+   Consta de tan solo dos atributos: el tablero (matriz de objetos Box),
+   y la posición (como un par), de la casilla central.
+ */
 public class Board {
 	
 	private List<List<Box>> board;
 	private Pair<Integer, Integer> center;
 	
-	//public Board() {
-	//	this.board = new ArrayList<List<Box>>();
-	//}
-	
-	// Constructor para nuevas y anteriores partidas.
 	public Board(List<List<Box>> board) {
-		this.board = board;
+		this.board = board; // Vacío en caso de nueva partida.
 		this.center = searchCenter();
 	}
 	
+	/* Método searchCenter:
+	 * 
+	 * Dado un tablero (posiblemente no cuadrado), 
+	 * busca la posición más centrada en él. Para ello,
+	 * delega la comprobación de ser el centro en el método
+	 * de isCenter de esta misma clase.
+	 */
 	private Pair<Integer, Integer> searchCenter() {
 		for(int i = 0; i < board.size(); i++) {
 			for(int j = 0; j < board.size(); j++) {
-				if(board.get(i).get(j).isCentre())
+				if(isCenter(i, j))
 					return new Pair<Integer, Integer>(i, j);
 			}
 		}
@@ -35,10 +44,22 @@ public class Board {
 		return null;
 	}
 
+	/* Método add:
+	 * Añade al tablero una fila de casillas
+	 */
 	public void add(List<Box> row) {
 		board.add(row);
 	}
 	
+	/* Método assignTile:
+	 * Asigna en una posición dada del tablero una ficha recibida por parámetro.
+	 */
+	public void assignTile(Tile tile, int posX, int posY) {
+		board.get(posX).get(posY).assignTile(tile);
+	}
+	
+	// Getters
+
 	public int getBoardSize() {
 		return this.board.size();
 	}
@@ -49,21 +70,14 @@ public class Board {
 	}
 
 	public Tile getTile(int posX, int posY) {
-		
 		return board.get(posX).get(posY).getTile();
 	}
 
-	public void assignTile(Tile tile, int posX, int posY) {
-
-		board.get(posX).get(posY).assignTile(tile);
-	}
-
 	public int getPoints(int posX, int posY) {
-		
 		return board.get(posX).get(posY).getPoints();
 	}
 
-	public boolean isCentre(int posX, int posY) {
+	public boolean isCenter(int posX, int posY) {
 		return board.get(posX).get(posY).isCentre();
 	}
 
@@ -72,7 +86,6 @@ public class Board {
 	}
 
 	public int getWordMultiplier(int posX, int posY) {
-		
 		return this.board.get(posX).get(posY).getWordMultiplier();
 	}
 	

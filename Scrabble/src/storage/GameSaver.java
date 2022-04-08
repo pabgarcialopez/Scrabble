@@ -18,7 +18,7 @@ public class GameSaver {
 			file += ".json";
 		
 		
-		OutputStream out = new FileOutputStream("partidas/" + file);
+		OutputStream out = new FileOutputStream("resources/existingGames/" + file);
 		
 		@SuppressWarnings("resource")
 		PrintStream p = new PrintStream(out);

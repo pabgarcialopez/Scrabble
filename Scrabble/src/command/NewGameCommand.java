@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import exceptions.CommandExecuteException;
 import scrabble.Controller;
 
+// Ver apuntes de la clase padre Command.
 public class NewGameCommand extends Command{
 
 	private static final String NAME = "nueva";
@@ -18,6 +19,10 @@ public class NewGameCommand extends Command{
 	public NewGameCommand() {
 		super(NAME, SHORTCUT, DETAILS, HELP);
 	}
+	
+	/* Sobrescritura del método execute:
+	 * Delega en la clase Controller la creación de una nueva partida.
+	 */
 	
 	@Override
 	public boolean execute(Controller controller) throws CommandExecuteException {

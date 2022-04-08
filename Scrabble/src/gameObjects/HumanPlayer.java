@@ -21,6 +21,9 @@ public class HumanPlayer extends Player{
 	}
 	
 	@Override
+	public void reset() {}
+	
+	@Override
 	public JSONObject report() {
 		
 		JSONObject jo = super.report();
@@ -29,7 +32,4 @@ public class HumanPlayer extends Player{
 		
 		return jo;
 	}
-
-	@Override
-	public void reset() {}
 }

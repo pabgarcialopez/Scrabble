@@ -6,6 +6,7 @@ import gameObjects.MediumPlayer;
 import gameObjects.Player;
 import gameObjects.Tile;
 
+// Ver apuntes de la clase padre PlayerBuilder
 public class MediumPlayerBuilder extends PlayerBuilder {
 
 	public MediumPlayerBuilder(TileBuilder tileBuilder) {
@@ -14,7 +15,6 @@ public class MediumPlayerBuilder extends PlayerBuilder {
 
 	@Override
 	protected Player createThePlayer(String name, int totalPoints, List<Tile> tiles) {
-		
 		return new MediumPlayer(name, totalPoints, tiles);
 	}
 }

@@ -28,13 +28,11 @@ public class ChooseWordDialog extends JDialog {
 	private DefaultComboBoxModel<String> directionsModel;
 	private JComboBox<String> directionsCombo;
 	
-	
 	private JTextField wordField;
 	
 	private JLabel position;
 	
 	private int status;
-	
 	
 	ChooseWordDialog(Component parent) {
 		this.parent = parent;
@@ -91,6 +89,7 @@ public class ChooseWordDialog extends JDialog {
 		cancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				status = 0;
 				setVisible(false);
 			}
 		});
@@ -101,7 +100,8 @@ public class ChooseWordDialog extends JDialog {
 		ok.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(wordField.getText() != null && directionsCombo.getSelectedItem() != null) status = 1;
+				if(wordField.getText() != null && directionsCombo.getSelectedItem() != null) 
+					status = 1;
 				else  {
 					status = 0;
 					JOptionPane.showMessageDialog(ChooseWordDialog.this, "Los valores escogidos no son válidos", "ERROR", JOptionPane.ERROR_MESSAGE);

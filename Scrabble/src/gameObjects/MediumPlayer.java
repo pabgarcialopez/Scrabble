@@ -29,14 +29,14 @@ public class MediumPlayer extends Player {
 		if(!game.getWordsInBoard()) {
 			while(!played && lengths.size() > 0) {
 				int i = (int) (this.rdm.nextDouble() * lengths.size());
-				played = this.tryWritingInBoardWithoutWords(lengths.remove(i), tilesForWord, game);
+				played = this.tryWritingInEmptyBoard(lengths.remove(i), tilesForWord, game);
 			}
 		}
 		else {
 			lengths.add(this.getNumTiles() + 1);
 			while(!played && lengths.size() > 0) {
 				int i = (int) (this.rdm.nextDouble() * lengths.size());
-				played = this.tryWritingInBoardWithWords(lengths.remove(i), tilesForWord, game);
+				played = this.tryWritingInNotEmptyBoard(lengths.remove(i), tilesForWord, game);
 			}
 		}
 		

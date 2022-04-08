@@ -1,5 +1,4 @@
 package gameContainers;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -7,26 +6,35 @@ import org.json.JSONObject;
 
 import gameObjects.Tile;
 
+/* APUNTES GENERALES
+
+   La clase GameTiles es usada para modelizar el conjunto de fichas de juego (saco).
+	
+   Consta de tan solo un atributo: una lista de objetos de tipo Tile.
+*/
 public class GameTiles {
 
 	private List<Tile> tiles;
 	
-	public GameTiles() {
-		this.tiles = new ArrayList<Tile>();
-	}
-	
-	// Constructor para la carga de partida
 	public GameTiles(List<Tile> tiles) {
 		this.tiles = tiles;
 	}
 
+	/* Método add:
+	 * Añade una ficha al saco de fichas del juego.
+	 */
 	public void add(Tile tile) {
 		tiles.add(tile);
 	}
 	
+	/* Método remove:
+	 * Borra una ficha al saco de fichas del juego.
+	 */
 	public void remove(Tile tile) {
 		tiles.remove(tile);
 	}
+	
+	// Getters
 	
 	public int getNumTiles() {
 		return tiles.size();

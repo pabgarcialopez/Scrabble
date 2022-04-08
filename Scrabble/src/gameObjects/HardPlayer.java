@@ -24,11 +24,11 @@ public class HardPlayer extends Player{
 		
 		if(!game.getWordsInBoard()) {
 			for(int wordLength = tilesForWord.size(); wordLength > 1 && !played; --wordLength)
-				played = tryWritingInBoardWithoutWords(wordLength, tilesForWord, game);
+				played = tryWritingInEmptyBoard(wordLength, tilesForWord, game);
 		}
 		else {
 			for(int wordLength = tilesForWord.size() + 1; wordLength > 1 && !played; --wordLength)
-				played = tryWritingInBoardWithWords(wordLength, tilesForWord, game);
+				played = tryWritingInNotEmptyBoard(wordLength, tilesForWord, game);
 		}
 		
 		

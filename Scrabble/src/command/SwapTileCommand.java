@@ -2,6 +2,7 @@ package command;
 
 import scrabble.Controller;
 
+// Ver apuntes de la clase padre Command.
 public class SwapTileCommand extends Command {
 	
 	private static final String NAME = "intercambio";
@@ -16,9 +17,15 @@ public class SwapTileCommand extends Command {
 		super(NAME, SHORTCUT, DETAILS, HELP);
 	}
 	
+	/* Sobrescritura del método execute:
+	 * Delega en la clase Controller la acción de cambio de ficha.
+	 * El método swapTile() devuelve falso si no se puede robar ficha.
+	 * Por tanto, en este caso, se debe devolver true para que el
+	 * actual jugador pueda realizar otra acción si lo desea.
+	 */
+	
 	@Override
 	public boolean execute(Controller controller) {
-		
 		return !controller.swapTile();
 	}
 }

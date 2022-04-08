@@ -15,53 +15,136 @@ import gameContainers.Board;
 import gameContainers.GamePlayers;
 import gameContainers.GameTiles;
 import gameObjects.Box;
+import gameObjects.Player;
 import gameObjects.Tile;
 import gameUtils.StringUtils;
 import gameView.ScrabbleObserver;
 import storage.GameLoader;
 
+/* APUNTES GENERALES
+
+La clase Game encapsula toda la lógica de juego.
+
+Para ello, necesita:
+
+
+- Contenedores de tipo Board, GamePlayers, GameTiles.
+- El turno del jugador actual y el número consecutivo de turnos saltados.
+- Conocer si se han puesto palabras en el tablero y si el juego ha terminado.
+- Listas de las palabras usadas, y todas las palabras válidas.
+- Un comprobador de palabras.
+- Un objeto Random para establecer aleatoriedad.
+- Lista de observadores para actualizar las vistas en función del modelo.
+
+*/
+
 public class Game {
 	
 	private static final int EXTRA_POINTS = 50;
+	private static final int PASSED_TURNS_TO_END_GAME = 2;
 	private static boolean gameInitiated;
 	
-	private GamePlayers players;
-	private Random random;
-	private GameTiles tiles;
 	private Board board;
-	private List<String> usedWords;
-	private static List<String> words;
-	private WordChecker wordChecker;
-	private List<ScrabbleObserver> observers;
+	private GamePlayers players;
+	private GameTiles tiles;
 	
 	private int currentTurn;
 	private int numConsecutivePassedTurns;
 	
 	private boolean wordsInBoard;
 	private boolean gameFinished;
+	private String gameFinishedCause;
 	
+	private List<String> usedWords;
+	private static List<String> words;
+	
+	private WordChecker wordChecker;
+	
+	private Random random;
+	
+	private List<ScrabbleObserver> observers;
+
 	public Game() {
+		
 		gameInitiated = false;
-		this.observers = new ArrayList<ScrabbleObserver>();
+		
+		this.board = null;
+		this.players = new GamePlayers((List<Player>) new ArrayList<Player>());
+		this.tiles = null;
+		
+		this.currentTurn = 0;
+		this.numConsecutivePassedTurns = 0;
+		
+		this.wordsInBoard = false;
+		this.gameFinished = false;
+		this.gameFinishedCause = "";
+		
+		this.usedWords = null;
+		
 		this.wordChecker = new WordChecker(this);
-		this.players = new GamePlayers();
+		this.observers = new ArrayList<ScrabbleObserver>();
+
+		
+//		gameInitiated = false;
+//		
+//		this.observers = new ArrayList<ScrabbleObserver>();
+//		this.wordChecker = new WordChecker(this);
+//		this.players = new GamePlayers((List<Player>) new ArrayList<Player>());
 	}
 	
-	public Game(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
-			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
-		
-		this.observers = new ArrayList<ScrabbleObserver>();
-		this.wordChecker = new WordChecker(this);
-		
-		reset(currentTurn, numConsecutivePassedTurns, wordsInBoard, 
-				gameFinished, players, tiles, board, usedWords);
-	}
+//	public Game(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
+//			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
+//		
+//		this.observers = new ArrayList<ScrabbleObserver>();
+//		this.wordChecker = new WordChecker(this);
+//		
+//		reset(currentTurn, numConsecutivePassedTurns, wordsInBoard, 
+//				gameFinished, players, tiles, board, usedWords);
+//	}
 	
-	
-	// LOGICA DEL JUEGO
-	
+	/* Método reset:
+	 * 
+	 * Este método recibe desde la clase GameLoader ciertos valores con los que inicializar atributos de esta clase.
+	 * 
+	 * Si el fichero que se haya cargado tenía jugadores predeterminados, se llama al método addPlayers de esta clase
+	 * (ver su funcionalidad).
+	 * 
+	 * En caso contrario, hay que pedirlos al usuario (ya sea por consola o por interfaz gráfica).
+	 * 
+	 * IMPORTANTE: la inicialización del atributo de la clase Random y el atributo que representa el turno actual,
+	 * deben inicializarse antes de ejecutar el if-else, por razones de diseño.
+	 */
 	public void reset(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
 			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
+		
+		this.board = board;
+		this.tiles = tiles;
+		
+		this.random = new Random();
+
+		this.currentTurn = currentTurn;
+		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
+		
+		if(players.getNumPlayers() != 0) {
+			addPlayers(players);
+		}
+		
+		else {
+			for(ScrabbleObserver o : this.observers)
+				o.onPlayersNotAdded(this);
+		}
+		
+		this.wordsInBoard = wordsInBoard;
+		this.gameFinished = gameFinished;
+		
+		this.usedWords = usedWords;
+		
+		gameInitiated = true;
+		
+		for(int i = 0; i < this.observers.size(); ++i)
+			this.observers.get(i).onReset(this);
+		
+		/* VERSION ANTERIOR
 		
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
 		this.wordsInBoard = wordsInBoard;
@@ -86,6 +169,8 @@ public class Game {
 		
 		for(int i = 0; i < this.observers.size(); ++i)
 			this.observers.get(i).onReset(this);
+			
+		 */
 	}
 
 	
@@ -96,6 +181,7 @@ public class Game {
 	public boolean writeAWord(String word, int posX, int posY, String direction) {
 		
 		try {
+			word = StringUtils.removeAccents(word.toLowerCase());
 			this.wordChecker.checkArguments(word, posX, posY, direction);
 		}
 		catch(CommandExecuteException cee) {
@@ -131,6 +217,13 @@ public class Game {
 		return true;
 	}
 	
+	/* Método decideFirstTurn:
+	 * 
+	 * Este método decide, si es necesario, el orden de juego de una partida.
+	 * 
+	 * Primero comprueba que 
+	 *
+	 */
 	public void decideFirstTurn() {
 		
 		if(0 <= this.currentTurn && this.currentTurn < this.players.getNumPlayers())
@@ -180,13 +273,15 @@ public class Game {
 			return false;
 		}
 		
-		int randomPlayerTile = (int) (getRandomDouble() * players.getNumPlayerTiles(this.currentTurn));
+		int randomNumberForTile = (int) (getRandomDouble() * players.getNumPlayerTiles(currentTurn));
+		
+		Tile randomTile = players.getPlayerTile(currentTurn, randomNumberForTile);
 		
 		// Aniadimos la ficha al saco original
-		tiles.add(players.getPlayerTile(currentTurn, randomPlayerTile));
+		tiles.add(randomTile);
 		
 		// Quitamos la ficha al jugador
-		players.removePlayerTile(currentTurn, randomPlayerTile);
+		players.removePlayerTile(currentTurn, randomTile);
 		
 		// Le damos una ficha al jugador aleatoria
 		players.drawTiles(this, currentTurn);
@@ -203,12 +298,6 @@ public class Game {
 	
 	public void removeTile(Tile tile) {
 		tiles.remove(tile);
-	}
-	
-	public void initializePlayerTiles() {
-		for(int i = 0; i < this.players.getNumPlayers(); i++) {
-			players.drawTiles(this, i);
-		}
 	}
 	
 	private int calculatePoints(String word, int posX, int posY, String direction) {
@@ -255,20 +344,28 @@ public class Game {
 	public void update() {
 		
 		// Si no quedan fichas en el saco, y el jugador actual no tiene fichas
-		if(this.getRemainingTiles() == 0 && this.players.getNumPlayerTiles((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers()) == 0)
+		if(this.getRemainingTiles() == 0 && 
+				this.players.getNumPlayerTiles((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers()) == 0) {
 			this.gameFinished = true;
+			
+			this.gameFinishedCause = "La partida ha finalizado: no quedan fichas para robar." + StringUtils.DOUBLE_LINE_SEPARATOR;
+		}
 		
-		if(this.numConsecutivePassedTurns == this.getNumPlayers()*2)
+		if(this.numConsecutivePassedTurns == this.getNumPlayers() * PASSED_TURNS_TO_END_GAME) {
 			this.gameFinished = true;
+			this.gameFinishedCause = "La partida ha finalizado: todos los jugadores han pasado " 
+					+ PASSED_TURNS_TO_END_GAME + " turnos." + StringUtils.DOUBLE_LINE_SEPARATOR;
+		}
 		
 		for(ScrabbleObserver o : this.observers)
 			o.onUpdate(this);
 		
 		if(gameIsFinished()) {
 			for(ScrabbleObserver o : this.observers)
-				o.onEnd(getWinnerName());
+				o.onEnd(gameFinishedCause + getWinnerName());
 		}
 	}
+	
 
 	private String getWinnerName() {
 		List<Integer> winners = this.players.getWinners();
@@ -296,7 +393,7 @@ public class Game {
 	}
 
 	public void addUsedWord(String word) {
-		this.usedWords.add(word);
+		this.usedWords.add(word.toLowerCase());
 		Collections.sort(this.usedWords);
 	}
 	
@@ -304,11 +401,28 @@ public class Game {
 		words = GameLoader.loadWordList();
 	}
 	
+	/* Método addPlayers:
+	 * 
+	 * Este método inicializa el container GamePlayers al recibido por parámetro.
+	 * Además, completa las fichas que a los jugadores les pueda faltar (caso de nueva partida).
+	 * Por último, si es necesario (partida nueva), el método decideFirstTurn establecerá el orden
+	 * de juego de la partida.
+	 * 
+	 */
 	public void addPlayers(GamePlayers players) {
 
 		this.players = players;
-		this.initializePlayerTiles();
+		this.initPlayerTiles();
 		decideFirstTurn();	
+	}
+	
+	/* Método initPlayerTiles:
+	 * 
+	 */
+	public void initPlayerTiles() {
+		for(int i = 0; i < this.players.getNumPlayers(); i++) {
+			players.drawTiles(this, i);
+		}
 	}
 
 	public void addObserver(ScrabbleObserver o) {
@@ -323,30 +437,21 @@ public class Game {
 			this.observers.remove(o);
 	}
 	
-	public JSONObject report() {
+	public void userExits() {
 		
-		JSONObject jo = new JSONObject();
+		this.gameFinished = true;
 		
-		jo.put("current_turn", this.currentTurn);
-		jo.put("consecutive_turns_passed", this.numConsecutivePassedTurns);
-		jo.put("words_in_board", this.wordsInBoard);
-		jo.put("game_finished", this.gameFinished);
+		this.gameFinishedCause = "El jugador " 
+				+ this.players.getPlayerName(this.currentTurn) + " ha finalizado la partida." 
+				+ StringUtils.DOUBLE_LINE_SEPARATOR;
 		
-		JSONArray words = new JSONArray();
-		for(int i = 0; i < this.usedWords.size(); ++i)
-			words.put(this.usedWords.get(i));
-		
-		JSONObject usedWords = new JSONObject();
-		usedWords.put("words", words);
-		
-		jo.put("used_words", usedWords);
-		jo.put("game_players", this.players.report());
-		jo.put("game_tiles", this.tiles.report());
-		jo.put("game_board", this.board.report());
-		
-		return jo;
+		for(ScrabbleObserver o : this.observers)
+			o.onEnd(gameFinishedCause + getWinnerName());
 	}
-
+	
+	public void resetPlayers() {
+		this.players.reset();
+	}
 	
 	// GETTERS
 	
@@ -374,8 +479,7 @@ public class Game {
 		if(tiles.getNumTiles() == 0)
 			return null;
 		
-		return 
-			tiles.getTile((int) (this.getRandomDouble() * this.tiles.getNumTiles()));
+		return tiles.getTile((int) (this.getRandomDouble() * this.tiles.getNumTiles()));
 	}
 	
 	private Double getRandomDouble() {
@@ -384,7 +488,11 @@ public class Game {
 	
 	public String getStatus() {
 		String status = "Fichas restantes: " + this.getRemainingTiles() + StringUtils.LINE_SEPARATOR;
-		status += players.getPlayerStatus(currentTurn);
+		status += players.getPlayerStatus(currentTurn) + StringUtils.LINE_SEPARATOR;
+		
+		if(!humanIsPlaying())
+			status += "Cargando... Por favor, espera." + StringUtils.LINE_SEPARATOR;
+		
 		return status;
 	}
 	
@@ -416,21 +524,32 @@ public class Game {
 		return players.humanIsPlaying(currentTurn);
 	}
 	
-	public void userExits() {
-		
-		this.gameFinished = true;
-		
-		if(gameIsFinished()) {
-			for(ScrabbleObserver o : this.observers)
-				o.onEnd("¡Gracias por jugar!");
-		}
-	}
-
 	public static boolean getGameInitiated() {
 		return gameInitiated;
 	}
 	
-	public void resetPlayers() {
-		this.players.reset();
+	public JSONObject report() {
+		
+		JSONObject jo = new JSONObject();
+		
+		jo.put("current_turn", this.currentTurn);
+		jo.put("consecutive_turns_passed", this.numConsecutivePassedTurns);
+		jo.put("words_in_board", this.wordsInBoard);
+		jo.put("game_finished", this.gameFinished);
+		
+		JSONArray words = new JSONArray();
+		for(int i = 0; i < this.usedWords.size(); ++i)
+			words.put(this.usedWords.get(i));
+		
+		JSONObject usedWords = new JSONObject();
+		usedWords.put("words", words);
+		
+		jo.put("used_words", usedWords);
+		jo.put("game_players", this.players.report());
+		jo.put("game_tiles", this.tiles.report());
+		jo.put("game_board", this.board.report());
+		
+		return jo;
 	}
+
 }

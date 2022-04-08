@@ -12,6 +12,12 @@ public class WordsBuilder extends Builder<List<String>>{
 		super("used_words");
 	}
 
+	/* Sobrescritura del método createTheInstance:
+	 * 
+	 * Construye y devuelve la lista que contiene todas 
+	 * las palabras válidas del juego.
+	 */
+
 	@Override
 	protected List<String> createTheInstance(JSONObject data) {
 		

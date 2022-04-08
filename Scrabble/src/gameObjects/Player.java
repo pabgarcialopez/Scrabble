@@ -150,7 +150,7 @@ public abstract class Player {
 	
 	public abstract boolean isHuman();
 	
-	protected boolean tryWritingInBoardWithWords(int wordLength, List<Tile> tilesForWord, Game game) {
+	protected boolean tryWritingInNotEmptyBoard(int wordLength, List<Tile> tilesForWord, Game game) {
 		
 		if(wordLength > tilesForWord.size() + 1)
 			return false;
@@ -178,7 +178,7 @@ public abstract class Player {
 		return played;
 	}
 	
-	protected boolean tryWritingInBoardWithoutWords(int wordLength, List<Tile> tilesForWord, Game game) {
+	protected boolean tryWritingInEmptyBoard(int wordLength, List<Tile> tilesForWord, Game game) {
 		
 		if(wordLength > tilesForWord.size())
 			return false;

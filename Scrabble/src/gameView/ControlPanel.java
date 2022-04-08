@@ -52,7 +52,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		
 		this.fc = new JFileChooser();
 		
-		this.fc.setCurrentDirectory(new File("partidas"));
+		this.fc.setCurrentDirectory(new File("existingGames"));
 		
 		initGUI();
 		

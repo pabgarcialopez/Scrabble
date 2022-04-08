@@ -17,6 +17,13 @@ public class GameTilesBuilder extends Builder<GameTiles>{
 		this.tileBuilder = tileBuilder;
 	}
 
+	/* Sobrescritura del método createTheInstance:
+	 * 
+	 * Construye y devuelve una instancia de la clase GameTiles,
+	 * es decir, las fichas del "saco" que los jugadores irán cogiendo
+	 * según avance la partida.
+	 */
+
 	@Override
 	protected GameTiles createTheInstance(JSONObject data) {
 		

@@ -10,7 +10,6 @@ public class Box {
 	
 	// Constructor para cuando en la casilla existe una ficha
 	public Box(SpecialEffects specialEffect, Tile tile) {
-		
 		this.tile = tile;
 		this.specialEffect = specialEffect;
 		this.specialEffectAlreadyDone = true;
@@ -18,8 +17,8 @@ public class Box {
 	
 	// Constructor para cuando en la casilla NO existe una ficha
 	public Box(SpecialEffects specialEffect) {
-		this.specialEffect = specialEffect;
 		this.tile = null;
+		this.specialEffect = specialEffect;
 		this.specialEffectAlreadyDone = false;
 	}
 	

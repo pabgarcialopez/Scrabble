@@ -15,6 +15,14 @@ public class BoxBuilder extends Builder<Box>{
 		this.tileBuilder = tileBuilder;
 	}
 	
+	/* Sobrescritura del método createTheInstance:
+	 * 
+	 * Este método construye un objeto de la clase Box, es decir,
+	 * una casilla del tablero. La casilla tiene la posibilidad de
+	 * tener asociados un efecto especial y una letra, las cuales vienen
+	 * especificadas en el JSONObject recibido por parámetro.
+	 */
+	
 	@Override
 	protected Box createTheInstance(JSONObject data) {
 		

@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -30,6 +31,10 @@ public class ConsoleView implements ScrabbleObserver {
 	private static final String DOUBLE_WORD_SYMBOL = "░";
 	private static final String TRIPLE_LETTER_SYMBOL = "▒";
 	private static final String TRIPLE_WORD_SYMBOL = "█";
+	private static final String ROW_SEPARATOR_SYMBOL = "-";
+	private static final String COLUMN_SEPARATOR_SYMBOL = "|";
+	
+	private static final String[] PLAYER_TYPES = {"humano", "fácil", "medio", "difícil"};
 	
 	private Controller controller;
 	
@@ -47,13 +52,13 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 
 	public void showStatus(Game game) {
-		this.out.println(game.getStatus());
+		this.out.print(game.getStatus());
 	}
 
 	private void showFirstTurn(String[] lettersObtained, GamePlayers players, int turn) {
 		
 		StringBuilder buffer = new StringBuilder();
-		buffer.append("Eleccion de turnos:").append(StringUtils.LINE_SEPARATOR);
+		buffer.append("Elección de turnos:").append(StringUtils.LINE_SEPARATOR);
 		
 		for(int i = 0; i < players.getNumPlayers(); i++) {
 			buffer.append(players.getPlayerName(i)).append(" ha cogido una ")
@@ -66,20 +71,41 @@ public class ConsoleView implements ScrabbleObserver {
 			buffer.append(players.getPlayerName((i + turn) % players.getNumPlayers()));
 			if(i != players.getNumPlayers() - 1) buffer.append(" -> ");
 		}
-			
 		
 		buffer.append(StringUtils.LINE_SEPARATOR);
 		
 		this.out.println(buffer);
+		
+		pausa();
 	}
 
 	public void showBoard(Game game) {
 		
-		this.out.print("   "); // Espacio de indentacion
-		// Imprimimos linea de coordenadas del lado superior
+		// Numero de digitos del tamaño del tablero.
+		int max_indentation_length = (int) Math.log10(game.getBoardSize()) + 1;
+		String max_left_indentation = createIndentation(max_indentation_length) + "   ";
+		
+		// Numero de "ROW_SEPARATOR_SYMBOL", que deben separar filas.
+		int row_separator_length = 0;
+		
+		// Indentación para la primera fila de números.
+		this.out.print(max_left_indentation);
+		
+		// Imprimimos línea de coordenadas del lado superior
 		for(int i = 0; i < game.getBoardSize(); i++) {
-			if(i < 10) this.out.print(" " + i + "  ");
-			else this.out.print(" " + i + " ");
+			
+			// Espacio extra que deben tener numeros de ciertas cifras
+			int separationBetweenNumbers = max_indentation_length - (i == 0 ? 1 : (int) Math.log10(i) + 1);
+			
+			if(max_indentation_length % 2 == 0) {
+				this.out.print(createIndentation(max_indentation_length / 2) + i + createIndentation(max_indentation_length / 2 + separationBetweenNumbers));
+				row_separator_length += max_indentation_length + separationBetweenNumbers + (i == 0 ? 1 : (int) Math.log10(i) + 1);
+			}
+			
+			else {
+				this.out.print(createIndentation(max_indentation_length / 2 + 1) + i + createIndentation(max_indentation_length / 2 + separationBetweenNumbers + 2));
+				row_separator_length += max_indentation_length + separationBetweenNumbers + 2 + (i == 0 ? 1 : (int) Math.log10(i) + 1);
+			}
 		}
 		
 		this.out.print(StringUtils.LINE_SEPARATOR);
@@ -87,15 +113,15 @@ public class ConsoleView implements ScrabbleObserver {
 		// Imprimimos el resto del tablero
 		for(int i = 0; i < game.getBoardSize(); i++) {
 			
-			this.out.print("   "); // Espacio de indentacion
-			for(int k = 0; k < game.getBoardSize(); k++)
-				this.out.print("----");
-			
-			this.out.print(StringUtils.LINE_SEPARATOR);
+			printRowSeparator(row_separator_length - 1, max_left_indentation);
 				
-			// Imprimir numero de fila
-			if(i < 10) this.out.print(" " + i);
-			else this.out.print(i);
+			// Imprimir número de fila
+			this.out.print(" ");
+			
+			int i_indentation_length = max_indentation_length - (i == 0 ? 1 : (int) Math.log10(i) + 1);
+			String actual_left_indentation = createIndentation(i_indentation_length);
+			
+			this.out.print(actual_left_indentation + i + " ");
 			
 			// Imprimir lo correspondiente a esa fila
 			for(int j = 0; j < game.getBoardSize(); j++) {
@@ -105,29 +131,28 @@ public class ConsoleView implements ScrabbleObserver {
 				if(" ".equals(boxContent)) {
 					SpecialEffects speEff = box.getSpecialEffect();
 					
-					if(SpecialEffects.CENTRE.equals(speEff))
-						boxContent = CENTRE_SYMBOL;
-					else if(SpecialEffects.DOUBLE_LETTER.equals(speEff))
-						boxContent = DOUBLE_LETTER_SYMBOL;
-					else if(SpecialEffects.DOUBLE_WORD.equals(speEff))
-						boxContent = DOUBLE_WORD_SYMBOL;
-					else if(SpecialEffects.TRIPLE_LETTER.equals(speEff))
-						boxContent = TRIPLE_LETTER_SYMBOL;
-					else if(SpecialEffects.TRIPLE_WORD.equals(speEff))
-						boxContent = TRIPLE_WORD_SYMBOL;
+					if(speEff != null) {
+						switch(speEff) {
+						case CENTRE: boxContent = CENTRE_SYMBOL; break;
+						case DOUBLE_LETTER: boxContent = DOUBLE_LETTER_SYMBOL; break;
+						case DOUBLE_WORD: boxContent = DOUBLE_WORD_SYMBOL; break;
+						case TRIPLE_LETTER: boxContent = TRIPLE_LETTER_SYMBOL; break;
+						case TRIPLE_WORD: boxContent = TRIPLE_WORD_SYMBOL; break;
+				
+						}
+					}
 				}
 				
-				this.out.print("|" + " " + boxContent + " ");
+				if(max_indentation_length % 2 == 0)
+					this.out.print(COLUMN_SEPARATOR_SYMBOL + createIndentation(max_indentation_length/2) + boxContent + createIndentation(max_indentation_length/2));
+				
+				else this.out.print(COLUMN_SEPARATOR_SYMBOL + createIndentation(max_indentation_length/2 + 1) + boxContent + createIndentation(max_indentation_length/2 + 1));
 			}
 				
-			this.out.print("|" + StringUtils.LINE_SEPARATOR);
+			this.out.print(COLUMN_SEPARATOR_SYMBOL + StringUtils.LINE_SEPARATOR);
 		}
 		
-		this.out.print("   "); // Espacio de indentacion
-		for(int k = 0; k < game.getBoardSize(); k++)
-			this.out.print("----");
-		
-		this.out.print(StringUtils.LINE_SEPARATOR);
+		printRowSeparator(row_separator_length - 1, max_left_indentation);
 		
 		this.out.print("Doble letra: " + DOUBLE_LETTER_SYMBOL + " || " +
 				         "Doble palabra: " + DOUBLE_WORD_SYMBOL + " || " +
@@ -137,22 +162,39 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		this.out.print(StringUtils.LINE_SEPARATOR);
 	}
+	
+	private String createIndentation(int length) {
+		String indentation = "";
+		for(int i = 0; i < length; i++)
+			indentation += " ";
+		return indentation;
+	}
+	
+	private void printRowSeparator(int row_separator_length, String max_left_indentation) {
+		
+		this.out.print(max_left_indentation);
+		for(int i = 0; i < row_separator_length; i++)
+			this.out.print(ROW_SEPARATOR_SYMBOL);
+		this.out.print(StringUtils.LINE_SEPARATOR);
+	}
 
-	public void showEndMessage() {
-		this.out.println("Gracias por jugar!");
+	public void showEndMessage(String winners) {
+		this.out.print(StringUtils.LINE_SEPARATOR);
+		this.out.println(winners);
+		this.out.println("¡Gracias por jugar!");
 	}
 
 	@Override
 	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points,
 			int extraPoints) {
 		this.out.println(String.format(
-				"El jugador %s escribe la palabra \"%s\" en la posicion (%s, %s) en dirección \"%s\".%n",
+				"El jugador %s escribe la palabra \"%s\" en la posición (%s, %s) en dirección \"%s\".%n",
 				game.getPlayers().getPlayerName(game.getCurrentTurn()), word.toUpperCase(), posX, posY, direction.toUpperCase()));
 		this.out.print(String.format("¡Gana %s puntos!", points));
 		if(extraPoints != 0)
 			this.out.println(String.format(" Además, ¡gana %s puntos extra!%n", extraPoints));
 		else
-			this.out.println(StringUtils.LINE_SEPARATOR);
+			this.out.print(StringUtils.DOUBLE_LINE_SEPARATOR);
 	}
 
 	@Override
@@ -206,7 +248,7 @@ public class ConsoleView implements ScrabbleObserver {
 
 	@Override
 	public void onEnd(String message) {
-		showEndMessage();
+		showEndMessage(message);
 		System.exit(0);
 	}
 	
@@ -226,29 +268,28 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		if(this.humanIsPlaying) {
 			
-			while (command == null) {
+			while (command == null)
 				command = askCommand();
-			}
 			
-			boolean makeAnotherTurn = true;
+			boolean playAnotherTurn = true;
 			
 			try {
-				makeAnotherTurn = command.execute(this.controller);
+				playAnotherTurn = command.execute(this.controller);
 			}
 			
 			catch(CommandExecuteException cee) {
 				this.out.println(cee.getMessage() + StringUtils.LINE_SEPARATOR);
 			}
 			
-			if(makeAnotherTurn) {
+			if(playAnotherTurn)
 				playTurn();
-			}
 			
 			else {				
 				pausa();
 				controller.update();
 			}
 		}
+		
 		else {
 			controller.automaticPlay();
 			pausa();
@@ -257,7 +298,7 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 	
 	private void pausa() {
-		this.out.println("Pulse enter para continuar...");
+		this.out.println("Pulsa enter para continuar...");
 		this.in.nextLine();
 	}
 
@@ -288,7 +329,7 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		while(players.length() < numPlayers) {
 			
-			this.out.print("Tipo del jugador " + (players.length() + 1) + " [facil, medio, dificil o humano]: ");
+			this.out.print("Tipo del jugador " + (players.length() + 1) + " " + Arrays.asList(PLAYER_TYPES).toString() + ": ");
 			String type = takeType(this.in.nextLine().trim());
 			
 			if(type != null) {
@@ -326,22 +367,22 @@ public class ConsoleView implements ScrabbleObserver {
 			
 		int numPlayers = 0;
 		boolean done = false;
-		this.out.print("Selecciona el numero de jugadores (2-4): ");
+		this.out.print("Selecciona el número de jugadores (2-4): ");
 		
 		while (!done) {
 			try {
 				numPlayers = this.in.nextInt();
 				
 				if (numPlayers < 2 || numPlayers > 4) {
-					this.out.println("El numero de jugadores debe estar entre 2 y 4.");
-					this.out.print("Selecciona el numero de jugadores (2-4): ");
+					this.out.println("El número de jugadores debe estar entre 2 y 4.");
+					this.out.print("Selecciona el número de jugadores (2-4): ");
 				}
 				else done = true;
 				
 			}
 			catch (InputMismatchException ime) {
-				this.out.println("¡La entrada debe ser un numero!");
-				this.out.print("Selecciona el numero de jugadores (2-4): ");
+				this.out.println("¡La entrada debe ser un número!");
+				this.out.print("Selecciona el número de jugadores (2-4): ");
 				this.in.nextLine();
 			}
 		}
@@ -366,7 +407,9 @@ public class ConsoleView implements ScrabbleObserver {
 	
 	private static String takeType(String type) {
 
-		switch(type.toLowerCase()) {
+		type = StringUtils.removeAccents(type.toLowerCase());
+		
+		switch(type) {
 		case "facil":
 			return "easy_player";
 		case "medio":
@@ -393,16 +436,16 @@ public class ConsoleView implements ScrabbleObserver {
 		while(option != 1 && option != 2) {
 			
 			try {
-				this.out.print(StringUtils.LINE_SEPARATOR + "Selecciona opcion: ");
+				this.out.print(StringUtils.LINE_SEPARATOR + "Selecciona opción: ");
 				option = this.in.nextInt();
 				
 				if(option != 1 && option != 2)
-					this.out.println("Opcion no valida.");
+					this.out.println("Opción no valida.");
 			}
 			
 			catch(InputMismatchException ime) {
 				this.in.nextLine();
-				this.out.println("Opcion no valida.");
+				this.out.println("Opción no valida.");
 			}
 		}
 		
@@ -414,36 +457,48 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		else {
 			
-			File dir = new File("partidas");
+			File dir = new File("resources/existingGames");
 			File[] files = dir.listFiles();
 			
 			if(files.length != 0) {
 				this.out.print(StringUtils.LINE_SEPARATOR);
 				this.out.print("Las partidas disponibles son:" + StringUtils.LINE_SEPARATOR);
 				
-				
 				for(File file: files) {
 					String fileName = file.getName();
-					String[] fileComponents = fileName.split("\\.");
-					this.out.println("|--> " + fileComponents[0]);
+					this.out.println("|--> " + fileName);
 				}
-			}
 				
-			this.out.print(StringUtils.LINE_SEPARATOR);
-			this.out.print("Introduce el nombre de la partida a cargar: ");
-			String fileWithNoExtension = this.in.nextLine().trim();
-			String file = "partidas/" + fileWithNoExtension + ".json";
-			
-			while(!(new File(file)).exists()) {
 				this.out.print(StringUtils.LINE_SEPARATOR);
-				this.out.println("No existe una partida con el nombre " + "\"" + fileWithNoExtension + "\"");
-				
 				this.out.print("Introduce el nombre de la partida a cargar: ");
-				fileWithNoExtension = this.in.nextLine().trim();
-				file = "partidas/" + fileWithNoExtension + ".json";
+				
+				String file = this.in.nextLine();
+				
+				if(!file.endsWith(".json"))
+					file += ".json";
+				
+				while(!(new File("resources/existingGames/" + file)).exists()) {
+					this.out.print(StringUtils.LINE_SEPARATOR);
+					this.out.println("No existe una partida con el nombre " + "\"" + file + "\"");
+					
+					this.out.print("Introduce el nombre de la partida a cargar: ");
+					
+					file = this.in.nextLine();
+					
+					if(!file.endsWith(".json"))
+						file += ".json";
+				}
+				
+				this.out.print(StringUtils.LINE_SEPARATOR);
+				
+				this.controller.loadGame("resources/existingGames/" + file);
 			}
 			
-			this.controller.loadGame(file);
+			else {
+				this.out.print(StringUtils.LINE_SEPARATOR);
+				this.out.print("No existen partidas anteriores.");
+				this.out.print(StringUtils.LINE_SEPARATOR);
+			}
 		}
 	}
 }

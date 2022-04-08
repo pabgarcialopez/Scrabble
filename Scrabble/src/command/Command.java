@@ -4,22 +4,37 @@ import exceptions.CommandExecuteException;
 import exceptions.CommandParseException;
 import scrabble.Controller;
 
+/* APUNTES GENERALES:
+   
+   La clase Command es una clase abstracta que 
+   encapsula la principal funcionalidad de los comandos.
+   
+   Cada comando tiene un nombre (name), un atajo (shortcut),
+   su formato de entrada (details) y una descripcion (help).
+   
+   El metodo parse es sobreescrito en LoadCommand, SaveCommand y WriteWordCommand.
+   
+   El metodo execute, al ser abstracto, es sobreescrito por todas los comandos que
+   heredan de esta clase.
+   
+ */
 public abstract class Command {
+	
 	private static final String UNKNOWN_COMMAND_MSG = "Comando desconocido";
-
 	protected static final String INCORRECT_NUMBER_OF_ARGS_MSG = "Número incorrecto de argumentos";
 
 	/* @formatter:off */
 	protected static final Command[] AVAILABLE_COMMANDS = {
-		new WriteWordCommand(),
-		new PassTurnCommand(),
-		new SwapTileCommand(),
-		new HelpCommand(),
+		new SkipCommand(),
 		new ExitCommand(),
-		new LoadCommand(),
+		new HelpCommand(),
 		new ResetCommand(),
+		new NewGameCommand(),
+		new SwapTileCommand(),
+		new LoadCommand(),
 		new SaveCommand(),
-		new NewGameCommand()
+		new WriteWordCommand()
+
 	};
 	/* @formatter:on */
 
@@ -38,12 +53,23 @@ public abstract class Command {
 		this.help = help;
 	}
 
-	public abstract boolean execute(Controller controller) throws CommandExecuteException;
+	// Métodos comunes (posiblemente sobrescribibles) para todos los comandos 
 
+	/* Método matchCommandName:
+	 * Devuelve un booleano indicando si el nombre del comando introducido
+	 * se corresponde con el nombre establecido o con su atajo.
+	 * Este método nunca es sobrescrito.
+	 */
 	protected boolean matchCommandName(String name) {
 		return this.shortcut.equalsIgnoreCase(name) || this.name.equalsIgnoreCase(name);
 	}
 
+	/* Método parse:
+	 * Para cualquier comando que no sobreescriba este método, el método parse devuelve 
+	 * el comando correspondiente en caso de que haya sido introducido correctamente por 
+	 * el usuario, y en caso contrario, devuelve null.
+	 * Este método es sobrescrito por LoadCommand, SaveCommand y WriteWordCommand.
+	 */
 	protected Command parse(String[] words) throws CommandParseException {
 		if (matchCommandName(words[0])) {
 			
@@ -57,6 +83,12 @@ public abstract class Command {
 		return null;
 	}
 	
+	/* Método getCommand:
+	 * Recibe un supuesto comando del usuario.
+	 * Si no existe, se devuelve null.
+	 * Si existe, se devuelve el comando asociado.
+	 * Este método nunca es sobrescrito.
+	 */
 	public static Command getCommand(String[] commandWords) throws CommandParseException {
 		
 		Command command = null;
@@ -75,7 +107,8 @@ public abstract class Command {
 		return command;
 	}
 
-
+	// Getters
+	
 	protected String getDetails() {
 		return this.details;
 	}
@@ -83,5 +116,14 @@ public abstract class Command {
 	protected String getHelp() {
 		return this.help;
 	}
+
+	// Métodos abstractos
+	
+	/* Método execute:
+	 * Cada comando que hereda de esta clase sobreescribe su propio método execute con su 
+	 * funcionalidad concreta. El método devuelve un booleano indicando si el jugador actual 
+	 * debe seguir jugando su turno o pasar al siguiente.
+	 */
+	public abstract boolean execute(Controller controller) throws CommandExecuteException;
 
 }

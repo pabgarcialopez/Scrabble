@@ -29,7 +29,7 @@ import gameLogic.Game;
 public class GameLoader {
 	
 	private static final String wordsFile = "words.json";
-	public static final String NEW_GAME = "partidas/new_game.json";
+	public static final String NEW_GAME = "resources/existingGames/new_game.json";
 	
 	private static BoardBuilder boardBuilder;
 	private static GameTilesBuilder gameTilesBuilder;
@@ -65,17 +65,11 @@ public class GameLoader {
 		List<String> usedWords = wordsBuilder.createInstance(json.getJSONObject("used_words"));
 		
 		
-		// Creo que este game nunca va a ser nulo.
-//		if(game == null)
-//			return new Game(currentTurn, numConsecutivePassedTurns, wordsInBoard, gameFinished, 
-//				players, tiles, board, usedWords);
-//		
-//		else {
-			game.reset(currentTurn, numConsecutivePassedTurns, wordsInBoard, gameFinished, 
-					players, tiles, board, usedWords);
-			
-			return game;
-//		}
+		game.reset(currentTurn, numConsecutivePassedTurns, wordsInBoard, gameFinished, 
+				players, tiles, board, usedWords);
+		
+		return game;
+
 	}
 		
 	public static GamePlayers createPlayers(JSONObject data) {
