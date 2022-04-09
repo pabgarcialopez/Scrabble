@@ -52,7 +52,7 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 
 	public void showStatus(Game game) {
-		this.out.print(game.getStatus());
+		this.out.print(game.obtainStatus());
 	}
 
 	private void showFirstTurn(String[] lettersObtained, GamePlayers players, int turn) {
@@ -128,19 +128,21 @@ public class ConsoleView implements ScrabbleObserver {
 				Box box = game.getBoxAt(i, j);
 				String boxContent = box.toString();
 				
-				if(" ".equals(boxContent)) {
+				if("".equals(boxContent)) {
 					SpecialEffects speEff = box.getSpecialEffect();
 					
 					if(speEff != null) {
 						switch(speEff) {
-						case CENTRE: boxContent = CENTRE_SYMBOL; break;
-						case DOUBLE_LETTER: boxContent = DOUBLE_LETTER_SYMBOL; break;
-						case DOUBLE_WORD: boxContent = DOUBLE_WORD_SYMBOL; break;
-						case TRIPLE_LETTER: boxContent = TRIPLE_LETTER_SYMBOL; break;
-						case TRIPLE_WORD: boxContent = TRIPLE_WORD_SYMBOL; break;
-				
+							case CENTRE: boxContent = CENTRE_SYMBOL; break;
+							case DOUBLE_LETTER: boxContent = DOUBLE_LETTER_SYMBOL; break;
+							case DOUBLE_WORD: boxContent = DOUBLE_WORD_SYMBOL; break;
+							case TRIPLE_LETTER: boxContent = TRIPLE_LETTER_SYMBOL; break;
+							case TRIPLE_WORD: boxContent = TRIPLE_WORD_SYMBOL; break;
+							default: boxContent = " "; break;
 						}
 					}
+					
+					else boxContent = " ";
 				}
 				
 				if(max_indentation_length % 2 == 0)

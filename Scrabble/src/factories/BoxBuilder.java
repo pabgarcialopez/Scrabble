@@ -33,10 +33,10 @@ public class BoxBuilder extends Builder<Box>{
 		
 		if(data.has("tile")) {
 			Tile tile = tileBuilder.createTheInstance(data.getJSONObject("tile"));
-			return new Box(specialEffect, tile);
+			return new Box(specialEffect, tile, true);
 		}
 		
-		else return new Box(specialEffect);
+		else return new Box(specialEffect, null, false);
 	}
 
 }

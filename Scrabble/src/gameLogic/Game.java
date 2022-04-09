@@ -23,14 +23,14 @@ import storage.GameLoader;
 
 /* APUNTES GENERALES
 
-La clase Game encapsula toda la lógica de juego.
+La clase Game encapsula toda la lógica principal de juego.
 
-Para ello, necesita:
+Para ello, se necesita:
 
-
+- Saber si el juego ha sido inicializado, y si ya se ha colocado alguna palabra en el tablero.
 - Contenedores de tipo Board, GamePlayers, GameTiles.
 - El turno del jugador actual y el número consecutivo de turnos saltados.
-- Conocer si se han puesto palabras en el tablero y si el juego ha terminado.
+- Conocer si se han puesto palabras en el tablero, si el juego ha terminado, y la causa de ello.
 - Listas de las palabras usadas, y todas las palabras válidas.
 - Un comprobador de palabras.
 - Un objeto Random para establecer aleatoriedad.
@@ -42,8 +42,9 @@ public class Game {
 	
 	private static final int EXTRA_POINTS = 50;
 	private static final int PASSED_TURNS_TO_END_GAME = 2;
-	private static boolean gameInitiated;
-	
+	private static boolean _gameInitiated;
+	private static boolean _wordsInBoard;
+
 	private Board board;
 	private GamePlayers players;
 	private GameTiles tiles;
@@ -51,7 +52,6 @@ public class Game {
 	private int currentTurn;
 	private int numConsecutivePassedTurns;
 	
-	private boolean wordsInBoard;
 	private boolean gameFinished;
 	private String gameFinishedCause;
 	
@@ -66,7 +66,8 @@ public class Game {
 
 	public Game() {
 		
-		gameInitiated = false;
+		_gameInitiated = false;
+		_wordsInBoard = false;
 		
 		this.board = null;
 		this.players = new GamePlayers((List<Player>) new ArrayList<Player>());
@@ -75,7 +76,6 @@ public class Game {
 		this.currentTurn = 0;
 		this.numConsecutivePassedTurns = 0;
 		
-		this.wordsInBoard = false;
 		this.gameFinished = false;
 		this.gameFinishedCause = "";
 		
@@ -112,7 +112,7 @@ public class Game {
 	 * En caso contrario, hay que pedirlos al usuario (ya sea por consola o por interfaz gráfica).
 	 * 
 	 * IMPORTANTE: la inicialización del atributo de la clase Random y el atributo que representa el turno actual,
-	 * deben inicializarse antes de ejecutar el if-else, por razones de diseño.
+	 * deben inicializarse antes de ejecutar el gestionar el añadido de jugadores (if-else), por razones de diseño.
 	 */
 	public void reset(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
 			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
@@ -134,12 +134,12 @@ public class Game {
 				o.onPlayersNotAdded(this);
 		}
 		
-		this.wordsInBoard = wordsInBoard;
+		_wordsInBoard = wordsInBoard;
 		this.gameFinished = gameFinished;
 		
 		this.usedWords = usedWords;
 		
-		gameInitiated = true;
+		_gameInitiated = true;
 		
 		for(int i = 0; i < this.observers.size(); ++i)
 			this.observers.get(i).onReset(this);
@@ -172,16 +172,30 @@ public class Game {
 			
 		 */
 	}
-
 	
-	public void checkArguments(String word, int posX, int posY, String direction) throws CommandExecuteException {
-		this.wordChecker.checkArguments(word, posX, posY, direction);
-	}
-	
+	/* Método writeAWord:
+	 * 
+	 * Lleva a cabo la acción de escribir una palabra en el tablero.
+	 * 
+	 * Primero convierte la palabra a un formato deseado (en minúsculas y sin acentos), y delega
+	 * en la clase WordChecker la comprobación de la validez de los parámetros recibidos (cabiendo
+	 * la posibilidad de que se lancen excepciones).
+	 * 
+	 * Si no se ha detectado ningún error en los parámetros, se añade la palabra introducida a la lista
+	 * de palabras usadas. También se comprueba si el jugador ha usado todas sus fichas, en cuyo caso,
+	 * se le añaden EXTRA_POINTS a los puntos que hubiese acumulado con la palabra colocada.
+	 * 
+	 * A continuación se delega en GamePlayers la entraga de puntos al jugador; se establece que el tablero
+	 * no está vacío, y que el número de turnos consecutivos saltados es cero.
+	 * 
+	 * Por último, se notifica a los observadores que se ha escrito una palabra; se delega en GamePlayers
+	 * el robo de fichas por parte del jugador, y se avanza el turno.
+	 */
 	public boolean writeAWord(String word, int posX, int posY, String direction) {
 		
 		try {
-			word = StringUtils.removeAccents(word.toLowerCase());
+			word = word.toLowerCase();
+			word = StringUtils.removeAccents(word);
 			this.wordChecker.checkArguments(word, posX, posY, direction);
 		}
 		catch(CommandExecuteException cee) {
@@ -192,19 +206,20 @@ public class Game {
 			return false;
 		}
 		
-		addUsedWord(word.toLowerCase());
+		addUsedWord(word);
 		
 		int numPlayerTilesBefore = this.players.getNumPlayerTiles(this.currentTurn);
+		
 		assignTiles(word, posX, posY, direction);
+		int points = calculatePoints(word, posX, posY, direction);
 		
-		int points = calculatePoints(word, posX, posY, direction), extraPoints = 0;
-		
+		int extraPoints = 0;
 		if(numPlayerTilesBefore == 7 && this.players.getNumPlayerTiles(this.currentTurn) == 0)
 			extraPoints = EXTRA_POINTS;
 		
 		players.givePoints(this.currentTurn, points + extraPoints);
 		
-		this.wordsInBoard = true;
+		_wordsInBoard = true;
 		numConsecutivePassedTurns = 0;
 		
 		for(ScrabbleObserver o : this.observers)
@@ -219,10 +234,18 @@ public class Game {
 	
 	/* Método decideFirstTurn:
 	 * 
-	 * Este método decide, si es necesario, el orden de juego de una partida.
+	 * Decide, si es necesario, el orden de juego de una partida.
 	 * 
-	 * Primero comprueba que 
-	 *
+	 * Primero comprueba si el turno ya se ha inicializado (se encuentra en el
+	 * intervalo [0, players.getNumPlayers()]; en caso de no haberse inicializado
+	 * tendría el valor -1).
+	 * 
+	 * Se construye un array de letras aleatorias obtenidas por los jugadores,
+	 * y se comparan en orden lexicográfico para decidir quién empieza la partida
+	 * (gana quién más se acerque a la A, y en caso de empate, se prioriza el orden 
+	 * en el que se cogió la letra).
+	 * 
+	 * Por último, se notifica a los observadores.
 	 */
 	public void decideFirstTurn() {
 		
@@ -234,7 +257,7 @@ public class Game {
 		String[] lettersObtained = new String[this.getNumPlayers()];
 		
 		for(int i = 0; i < this.getNumPlayers(); ++i) 
-			lettersObtained[i] = this.getRandomTile().getLetter();
+			lettersObtained[i] = this.randomTile().getLetter();
 	
 		// La partida es empezada por quien obtenga la letra mas cercana a la A.
 		for(int i = 1; i < this.getNumPlayers(); ++i)
@@ -245,6 +268,11 @@ public class Game {
 			o.onFirstTurnDecided(this, lettersObtained);
 	}
 	
+	/* Método passTurn:
+	 * 
+	 * Pasa de turno en el juego (método nextTurn), incrementando previamente el número de turnos
+	 * consecutivos saltados, y notificando a los observadores.
+	 */
 	public void passTurn() {
 		++this.numConsecutivePassedTurns;
 		
@@ -254,14 +282,31 @@ public class Game {
 		nextTurn();
 	}
 	
+	/* Método nextTurn:
+	 * Avanza el turno actual en uno.
+	 */
 	private void nextTurn() {
 		this.currentTurn = (this.currentTurn + 1) % this.getNumPlayers();
 	}
 
+	/* Método automaticPlay:
+	 * Delega en GamePlayers el juego de jugadores automáticos.
+	 */
 	public void automaticPlay() {
 		this.players.automaticPlay(this.currentTurn, this);
 	}
 
+	/* Método swapTile:
+	 * 
+	 * Primero comprueba que queden fichas para poder realizar un intercambio.
+	 * 
+	 * En caso de que así sea, se obtiene una ficha aleatoria del jugador,
+	 * que es introducida en el saco, y eliminada de su mano; después el jugador
+	 * obtiene su nueva ficha (acciones delegadas en los containers respectivos).
+	 * 
+	 * Se incrementan los turnos saltados, se notifica a los observadores y se
+	 * avanza al siguiente turno (método nextTurn).
+	 */
 	public boolean swapTile() {
 		
 		if(tiles.getSize() <= 0) {
@@ -296,26 +341,42 @@ public class Game {
 		return true;
 	}
 	
+	/* Método removeTile:
+	 * Delega en la clase GameTiles la acción de eliminar una ficha del saco.
+	 */
 	public void removeTile(Tile tile) {
 		tiles.remove(tile);
 	}
 	
+	/* Método randomTile:
+	 * Devuelve una ficha aleatoria del saco (si la hay).
+	 */
+	public Tile randomTile() {
+		if (tiles.getNumTiles() == 0)
+			return null;
+		return tiles.getTile((int) (this.getRandomDouble() * this.tiles.getNumTiles()));
+	}
+	
+	/* Método calculatePoints:
+	 * 
+	 * Para cada letra de la palabra recibida por parámetrp, se delega en la clase Board la acción de 
+	 * obtener el total de puntos asociado a esa letra (points) en esa casilla (wordMultiplier).
+	 * 
+	 * Durante el bucle, se obtiene el total de puntos asociados a las letras, y el total asociado a los
+	 * multiplicadores de palabras (modificadores DOUBLE_WORD y TRIPLE_WORD).
+	 * 
+	 * Finalmente se devuelve el resultado de multiplicar los puntos de letras con los puntos de los modificadores.
+	 */
 	private int calculatePoints(String word, int posX, int posY, String direction) {
 		
-		int points = 0;
-		int wordMultiplier = 1;
+		int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
+		int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
 		
-		if ("V".equalsIgnoreCase(direction)) {
-			for (int i = 0; i < word.length(); ++i) {
-				points += this.board.getPoints(posX + i, posY);
-				wordMultiplier *= this.board.getWordMultiplier(posX + i, posY);
-			}
-		}
-		else {
-			for (int i = 0; i < word.length(); ++i) {
-				points += this.board.getPoints(posX, posY + i);
-				wordMultiplier *= this.board.getWordMultiplier(posX, posY + i);
-			}
+		int points = 0, wordMultiplier = 1;
+		
+		for (int i = 0; i < word.length(); ++i) {
+			points += this.board.getPoints(posX + i * vertical, posY + i * horizontal);
+			wordMultiplier *= this.board.getWordMultiplier(posX + i * vertical, posY + i * horizontal);
 		}
 		
 		points *= wordMultiplier;
@@ -323,6 +384,12 @@ public class Game {
 		return points;
 	}
 
+	/* Método assignTiles:
+	 * 
+	 * Por cada letra de la palabra recibida por parámetro, se obtiene la ficha asociada a esa letra (acción delegada
+	 * en la clase GamePlayers), se asigna dicha dicha en el tablero (acción delegada en la clase Board), y se elimina
+	 * dicha ficha de la mano del jugador (acción delegada en la clase GamePlayers).
+	 */
 	public void assignTiles(String word, int posX, int posY, String direction) {
 		
 		int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
@@ -341,6 +408,17 @@ public class Game {
 		}
 	}
 
+	/* Método update:
+	 * 
+	 * Comprueba si el juego ha terminado por alguna de las siguientes razones:
+	 * - No quedan fichas en el saco y el jugador anterior al actual no tiene tampoco.
+	 * - Todos los jugadores han pasado su turno PASSED_TURNS_TO_END_GAME veces.
+	 * 
+	 * En caso de que alguna se dé, se registra la causa del final de la partida.
+	 * 
+	 * Después notifica a los observadores para que actualicen su estado, 
+	 * y si el juego se ha acabado, también se les notifica de ello.
+	 */
 	public void update() {
 		
 		// Si no quedan fichas en el saco, y el jugador actual no tiene fichas
@@ -354,7 +432,7 @@ public class Game {
 		if(this.numConsecutivePassedTurns == this.getNumPlayers() * PASSED_TURNS_TO_END_GAME) {
 			this.gameFinished = true;
 			this.gameFinishedCause = "La partida ha finalizado: todos los jugadores han pasado " 
-					+ PASSED_TURNS_TO_END_GAME + " turnos." + StringUtils.DOUBLE_LINE_SEPARATOR;
+					+ PASSED_TURNS_TO_END_GAME + " turnos." + StringUtils.LINE_SEPARATOR;
 		}
 		
 		for(ScrabbleObserver o : this.observers)
@@ -366,7 +444,11 @@ public class Game {
 		}
 	}
 	
-
+	/* Método getWinnerGame:
+	 * 
+	 * Devuelve un mensaje detallando quién o quiénes han ganado la partida.
+	 * Delega parte de la acción en la clase GamePlayers (método getWinners).
+	 */
 	private String getWinnerName() {
 		List<Integer> winners = this.players.getWinners();
 		String winnersMessage = null;
@@ -392,32 +474,50 @@ public class Game {
 		return winnersMessage;
 	}
 
+	/* Método obtainStatus:
+	 * Devuelve un String con el estado actual del juego y del jugador (delegación en GamePlayers).
+	 */
+	public String obtainStatus() {
+		String status = "Fichas restantes: " + this.getRemainingTiles() + StringUtils.LINE_SEPARATOR;
+		status += players.getPlayerStatus(currentTurn) + StringUtils.LINE_SEPARATOR;
+
+		if (!humanIsPlaying())
+			status += "Cargando... Por favor, espera." + StringUtils.LINE_SEPARATOR;
+
+		return status;
+	}
+	
+	/* Método addUsedWord
+	 * Añade la palabra recibida por parámetro a la lista de palabras usadas.
+	 * La lista se mantiene siempre ordenada para poder realizar una búsqueda eficiente.
+	 */
 	public void addUsedWord(String word) {
 		this.usedWords.add(word.toLowerCase());
 		Collections.sort(this.usedWords);
 	}
 	
+	/* Método initWordList:
+	 * Este método estático es llamado desde la clase Main, y delega estáticamente
+	 * en la clase GameLoader la carga de las palabras válidas de la partida.
+	 */
 	public static void initWordList() throws JSONException, FileNotFoundException {
 		words = GameLoader.loadWordList();
 	}
 	
-	/* Método addPlayers:
-	 * 
+	/* Método addPlayers:]
 	 * Este método inicializa el container GamePlayers al recibido por parámetro.
-	 * Además, completa las fichas que a los jugadores les pueda faltar (caso de nueva partida).
-	 * Por último, si es necesario (partida nueva), el método decideFirstTurn establecerá el orden
-	 * de juego de la partida.
-	 * 
+	 * Además, completa las fichas que a los jugadores les pueda faltar (método initPlayerTiles) (caso de nueva partida).
+	 * Por último, si es necesario (nueva partida), se establece el orden de juego (método decideFirstTurn).
 	 */
 	public void addPlayers(GamePlayers players) {
 
 		this.players = players;
-		this.initPlayerTiles();
+		initPlayerTiles();
 		decideFirstTurn();	
 	}
 	
 	/* Método initPlayerTiles:
-	 * 
+	 * Completa las fichas que a los jugadores les pueda faltar.
 	 */
 	public void initPlayerTiles() {
 		for(int i = 0; i < this.players.getNumPlayers(); i++) {
@@ -425,6 +525,10 @@ public class Game {
 		}
 	}
 
+	/* Método addObserver:
+	 * Añade a un observador no nulo y todavía no añadido recibido por parámetro 
+	 * a la lista de tipo ScrabbleObserver. También se notifica a dicho observer de esta acción.
+	 */
 	public void addObserver(ScrabbleObserver o) {
 		if(o != null && !this.observers.contains(o)) {
 			this.observers.add(o);
@@ -432,11 +536,18 @@ public class Game {
 		}
 	}
 	
+	/* Método removeObserver:
+	 * Elimina a un observador no nulo de la lista de tipo ScrabbleObserver.
+	 */
 	public void removeObserver(ScrabbleObserver o) {
-		if(o != null && !this.observers.contains(o))
+		if(o != null)
 			this.observers.remove(o);
 	}
 	
+	/* Método userExits:
+	 * Actualiza el estado del juego a finalizado, y establece la causa de ello.
+	 * Notifica a los observadores de la terminación de la partida.
+	 */
 	public void userExits() {
 		
 		this.gameFinished = true;
@@ -449,106 +560,92 @@ public class Game {
 			o.onEnd(gameFinishedCause + getWinnerName());
 	}
 	
+	/* Método resetPlayers:
+	 * Delega en la clase GamePlayers el reseteo de los jugadores.
+	 */
 	public void resetPlayers() {
 		this.players.reset();
 	}
 	
 	// GETTERS
 	
-	public boolean gameIsFinished() {
-		return this.gameFinished;
+	public static boolean getGameInitiated() {
+		return _gameInitiated;
 	}
 	
-	public int getRemainingTiles() {
-		return this.tiles.getNumTiles();
+	public boolean getWordsInBoard() {
+		return _wordsInBoard;
 	}
-
+	
 	public int getBoardSize() {
 		return board.getBoardSize();
 	}
-
+	
 	public Box getBoxAt(int i, int j) {
-		return board.getBoxAt(i,j);
+		return board.getBoxAt(i, j);
+	}
+	
+	public Board getBoard() {
+		return this.board;
 	}
 	
 	private int getNumPlayers() {
 		return this.players.getNumPlayers();
 	}
 	
-	public Tile getRandomTile() {
-		if(tiles.getNumTiles() == 0)
-			return null;
-		
-		return tiles.getTile((int) (this.getRandomDouble() * this.tiles.getNumTiles()));
-	}
-	
-	private Double getRandomDouble() {
-		return this.random.nextDouble();
-	}
-	
-	public String getStatus() {
-		String status = "Fichas restantes: " + this.getRemainingTiles() + StringUtils.LINE_SEPARATOR;
-		status += players.getPlayerStatus(currentTurn) + StringUtils.LINE_SEPARATOR;
-		
-		if(!humanIsPlaying())
-			status += "Cargando... Por favor, espera." + StringUtils.LINE_SEPARATOR;
-		
-		return status;
-	}
-	
 	public GamePlayers getPlayers() {
 		return this.players;
+	}
+	
+	public boolean humanIsPlaying() {
+		return players.humanIsPlaying(currentTurn);
+	}
+
+	public int getRemainingTiles() {
+		return this.tiles.getNumTiles();
 	}
 	
 	public int getCurrentTurn() {
 		return this.currentTurn;
 	}
-
-	public boolean getWordsInBoard() {
-		return this.wordsInBoard;
+	
+	public boolean gameIsFinished() {
+		return this.gameFinished;
 	}
 
 	public List<String> getWordsList() {
-		return words;
+		return Collections.unmodifiableList(words);
 	}
 
 	public List<String> getUsedWords() {
-		return this.usedWords;
+		return Collections.unmodifiableList(usedWords);
 	}
 
-	public Board getBoard() {
-		return this.board;
+	private Double getRandomDouble() {
+		return this.random.nextDouble();
 	}
 
-	public boolean humanIsPlaying() {
-		return players.humanIsPlaying(currentTurn);
-	}
-	
-	public static boolean getGameInitiated() {
-		return gameInitiated;
-	}
-	
 	public JSONObject report() {
-		
+
 		JSONObject jo = new JSONObject();
-		
+
 		jo.put("current_turn", this.currentTurn);
 		jo.put("consecutive_turns_passed", this.numConsecutivePassedTurns);
-		jo.put("words_in_board", this.wordsInBoard);
+		jo.put("words_in_board", _wordsInBoard);
 		jo.put("game_finished", this.gameFinished);
-		
+
 		JSONArray words = new JSONArray();
-		for(int i = 0; i < this.usedWords.size(); ++i)
+		for (int i = 0; i < this.usedWords.size(); ++i)
 			words.put(this.usedWords.get(i));
-		
+
 		JSONObject usedWords = new JSONObject();
 		usedWords.put("words", words);
-		
+
 		jo.put("used_words", usedWords);
 		jo.put("game_players", this.players.report());
 		jo.put("game_tiles", this.tiles.report());
 		jo.put("game_board", this.board.report());
-		
+
 		return jo;
 	}
 

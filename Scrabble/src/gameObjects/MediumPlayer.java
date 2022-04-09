@@ -7,6 +7,14 @@ import org.json.JSONObject;
 
 import gameLogic.Game;
 
+/* APUNTES GENERALES:
+
+   Ver apuntes de la clase padre Player.
+
+   Cabe señalar el atributo estático numMediumPlayers, que se emplea para llevar la cuenta
+   de cuántos jugadores automáticos de este tipo se tienen en el juego, y así poder nombrarlos
+   de manera distinta acorde a este número.
+*/
 public class MediumPlayer extends Player {
 	
 	private static int numMediumPlayers = 0;
@@ -15,10 +23,18 @@ public class MediumPlayer extends Player {
 		super(name + " Medium " + ++numMediumPlayers, totalPoints, tiles);
 	}
 
+	/* Sobrescritura del método play:
+	 * La estrategia de MediumPlayer es intentar colocar palabras de tamaño
+	 * entre 2 y el número de sus fichas (+1, si ya hay palabras en el tablero).
+	 * A diferencia del HardPlayer, el tamaño de las palabras que intenta colocar
+	 * se genera de manera aleatoria (aunque no se repiten tamaños).
+	 * Si no ha conseguido escribir una palabra, y tampoco ha intercambiado una ficha,
+	 * tiene un 50% de probabilidades de pasar turno.
+	 */
 	@Override
 	public void play(Game game) {
 		
-		boolean played = false;
+		boolean wordWritten = false;
 		
 		List<Integer> lengths = new ArrayList<Integer>();
 		for(int i = 2; i <= this.getNumTiles(); ++i)
@@ -26,21 +42,15 @@ public class MediumPlayer extends Player {
 		
 		List<Tile> tilesForWord = new ArrayList<Tile>(this.tiles);
 		
-		if(!game.getWordsInBoard()) {
-			while(!played && lengths.size() > 0) {
-				int i = (int) (this.rdm.nextDouble() * lengths.size());
-				played = this.tryWritingInEmptyBoard(lengths.remove(i), tilesForWord, game);
-			}
-		}
-		else {
+		if(game.getWordsInBoard())
 			lengths.add(this.getNumTiles() + 1);
-			while(!played && lengths.size() > 0) {
-				int i = (int) (this.rdm.nextDouble() * lengths.size());
-				played = this.tryWritingInNotEmptyBoard(lengths.remove(i), tilesForWord, game);
-			}
+
+		while(!wordWritten && lengths.size() > 0) {
+			int i = (int) (this.rdm.nextDouble() * lengths.size());
+			wordWritten = tryWritingInBoard(lengths.remove(i), tilesForWord, game);
 		}
 		
-		if(!played) {
+		if(!wordWritten) {
 			int i = (int) (this.rdm.nextDouble() * 2);
 			if(i == 0 && !game.swapTile())
 				game.passTurn();

@@ -48,7 +48,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 		setIcon(new ImageIcon("resources/icons/letters/box_default_icon.png"));
 		setPreferredSize(new Dimension(49, 49));
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-		this.box = new Box(null);
+		this.box = new Box(null, null, false);
 		
 		addActionListener(new ActionListener() {
 			@Override

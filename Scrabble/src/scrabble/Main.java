@@ -2,10 +2,12 @@ package scrabble;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.NoSuchElementException;
 
 import javax.swing.SwingUtilities;
 
@@ -18,10 +20,22 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import gameLogic.Game;
+import gameUtils.StringUtils;
 import gameView.ConsoleView;
 import gameView.GUIView;
 import storage.GameLoader;
 
+/* APUNTES GENERALES:
+   
+   La clase Main es la clase donde comienza la ejecución de la aplicación.
+   En los argumentos del método main, se pueden usar las siguientes opciones:
+   
+   -a,--ayuda: muestra ayuda sobre los posibles comandos.
+   -i,--input <arg>: especifica el fichero de entrada de instrucciones "arg".
+   -o,--output <arg>: especifica el fichero de salida "arg".
+   -m,--mode <arg>: interfaz gráfica ("gui") o consola ("console").
+   
+ */
 public class Main {
 	
 	private static boolean gui = true;
@@ -34,7 +48,7 @@ public class Main {
 
 		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("Fichero de entrada, de donde se pueden leer instrucciones.").build());
 		cmdLineOptions.addOption(Option.builder("o").longOpt("output").hasArg().desc("Fichero de salida, donde se puede ver el resultado de ejecución.").build());
-		cmdLineOptions.addOption(Option.builder("a").longOpt("ayuda").desc("Imprime este mensaje").build());
+		cmdLineOptions.addOption(Option.builder("a").longOpt("ayuda").desc("Imprime esta ayuda").build());
 		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").hasArg().desc("Modo de visualización de la aplicación").build());
 		
 		return cmdLineOptions;
@@ -54,7 +68,7 @@ public class Main {
 	}
 
 	private static void parseHelpOption(CommandLine line, Options cmdLineOptions) {
-		if (line.hasOption("h")) {
+		if (line.hasOption("a")) {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp(Main.class.getCanonicalName(), cmdLineOptions, true);
 			System.exit(0);
@@ -106,14 +120,30 @@ public class Main {
 		}
 
 	}
-	
 
 	private static void startBatchMode(Controller controller) throws IOException {
 		
-		InputStream in = (inFile == null ? System.in : new FileInputStream(new File(inFile)));
-		OutputStream out = (outFile == null ? System.out : new FileOutputStream(new File(outFile)));
+		try {
+			
+			InputStream in = (inFile == null ? System.in : new FileInputStream(new File(inFile)));
+			OutputStream out = (outFile == null ? System.out : new FileOutputStream(new File(outFile)));
+			
+			if(inFile == null && outFile != null) {
+				in = System.in;
+				out = System.out;
+			}
+					
+			new ConsoleView(controller, in, out);
+		}
 		
-		new ConsoleView(controller, in, out);
+		catch(FileNotFoundException fnfe) {
+			throw new FileNotFoundException("El fichero de entrada \"" + inFile + "\" no existe." + StringUtils.LINE_SEPARATOR + "Ejecución finalizada.");
+		}
+		
+		catch(NoSuchElementException nsee) {
+			throw new NoSuchElementException(StringUtils.DOUBLE_LINE_SEPARATOR + "El fichero de entrada \"" + inFile + "\" no tiene el formato correcto." + StringUtils.LINE_SEPARATOR);
+			
+		}
 	}
 	
 	private static void startGUIMode(Controller controller) throws IOException{
@@ -145,7 +175,7 @@ public class Main {
 		try {
 			start(args);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.print(e.getMessage());
 		}
 
 	}

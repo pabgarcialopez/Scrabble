@@ -29,15 +29,6 @@ public abstract class Builder<T> {
 	 * Devuelve una instancia del tipo genérico T
 	 */
 	public T createInstance(JSONObject data) {
-
-		/*
-		T b = null;
-
-		b = createTheInstance(data);
-		
-		return b;
-		
-		*/
 		return createTheInstance(data);
 	}
 

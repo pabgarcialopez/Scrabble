@@ -105,14 +105,24 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 
 	@Override
 	public void onUpdate(Game game) {
-		this.currentTurnName = game.getPlayers().getPlayerName(game.getCurrentTurn());
-		this.currentTurnLabel.setText("Turno de: " + this.currentTurnName);
-		remainingTilesLabel.setText("Fichas restantes: " + game.getRemainingTiles());
 		
-		if(!game.humanIsPlaying()) this.infoLabel.setText("Eligiendo movimiento...");
-		else this.infoLabel.setText("Elige tu siguiente movimiento");
+		if(!game.gameIsFinished()) {
+			this.currentTurnName = game.getPlayers().getPlayerName(game.getCurrentTurn());
+			this.currentTurnLabel.setText("Turno de: " + this.currentTurnName);
+			this.remainingTilesLabel.setText("Fichas restantes: " + game.getRemainingTiles());
+			
+			if(!game.humanIsPlaying()) this.infoLabel.setText("Eligiendo movimiento...");
+			else this.infoLabel.setText("Elige tu siguiente movimiento");
+		}
+		
+		else {
+			this.infoLabel.setText("¡El juego ha finalizado!");
+			this.currentTurnLabel.setText("");
+			this.remainingTilesLabel.setText("");
+		}
 		
 		this.pointsLabel.setText("");
+		
 	}
 
 	@Override

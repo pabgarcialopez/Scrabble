@@ -7,16 +7,21 @@ import java.io.PrintStream;
 
 import gameLogic.Game;
 
+/* APUNTES GENERALES:
+   
+   La clase GameSaver es la encargada de guardar el estado del juego actual en un fichero.
+   Las partidas guardadas se encuentran en la carpeta resources/existingGames del src.
+ */
+
 public class GameSaver {
 
 	public static void saveGame(Game game, String file) throws FileNotFoundException {
 		
 		if (file.equals(GameLoader.NEW_GAME))
-			throw new IllegalArgumentException("El fichero donde guardar la partida no puede ser el fichero de reseteo.");
+			throw new IllegalArgumentException("El fichero donde guardar la partida no puede ser el fichero de nueva partida.");
 		
 		if(!file.endsWith(".json"))
 			file += ".json";
-		
 		
 		OutputStream out = new FileOutputStream("resources/existingGames/" + file);
 		

@@ -13,9 +13,7 @@ public class WordsBuilder extends Builder<List<String>>{
 	}
 
 	/* Sobrescritura del método createTheInstance:
-	 * 
-	 * Construye y devuelve la lista que contiene todas 
-	 * las palabras válidas del juego.
+	 * Construye y devuelve la lista que contiene las palabras usadas del juego.
 	 */
 
 	@Override

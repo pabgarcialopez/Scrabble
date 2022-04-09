@@ -25,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import gameContainers.GamePlayers;
+import gameUtils.StringUtils;
 import storage.GameLoader;
 
 public class AddPlayersDialog extends JDialog {
@@ -259,6 +260,9 @@ private static final long serialVersionUID = 1L;
 				return null;
 			
 			String typeSelected = (String) this.typesCombo.getSelectedItem();
+			
+			typeSelected = typeSelected.toLowerCase();
+			typeSelected = StringUtils.removeAccents(typeSelected);
 			
 			if("facil".equalsIgnoreCase(typeSelected))
 				return "easy_player";

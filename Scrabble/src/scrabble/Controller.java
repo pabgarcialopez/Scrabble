@@ -8,6 +8,16 @@ import gameView.ScrabbleObserver;
 import storage.GameLoader;
 import storage.GameSaver;
 
+/* APUNTES GENERALES
+   
+   La clase Controller es la encargada de conectar el modelo y la vista usada.
+   
+   Sus atributos son:
+   - Instancia de Game: para poder conectarse con la lógica del juego.
+   - Un String que representa el último fichero usado. Así, se puede controlar
+     a qué partida volvemos cuando se invoca el comando reset.
+   
+ */
 public class Controller {
 	
 	private Game game;
@@ -19,56 +29,11 @@ public class Controller {
 		this.lastFileUsed = null;
 	}
 	
-	public void addObserver(ScrabbleObserver o) {
-		this.game.addObserver(o);
-	}
-	
-	public void removeObserver(ScrabbleObserver o) {
-		this.game.removeObserver(o);
-	}
-	
+	/* Método writeAWord:
+	 * Delega en la clase Game la acción de escribir una palabra en el tablero.
+	 */
 	public boolean writeAWord(String word, int posX, int posY, String direction) {
 		return this.game.writeAWord(word, posX, posY, direction);
-	}
-	
-	/* Método reset:
-	 * Si el fichero usado más recientemente es nulo, entonces
-	 * significa que no se había cargado anteriormente una partida,
-	 * así que se debe resetear el juego creando una partida nueva.
-	 * En caso contrario, se reseta el juego cargando la partida 
-	 * asociada al fichero usado más reciente.
-	 */
-	public void reset() throws FileNotFoundException {
-		
-		if(this.lastFileUsed == null)
-			newGame();
-		
-		else loadGame(this.lastFileUsed);
-	}
-	
-	/* Método newGame:
-	 * Delega en la clase Game el reseteo de los jugadores.
-	 * Delega en la clase GameLoader la creación de una nueva partida 
-	 * Establece el último fichero usado a nulo.
-	 */
-	public void newGame() throws FileNotFoundException {
-		this.game.resetPlayers();
-		GameLoader.newGame(game);
-		this.lastFileUsed = null;
-	}
-	
-	/* Método loadGame:
-	 * Delega en la clase Game el reseteo de los jugadores.
-	 * Delega en la clase GameLoader la carga del juego a partir 
-	 * del fichero recibido por parámetro, y establece este último
-	 * como el fichero usado más reciente.
-	 * La excepción lanzada (fichero no encontrado), es recogida en
-	 * el método execute de la clase LoadCommand.
-	 */
-	public void loadGame(String file) throws FileNotFoundException {
-		this.game.resetPlayers();
-		GameLoader.loadGame(game, file);
-		this.lastFileUsed = file;
 	}
 	
 	/* Método passTurn:
@@ -86,6 +51,28 @@ public class Controller {
 		return this.game.swapTile();
 	}
 	
+	/* Método userExits:
+	 * Delega en la clase Game la terminación del juego.
+	 */
+	public void userExits() {
+		game.userExits();
+	}
+	
+	/* Método reset:
+	 * Si el fichero usado más recientemente es nulo, entonces
+	 * significa que no se había cargado anteriormente una partida,
+	 * así que se debe resetear el juego creando una partida nueva.
+	 * En caso contrario, se reseta el juego cargando la partida 
+	 * asociada al fichero usado más reciente.
+	 */
+	public void reset() throws FileNotFoundException {
+		
+		if(this.lastFileUsed == null)
+			newGame();
+		
+		else loadGame(this.lastFileUsed);
+	}
+
 	/* Método update:
 	 * Delega en la clase Game la actualización del estado de la partida.
 	 */
@@ -93,6 +80,17 @@ public class Controller {
 		this.game.update();
 	}
 
+	/* Método newGame:
+	 * Delega en la clase Game el reseteo de los jugadores.
+	 * Delega en la clase GameLoader la creación de una nueva partida 
+	 * Establece el último fichero usado a nulo.
+	 */
+	public void newGame() throws FileNotFoundException {
+		this.game.resetPlayers();
+		GameLoader.newGame(game);
+		this.lastFileUsed = null;
+	}
+	
 	/* Método addPlayers:
 	 * Delega en la clase Game la inicialización de los jugadores del juego.
 	 */
@@ -100,13 +98,20 @@ public class Controller {
 		this.game.addPlayers(players);
 	}
 
-	/* Método userExits:
-	 * Delega en la clase Game la terminación del juego.
+	/* Método loadGame:
+	 * Delega en la clase Game el reseteo de los jugadores.
+	 * Delega en la clase GameLoader la carga del juego a partir 
+	 * del fichero recibido por parámetro, y establece este último
+	 * como el fichero usado más reciente.
+	 * La excepción lanzada (fichero no encontrado), es recogida en
+	 * el método execute de la clase LoadCommand.
 	 */
-	public void userExits() {
-		game.userExits();
+	public void loadGame(String file) throws FileNotFoundException {
+		this.game.resetPlayers();
+		GameLoader.loadGame(game, file);
+		this.lastFileUsed = file;
 	}
-
+	
 	/* Método saveGame:
 	 * Delega en la clase GameSaver el guardado de partida.
 	 * La excepción lanzada (fichero no encontrado), es recogida en
@@ -116,6 +121,23 @@ public class Controller {
 		GameSaver.saveGame(this.game, file);
 	}
 
+	/* Método addObserver:
+	 * Delega en la clase Game la acción de añadir un observador del modelo en la partida.
+	 */
+	public void addObserver(ScrabbleObserver o) {
+		this.game.addObserver(o);
+	}
+	
+	/* Método removeObserver:
+	 * Delega en la clase Game la acción de eliminar un observador del modelo en la partida.
+	 */
+	public void removeObserver(ScrabbleObserver o) {
+		this.game.removeObserver(o);
+	}
+
+	/* Método automaticPlay:
+	 * Delega en la clase Game la acción de juego de un jugador automático.
+	 */
 	public void automaticPlay() {
 		//if(!game.humanIsPlaying()) 
 			game.automaticPlay();

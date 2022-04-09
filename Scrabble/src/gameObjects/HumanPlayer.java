@@ -6,7 +6,8 @@ import org.json.JSONObject;
 
 import gameLogic.Game;
 
-public class HumanPlayer extends Player{
+// Ver apuntes de la clase padre Player.
+public class HumanPlayer extends Player {
 
 	public HumanPlayer(String name, int totalPoints, List<Tile> tiles) {
 		super(name, totalPoints, tiles);

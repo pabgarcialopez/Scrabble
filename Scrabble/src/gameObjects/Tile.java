@@ -2,6 +2,15 @@ package gameObjects;
 
 import org.json.JSONObject;
 
+/* APUNTES GENERALES:
+
+   La clase Tile representa una ficha en el juego.
+   
+   Sus atributos son:
+   - La letra de la ficha
+   - Los puntos de la ficha
+*/
+
 public class Tile {
 
 	private String letter;
@@ -11,18 +20,20 @@ public class Tile {
 		this.letter = letter;
 		this.points = points;
 	}
+	
+	// Getters
 
 	public int getPoints() {
 		return this.points;
 	}
 
 	public String getLetter() {
-		return letter;
+		return this.letter;
 	}
 	
 	@Override
 	public String toString() {
-		return this.letter + ": " + this.points;
+		return this.letter + "[" + this.points + "]";
 	}
 	
 	public JSONObject report() {

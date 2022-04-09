@@ -38,7 +38,7 @@ public class GamePlayers {
 		
 		for(int j = players.get(player).getNumTiles(); j < NUM_TILES; j++) {
 			
-			Tile tile = game.getRandomTile();
+			Tile tile = game.randomTile();
 			
 			if(tile != null) {
 				players.get(player).addTile(tile);
@@ -81,7 +81,8 @@ public class GamePlayers {
 	}
 	
 	/* Método automaticPlay:
-	 * Delega la acción a la función play de la clase Player (método abstracto).
+	 * Delega el juego automático del jugador recibido por parámetro
+	 * a la función play de la clase Player (método abstracto).
 	 */
 	public void automaticPlay(int player, Game game) {
 		this.players.get(player).play(game);
@@ -116,7 +117,7 @@ public class GamePlayers {
 	}
 
 	/* Método reset:
-	 * Delega la acción de resetear al método reset de la clase Player (método abstracto)
+	 * Delega la acción de resetear al método reset de la clase Player (método abstracto).
 	 */
 	public void reset() {
 		for(Player p: players) {
