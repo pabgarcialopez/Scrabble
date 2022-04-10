@@ -4,8 +4,8 @@ import java.io.FileNotFoundException;
 
 import exceptions.CommandExecuteException;
 import exceptions.CommandParseException;
-import gameUtils.StringUtils;
 import scrabble.Controller;
+import utils.StringUtils;
 
 // Ver apuntes de la clase padre Command.
 public class SaveCommand extends Command {
@@ -40,7 +40,7 @@ public class SaveCommand extends Command {
 		}
 		
 		catch(FileNotFoundException fnfe) {
-			throw new CommandExecuteException("El fichero introducido no es valido", fnfe);
+			throw new CommandExecuteException("El fichero introducido no es válido", fnfe);
 		}
 		
 		catch(IllegalArgumentException iae) {
@@ -57,13 +57,16 @@ public class SaveCommand extends Command {
 	@Override
 	protected Command parse(String[] words) throws CommandParseException {
 		
-		if (!matchCommandName(words[0])) return null;
+		if (!matchCommandName(words[0])) 
+			return null;
 		
 		if (words.length != 2)
 			throw new CommandParseException(String.format("[ERROR]: Comando %s: %s%n", words[0] ,INCORRECT_NUMBER_OF_ARGS_MSG));
-
-		this.file = words[1] + ".json";
+		
+		this.file = words[1];
 		
 		return this;
 	}
+	
+	
 }

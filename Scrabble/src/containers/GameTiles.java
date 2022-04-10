@@ -1,10 +1,10 @@
-package gameContainers;
+package containers;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import gameObjects.Tile;
+import simulatedObjects.Tile;
 
 /* APUNTES GENERALES
 

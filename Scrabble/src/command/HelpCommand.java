@@ -1,7 +1,7 @@
 package command;
 
-import gameUtils.StringUtils;
 import scrabble.Controller;
+import utils.StringUtils;
 
 // Ver apuntes de la clase padre Command.
 public class HelpCommand extends Command {

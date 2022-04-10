@@ -1,4 +1,4 @@
-package gameView;
+package view;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,15 +13,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import command.Command;
+import containers.GamePlayers;
 import exceptions.CommandExecuteException;
 import exceptions.CommandParseException;
-import gameContainers.GamePlayers;
-import gameLogic.Game;
-import gameObjects.Box;
-import gameObjects.SpecialEffects;
-import gameUtils.StringUtils;
+import logic.Game;
 import scrabble.Controller;
+import simulatedObjects.Box;
+import simulatedObjects.SpecialEffects;
 import storage.GameLoader;
+import utils.StringUtils;
 
 public class ConsoleView implements ScrabbleObserver {
 	
@@ -52,7 +52,7 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 
 	public void showStatus(Game game) {
-		this.out.print(game.obtainStatus());
+		this.out.print(game.getStatus());
 	}
 
 	private void showFirstTurn(String[] lettersObtained, GamePlayers players, int turn) {
@@ -447,11 +447,13 @@ public class ConsoleView implements ScrabbleObserver {
 			
 			catch(InputMismatchException ime) {
 				this.in.nextLine();
-				this.out.println("Opción no valida.");
+				this.out.println("¡La entrada debe ser un número!");
 			}
 		}
 		
 		this.in.nextLine();
+		
+		this.out.println();
 		
 		// Nueva partida
 		if(option == 1)
@@ -463,7 +465,6 @@ public class ConsoleView implements ScrabbleObserver {
 			File[] files = dir.listFiles();
 			
 			if(files.length != 0) {
-				this.out.print(StringUtils.LINE_SEPARATOR);
 				this.out.print("Las partidas disponibles son:" + StringUtils.LINE_SEPARATOR);
 				
 				for(File file: files) {
@@ -503,4 +504,6 @@ public class ConsoleView implements ScrabbleObserver {
 			}
 		}
 	}
+
+	
 }

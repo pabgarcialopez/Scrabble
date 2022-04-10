@@ -7,8 +7,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import gameContainers.GamePlayers;
-import gameObjects.Player;
+import containers.GamePlayers;
+import simulatedObjects.Player;
 
 public class GamePlayersBuilder extends Builder<GamePlayers> {
 

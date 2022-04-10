@@ -1,4 +1,4 @@
-package gameObjects;
+package simulatedObjects;
 
 import org.json.JSONObject;
 

@@ -1,4 +1,4 @@
-package gameView;
+package view;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,12 +11,11 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import gameLogic.Game;
+import logic.Game;
 import scrabble.Controller;
 
 public class PlayerPanel extends JPanel implements ScrabbleObserver {
 
-	
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel tilesPanel;

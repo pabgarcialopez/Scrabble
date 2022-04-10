@@ -1,11 +1,11 @@
-package gameObjects;
+package simulatedObjects;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
 
-import gameLogic.Game;
+import logic.Game;
 
 /* APUNTES GENERALES:
 
@@ -37,7 +37,7 @@ public class HardPlayer extends Player{
 		
 		List<Tile> tilesForWord = new ArrayList<Tile>(this.tiles);
 		
-		int extraTile = (game.getWordsInBoard() ? 1 : 0);
+		int extraTile = (Game.getWordsInBoard() ? 1 : 0);
 		for(int wordLength = tilesForWord.size() + extraTile; wordLength > 1 && !wordWritten; --wordLength)
 			wordWritten = tryWritingInBoard(wordLength, tilesForWord, game);
 		

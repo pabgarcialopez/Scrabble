@@ -1,4 +1,4 @@
-package gameLogic;
+package logic;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -10,16 +10,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import containers.Board;
+import containers.GamePlayers;
+import containers.GameTiles;
 import exceptions.CommandExecuteException;
-import gameContainers.Board;
-import gameContainers.GamePlayers;
-import gameContainers.GameTiles;
-import gameObjects.Box;
-import gameObjects.Player;
-import gameObjects.Tile;
-import gameUtils.StringUtils;
-import gameView.ScrabbleObserver;
+import simulatedObjects.Box;
+import simulatedObjects.Player;
+import simulatedObjects.Tile;
 import storage.GameLoader;
+import utils.StringUtils;
+import view.ScrabbleObserver;
 
 /* APUNTES GENERALES
 
@@ -44,6 +44,7 @@ public class Game {
 	private static final int PASSED_TURNS_TO_END_GAME = 2;
 	private static boolean _gameInitiated;
 	private static boolean _wordsInBoard;
+	public static int _seed;
 
 	private Board board;
 	private GamePlayers players;
@@ -115,12 +116,13 @@ public class Game {
 	 * deben inicializarse antes de ejecutar el gestionar el añadido de jugadores (if-else), por razones de diseño.
 	 */
 	public void reset(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
-			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
+			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords, int seed) {
 		
 		this.board = board;
 		this.tiles = tiles;
 		
-		this.random = new Random();
+		_seed = seed;
+		this.random = new Random(_seed);
 
 		this.currentTurn = currentTurn;
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
@@ -234,7 +236,7 @@ public class Game {
 	
 	/* Método decideFirstTurn:
 	 * 
-	 * Decide, si es necesario, el orden de juego de una partida.
+	 * Establece, si es necesario, el orden de juego de una partida.
 	 * 
 	 * Primero comprueba si el turno ya se ha inicializado (se encuentra en el
 	 * intervalo [0, players.getNumPlayers()]; en caso de no haberse inicializado
@@ -474,11 +476,12 @@ public class Game {
 		return winnersMessage;
 	}
 
-	/* Método obtainStatus:
+	/* Método getStatus:
 	 * Devuelve un String con el estado actual del juego y del jugador (delegación en GamePlayers).
 	 */
-	public String obtainStatus() {
-		String status = "Fichas restantes: " + this.getRemainingTiles() + StringUtils.LINE_SEPARATOR;
+	public String getStatus() {
+		String status = "Semilla: " + _seed + StringUtils.LINE_SEPARATOR;
+		status += "Fichas restantes: " + this.getRemainingTiles() + StringUtils.LINE_SEPARATOR;
 		status += players.getPlayerStatus(currentTurn) + StringUtils.LINE_SEPARATOR;
 
 		if (!humanIsPlaying())
@@ -567,14 +570,18 @@ public class Game {
 		this.players.reset();
 	}
 	
-	// GETTERS
+	// Getters
 	
 	public static boolean getGameInitiated() {
 		return _gameInitiated;
 	}
 	
-	public boolean getWordsInBoard() {
+	public static boolean getWordsInBoard() {
 		return _wordsInBoard;
+	}
+	
+	public static int getSeed() {
+		return _seed;
 	}
 	
 	public int getBoardSize() {
@@ -624,6 +631,10 @@ public class Game {
 	private Double getRandomDouble() {
 		return this.random.nextDouble();
 	}
+	
+	public static void setSeed(int seed) {
+		_seed = seed;
+	}
 
 	public JSONObject report() {
 
@@ -645,8 +656,11 @@ public class Game {
 		jo.put("game_players", this.players.report());
 		jo.put("game_tiles", this.tiles.report());
 		jo.put("game_board", this.board.report());
+		
+		jo.put("seed", _seed);
 
 		return jo;
 	}
 
+	
 }

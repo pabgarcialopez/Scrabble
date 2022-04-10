@@ -2,11 +2,11 @@ package scrabble;
 
 import java.io.FileNotFoundException;
 
-import gameContainers.GamePlayers;
-import gameLogic.Game;
-import gameView.ScrabbleObserver;
+import containers.GamePlayers;
+import logic.Game;
 import storage.GameLoader;
 import storage.GameSaver;
+import view.ScrabbleObserver;
 
 /* APUNTES GENERALES
    
@@ -67,6 +67,7 @@ public class Controller {
 	 */
 	public void reset() throws FileNotFoundException {
 		
+		
 		if(this.lastFileUsed == null)
 			newGame();
 		
@@ -86,18 +87,12 @@ public class Controller {
 	 * Establece el último fichero usado a nulo.
 	 */
 	public void newGame() throws FileNotFoundException {
+		
 		this.game.resetPlayers();
-		GameLoader.newGame(game);
 		this.lastFileUsed = null;
+		GameLoader.newGame(game);
 	}
 	
-	/* Método addPlayers:
-	 * Delega en la clase Game la inicialización de los jugadores del juego.
-	 */
-	public void addPlayers(GamePlayers players) {
-		this.game.addPlayers(players);
-	}
-
 	/* Método loadGame:
 	 * Delega en la clase Game el reseteo de los jugadores.
 	 * Delega en la clase GameLoader la carga del juego a partir 
@@ -108,8 +103,16 @@ public class Controller {
 	 */
 	public void loadGame(String file) throws FileNotFoundException {
 		this.game.resetPlayers();
-		GameLoader.loadGame(game, file);
 		this.lastFileUsed = file;
+		GameLoader.loadGame(game, file);
+		
+	}
+	
+	/* Método addPlayers:
+	 * Delega en la clase Game la inicialización de los jugadores del juego.
+	 */
+	public void addPlayers(GamePlayers players) {
+		this.game.addPlayers(players);
 	}
 	
 	/* Método saveGame:

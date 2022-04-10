@@ -1,4 +1,4 @@
-package gameUtils;
+package utils;
 
 /* APUNTES GENERALES:
    

@@ -10,6 +10,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import containers.Board;
+import containers.GamePlayers;
+import containers.GameTiles;
 import factories.BoardBuilder;
 import factories.BoxBuilder;
 import factories.EasyPlayerBuilder;
@@ -21,10 +24,7 @@ import factories.MediumPlayerBuilder;
 import factories.PlayerBuilder;
 import factories.TileBuilder;
 import factories.WordsBuilder;
-import gameContainers.Board;
-import gameContainers.GamePlayers;
-import gameContainers.GameTiles;
-import gameLogic.Game;
+import logic.Game;
 
 /* APUNTES GENERALES:
    
@@ -40,7 +40,7 @@ import gameLogic.Game;
 public class GameLoader {
 	
 	private static final String wordsFile = "resources/files/words.json";
-	public static final String NEW_GAME = "resources/files/new_game.json";
+	public static final String NEW_GAME = "resources/existingGames/new_game.json";
 	
 	private static BoardBuilder boardBuilder;
 	private static GameTilesBuilder gameTilesBuilder;
@@ -88,8 +88,14 @@ public class GameLoader {
 		
 		List<String> usedWords = wordsBuilder.createInstance(json.getJSONObject("used_words"));
 		
+		int _seed;
+		if(!Game.getGameInitiated())
+			_seed = (json.has("seed") ? json.getInt("seed") : Game.getSeed());
+		else _seed = Game.getSeed();
+		
+		
 		game.reset(currentTurn, numConsecutivePassedTurns, wordsInBoard, gameFinished, 
-				players, tiles, board, usedWords);
+				players, tiles, board, usedWords, _seed);
 		
 		return game;
 

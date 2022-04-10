@@ -1,11 +1,11 @@
-package gameObjects;
+package simulatedObjects;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
 
-import gameLogic.Game;
+import logic.Game;
 
 /* APUNTES GENERALES:
 
@@ -42,7 +42,7 @@ public class MediumPlayer extends Player {
 		
 		List<Tile> tilesForWord = new ArrayList<Tile>(this.tiles);
 		
-		if(game.getWordsInBoard())
+		if(Game.getWordsInBoard())
 			lengths.add(this.getNumTiles() + 1);
 
 		while(!wordWritten && lengths.size() > 0) {

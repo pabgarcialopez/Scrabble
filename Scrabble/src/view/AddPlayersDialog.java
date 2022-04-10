@@ -1,4 +1,4 @@
-package gameView;
+package view;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -24,9 +24,9 @@ import javax.swing.JTextField;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import gameContainers.GamePlayers;
-import gameUtils.StringUtils;
+import containers.GamePlayers;
 import storage.GameLoader;
+import utils.StringUtils;
 
 public class AddPlayersDialog extends JDialog {
 

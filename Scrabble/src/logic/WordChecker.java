@@ -1,4 +1,4 @@
-package gameLogic;
+package logic;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ public final class WordChecker {
 		checkWordInPosAndDirection(word, posX, posY, direction, lettersNeeded);
 		checkEnoughLetters(lettersNeeded);
 		
-		if (!game.getWordsInBoard()) checkWordInCentre(word, posX, posY, direction);
+		if (!Game.getWordsInBoard()) checkWordInCentre(word, posX, posY, direction);
 		else checkWordNextToOther(word, posX, posY, direction);
 		
 		checkNewFormedWords(word, posX, posY, direction);

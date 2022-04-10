@@ -2,9 +2,9 @@ package factories;
 
 import java.util.List;
 
-import gameObjects.EasyPlayer;
-import gameObjects.Player;
-import gameObjects.Tile;
+import simulatedObjects.EasyPlayer;
+import simulatedObjects.Player;
+import simulatedObjects.Tile;
 
 // Ver apuntes de la clase padre PlayerBuilder
 public class EasyPlayerBuilder extends PlayerBuilder {

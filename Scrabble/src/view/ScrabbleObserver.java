@@ -1,6 +1,6 @@
-package gameView;
+package view;
 
-import gameLogic.Game;
+import logic.Game;
 
 /* APUNTES GENERALES:
    

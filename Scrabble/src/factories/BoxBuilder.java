@@ -2,9 +2,9 @@ package factories;
 
 import org.json.JSONObject;
 
-import gameObjects.Box;
-import gameObjects.SpecialEffects;
-import gameObjects.Tile;
+import simulatedObjects.Box;
+import simulatedObjects.SpecialEffects;
+import simulatedObjects.Tile;
 
 public class BoxBuilder extends Builder<Box>{
 	

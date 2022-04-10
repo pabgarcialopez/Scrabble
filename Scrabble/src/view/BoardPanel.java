@@ -1,11 +1,11 @@
-package gameView;
+package view;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
-import gameLogic.Game;
+import logic.Game;
 import scrabble.Controller;
 
 public class BoardPanel extends JPanel implements ScrabbleObserver {

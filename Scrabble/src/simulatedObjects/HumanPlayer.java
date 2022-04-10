@@ -1,10 +1,10 @@
-package gameObjects;
+package simulatedObjects;
 
 import java.util.List;
 
 import org.json.JSONObject;
 
-import gameLogic.Game;
+import logic.Game;
 
 // Ver apuntes de la clase padre Player.
 public class HumanPlayer extends Player {

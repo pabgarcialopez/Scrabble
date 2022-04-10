@@ -19,11 +19,11 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import gameLogic.Game;
-import gameUtils.StringUtils;
-import gameView.ConsoleView;
-import gameView.GUIView;
+import logic.Game;
 import storage.GameLoader;
+import utils.StringUtils;
+import view.ConsoleView;
+import view.GUIView;
 
 /* APUNTES GENERALES:
    
@@ -33,14 +33,17 @@ import storage.GameLoader;
    -a,--ayuda: muestra ayuda sobre los posibles comandos.
    -i,--input <arg>: especifica el fichero de entrada de instrucciones "arg".
    -o,--output <arg>: especifica el fichero de salida "arg".
-   -m,--mode <arg>: interfaz gráfica ("gui") o consola ("console").
+   -m,--modo <arg>: interfaz gráfica ("gui") o consola ("console").
    
  */
 public class Main {
 	
+	private static final int defaultSeed = 100;
 	private static boolean gui = true;
+	
 	private static String inFile;
 	private static String outFile;
+	private static int seed;
 	
 	private static Options buildOptions() {
 		
@@ -49,8 +52,9 @@ public class Main {
 		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("Fichero de entrada, de donde se pueden leer instrucciones.").build());
 		cmdLineOptions.addOption(Option.builder("o").longOpt("output").hasArg().desc("Fichero de salida, donde se puede ver el resultado de ejecución.").build());
 		cmdLineOptions.addOption(Option.builder("a").longOpt("ayuda").desc("Imprime esta ayuda").build());
-		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").hasArg().desc("Modo de visualización de la aplicación").build());
-		
+		cmdLineOptions.addOption(Option.builder("m").longOpt("modo").hasArg().desc("Modo de visualización de la aplicación").build());
+		cmdLineOptions.addOption(Option.builder("s").longOpt("semilla").hasArg().desc("Semilla para la generación de partidas").build());
+
 		return cmdLineOptions;
 	}
 	
@@ -75,15 +79,30 @@ public class Main {
 		}
 	}
 	
-	private static void parseInFileOption(CommandLine line) throws ParseException {
+	private static void parseInFileOption(CommandLine line) {
 		
 		inFile = line.getOptionValue("i");
 	}
 
-	private static void parseOutFileOption(CommandLine line) throws ParseException {
+	private static void parseOutFileOption(CommandLine line) {
 		outFile = line.getOptionValue("o");
 	}
 
+	
+	private static void parseSeedOption(CommandLine line) throws ParseException {
+		
+		if(line.hasOption('s')) {
+			
+			try {
+				seed = Integer.parseInt(line.getOptionValue('s'));
+			} catch (NumberFormatException e) {
+				throw new ParseException("La semilla debe ser un número.");
+			}
+		}
+		
+		else seed = defaultSeed;
+	}
+	
 	private static void parseArgs(String[] args) {
 
 		// Definimos las lineas de comando válidas
@@ -100,9 +119,9 @@ public class Main {
 			parseModeOption(line); // Primero para que en parseInFileOption ya se sepa si tenemos GUI.
 			
 			parseInFileOption(line);
+			if(!gui) parseOutFileOption(line);
 			
-			if(!gui) 
-				parseOutFileOption(line);
+			parseSeedOption(line);
 			
 			// Si todavia queda algo por procesar, significa que la línea de argumentos no tenía el formato correcto.
 			
@@ -118,7 +137,6 @@ public class Main {
 			System.err.println(e.getLocalizedMessage());
 			System.exit(1);
 		}
-
 	}
 
 	private static void startBatchMode(Controller controller) throws IOException {
@@ -164,6 +182,8 @@ public class Main {
 		Game.initWordList();
 		
 		parseArgs(args);
+		
+		Game.setSeed(seed);
 		
 		Controller controller = new Controller();
 		

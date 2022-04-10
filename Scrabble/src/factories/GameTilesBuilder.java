@@ -6,8 +6,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import gameContainers.GameTiles;
-import gameObjects.Tile;
+import containers.GameTiles;
+import simulatedObjects.Tile;
 
 public class GameTilesBuilder extends Builder<GameTiles>{
 

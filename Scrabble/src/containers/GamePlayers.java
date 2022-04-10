@@ -1,4 +1,4 @@
-package gameContainers;
+package containers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,9 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import gameLogic.Game;
-import gameObjects.Player;
-import gameObjects.Tile;
+import logic.Game;
+import simulatedObjects.Player;
+import simulatedObjects.Tile;
 
 /* APUNTES GENERALES
 

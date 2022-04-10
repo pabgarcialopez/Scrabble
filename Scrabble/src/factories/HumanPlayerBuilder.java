@@ -2,9 +2,9 @@ package factories;
 
 import java.util.List;
 
-import gameObjects.HumanPlayer;
-import gameObjects.Player;
-import gameObjects.Tile;
+import simulatedObjects.HumanPlayer;
+import simulatedObjects.Player;
+import simulatedObjects.Tile;
 
 // Ver apuntes de la clase padre PlayerBuilder
 public class HumanPlayerBuilder extends PlayerBuilder {

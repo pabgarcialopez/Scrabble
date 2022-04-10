@@ -1,4 +1,4 @@
-package gameUtils;
+package utils;
 
 /* APUNTES GENERALES:
 
@@ -19,5 +19,21 @@ public class StringUtils {
 		return word.replace('á', 'a').replace('é', 'e')
 		    .replace('í', 'i').replace('ó', 'o')
 		    .replace('ú', 'u');
+	}
+
+	public static int numberOfOcurrencesOf(String wordToBeFound, String word) {
+		
+		int numberOfOcurrences = 0;
+		
+		for(int i = 0; i < word.length(); i++) {
+			if(word.charAt(i) == wordToBeFound.charAt(0)) {
+				int rightLimit = i + wordToBeFound.length();
+				if(rightLimit <= word.length() && word.substring(i, rightLimit).equals(wordToBeFound))
+					numberOfOcurrences++;
+			}
+		}
+			
+			
+		return numberOfOcurrences;
 	}
 }

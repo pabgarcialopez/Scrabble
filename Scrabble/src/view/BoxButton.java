@@ -1,4 +1,4 @@
-package gameView;
+package view;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,9 +9,9 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import gameLogic.Game;
-import gameObjects.Box;
+import logic.Game;
 import scrabble.Controller;
+import simulatedObjects.Box;
 
 public class BoxButton extends JButton implements ScrabbleObserver {
 	

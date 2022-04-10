@@ -2,7 +2,7 @@ package factories;
 
 import org.json.JSONObject;
 
-import gameObjects.Tile;
+import simulatedObjects.Tile;
 
 public class TileBuilder extends Builder<Tile>{
 

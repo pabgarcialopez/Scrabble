@@ -1,4 +1,4 @@
-package gameView;
+package view;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -9,9 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import gameLogic.Game;
-import gameUtils.StringUtils;
+import logic.Game;
 import scrabble.Controller;
+import utils.StringUtils;
 
 public class InfoPanel extends JPanel implements ScrabbleObserver {
 

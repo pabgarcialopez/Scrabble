@@ -1,4 +1,4 @@
-package gameView;
+package view;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
-import gameLogic.Game;
+import logic.Game;
 import scrabble.Controller;
 
 public class ControlPanel extends JPanel implements ScrabbleObserver {
@@ -120,8 +120,8 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 					try {
 						controller.saveGame(fc.getSelectedFile().getName());
 						JOptionPane.showMessageDialog(ControlPanel.this, "La partida ha sido guardada con éxito", "GUARDAR", JOptionPane.INFORMATION_MESSAGE);
-					} catch (Exception exc) {
-						JOptionPane.showMessageDialog(ControlPanel.this, "El fichero seleccionado no es válido", "ERROR", JOptionPane.ERROR_MESSAGE);
+					} catch (FileNotFoundException | IllegalArgumentException exc) {
+						JOptionPane.showMessageDialog(ControlPanel.this, exc.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -139,7 +139,18 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					controller.reset();
+					String seedString = JOptionPane.showInputDialog(ControlPanel.this, "Introduce una semilla (actual: " + Game.getSeed() + ")", "Reset", JOptionPane.PLAIN_MESSAGE);
+					
+					if(seedString != null) {
+						try {
+							Game.setSeed(Integer.parseInt(seedString));
+							controller.reset();
+						}
+						
+						catch(NumberFormatException nfe) {
+							JOptionPane.showMessageDialog(ControlPanel.this, "La semilla debe ser un número", "ERROR", JOptionPane.ERROR_MESSAGE);
+						}
+					}
 				}
 				catch (FileNotFoundException fnfe) {
 					JOptionPane.showMessageDialog(ControlPanel.this, "El fichero de reseteo no es válido", "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -161,6 +172,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				controller.passTurn();
 			}
 		});
+		
 		bar.add(passButton);
 		bar.addSeparator();
 		this.buttonsToBlockCPUTurn.add(passButton);
@@ -295,7 +307,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	private void enableButtons(List<JButton> buttons, boolean enable) {
-		
 		for(JButton b : buttons)
 			b.setEnabled(enable);
 	}

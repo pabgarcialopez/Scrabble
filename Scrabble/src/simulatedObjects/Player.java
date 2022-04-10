@@ -1,4 +1,4 @@
-package gameObjects;
+package simulatedObjects;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,9 +8,9 @@ import java.util.Random;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import gameLogic.Game;
-import gameUtils.Pair;
-import gameUtils.StringUtils;
+import logic.Game;
+import utils.Pair;
+import utils.StringUtils;
 
 /* APUNTES GENERALES:
    
@@ -163,7 +163,7 @@ public abstract class Player {
 	 */
 	protected boolean tryWritingInBoard(int wordLength, List<Tile> tilesForWord, Game game) {
 		
-		int extraTile = (game.getWordsInBoard() ? 1 : 0);
+		int extraTile = (Game.getWordsInBoard() ? 1 : 0);
 		
 		if(wordLength > tilesForWord.size() + extraTile)
 			return false;

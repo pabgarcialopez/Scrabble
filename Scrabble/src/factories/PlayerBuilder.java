@@ -6,8 +6,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import gameObjects.Player;
-import gameObjects.Tile;
+import simulatedObjects.Player;
+import simulatedObjects.Tile;
 
 /* APUNTES GENERALES
    

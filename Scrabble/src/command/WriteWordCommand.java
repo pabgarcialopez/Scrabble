@@ -45,8 +45,9 @@ public class WriteWordCommand extends Command {
 			this.posX = Integer.parseInt(words[3]);
 			this.posY = Integer.parseInt(words[4]);
 		}
+		
 		catch(NumberFormatException nfe) {
-			throw new CommandParseException(String.format("[ERROR]: la posición debe ser dos números"));
+			throw new CommandParseException("[ERROR]: la posición debe ser dos números");
 		}
 		
 		return this;		

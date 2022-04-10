@@ -6,8 +6,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import gameContainers.Board;
-import gameObjects.Box;
+import containers.Board;
+import simulatedObjects.Box;
 
 //Ver apuntes de la clase padre Builder.
 public class BoardBuilder extends Builder<Board> {
