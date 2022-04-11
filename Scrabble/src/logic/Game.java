@@ -428,7 +428,9 @@ public class Game {
 				this.players.getNumPlayerTiles((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers()) == 0) {
 			this.gameFinished = true;
 			
-			this.gameFinishedCause = "La partida ha finalizado: no quedan fichas para robar." + StringUtils.DOUBLE_LINE_SEPARATOR;
+			this.gameFinishedCause = "La partida ha finalizado: no quedan fichas para robar y el jugador " 
+			+ this.players.getPlayerName(this.currentTurn + this.getNumPlayers() - 1)
+			+ " se ha quedado sin fichas."+ StringUtils.DOUBLE_LINE_SEPARATOR;
 		}
 		
 		if(this.numConsecutivePassedTurns == this.getNumPlayers() * PASSED_TURNS_TO_END_GAME) {

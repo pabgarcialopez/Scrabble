@@ -38,7 +38,7 @@ import view.GUIView;
  */
 public class Main {
 	
-	private static final int defaultSeed = 100;
+	//private static final int defaultSeed = 100;
 	private static boolean gui = true;
 	
 	private static String inFile;
@@ -100,7 +100,7 @@ public class Main {
 			}
 		}
 		
-		else seed = defaultSeed;
+		else seed = (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
 	}
 	
 	private static void parseArgs(String[] args) {
