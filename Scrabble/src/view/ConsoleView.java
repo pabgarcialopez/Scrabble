@@ -331,7 +331,10 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		while(players.length() < numPlayers) {
 			
+			this.out.print(StringUtils.LINE_SEPARATOR);
 			this.out.print("Tipo del jugador " + (players.length() + 1) + " " + Arrays.asList(PLAYER_TYPES).toString() + ": ");
+			this.out.print(StringUtils.LINE_SEPARATOR);
+			
 			String type = takeType(this.in.nextLine().trim());
 			
 			if(type != null) {
@@ -370,20 +373,26 @@ public class ConsoleView implements ScrabbleObserver {
 		int numPlayers = 0;
 		boolean done = false;
 		this.out.print("Selecciona el número de jugadores (2-4): ");
+		this.out.print(StringUtils.LINE_SEPARATOR);
+
 		
 		while (!done) {
 			try {
 				numPlayers = this.in.nextInt();
 				
 				if (numPlayers < 2 || numPlayers > 4) {
-					this.out.println("El número de jugadores debe estar entre 2 y 4.");
+					this.out.print(StringUtils.LINE_SEPARATOR);
+					this.out.print("El número de jugadores debe estar entre 2 y 4.");
+					this.out.print(StringUtils.DOUBLE_LINE_SEPARATOR);
 					this.out.print("Selecciona el número de jugadores (2-4): ");
 				}
 				else done = true;
 				
 			}
 			catch (InputMismatchException ime) {
-				this.out.println("¡La entrada debe ser un número!");
+				this.out.print(StringUtils.LINE_SEPARATOR);
+				this.out.print("¡La entrada debe ser un número!");
+				this.out.print(StringUtils.DOUBLE_LINE_SEPARATOR);
 				this.out.print("Selecciona el número de jugadores (2-4): ");
 				this.in.nextLine();
 			}
@@ -453,7 +462,7 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		this.in.nextLine();
 		
-		this.out.println();
+		this.out.print(StringUtils.DOUBLE_LINE_SEPARATOR);
 		
 		// Nueva partida
 		if(option == 1)

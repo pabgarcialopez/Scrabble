@@ -34,11 +34,11 @@ import view.GUIView;
    -i,--input <arg>: especifica el fichero de entrada de instrucciones "arg".
    -o,--output <arg>: especifica el fichero de salida "arg".
    -m,--modo <arg>: interfaz gráfica ("gui") o consola ("console").
+   -s,--semilla <arg>: entero para el control de generación de partidas.
    
  */
 public class Main {
 	
-	//private static final int defaultSeed = 100;
 	private static boolean gui = true;
 	
 	private static String inFile;
@@ -49,11 +49,11 @@ public class Main {
 		
 		Options cmdLineOptions = new Options();
 
-		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("Fichero de entrada, de donde se pueden leer instrucciones.").build());
+		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("Fichero de entrada, de donde la aplicación lee instrucciones.").build());
 		cmdLineOptions.addOption(Option.builder("o").longOpt("output").hasArg().desc("Fichero de salida, donde se puede ver el resultado de ejecución.").build());
 		cmdLineOptions.addOption(Option.builder("a").longOpt("ayuda").desc("Imprime esta ayuda").build());
 		cmdLineOptions.addOption(Option.builder("m").longOpt("modo").hasArg().desc("Modo de visualización de la aplicación").build());
-		cmdLineOptions.addOption(Option.builder("s").longOpt("semilla").hasArg().desc("Semilla para la generación de partidas").build());
+		cmdLineOptions.addOption(Option.builder("s").longOpt("semilla").hasArg().desc("Semilla para el control de generación de partidas").build());
 
 		return cmdLineOptions;
 	}
