@@ -43,8 +43,14 @@ public class Game {
 	
 	private static final int EXTRA_POINTS = 50;
 	private static final int PASSED_TURNS_TO_END_GAME = 2;
+	
+	// Para poder jugar partidas por fichero sin tener 
+	// que incluir saltos de línea en el fichero de entrada.
+	private static final boolean _pausePermitted = false;
+	
 	private static boolean _gameInitiated;
 	private static boolean _wordsInBoard;
+	
 	public static int _seed;
 
 	private Board board;
@@ -100,13 +106,12 @@ public class Game {
 	 * deben inicializarse antes de ejecutar el gestionar el añadido de jugadores (if-else), por razones de diseño.
 	 */
 	public void reset(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
-			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords, int seed) {
+			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
 		
 		this.board = board;
 		this.tiles = tiles;
 		
-		_seed = seed;
-		this.random = new Random(_seed);
+		this.random = new Random(Game.getSeed());
 
 		this.currentTurn = currentTurn;
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
@@ -552,6 +557,10 @@ public class Game {
 		return _wordsInBoard;
 	}
 	
+	public static boolean isPausePermitted() {
+		return _pausePermitted;
+	}
+	
 	public static int getSeed() {
 		return _seed;
 	}
@@ -633,6 +642,8 @@ public class Game {
 
 		return jo;
 	}
+
+	
 
 	
 }

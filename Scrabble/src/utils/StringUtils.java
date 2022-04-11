@@ -5,7 +5,8 @@ package utils;
 	La clase StringUtils es usada para recoger constantes útiles como el salto de línea,
 	no dependiente del sistema operativo. 
 	
-	También incluye un método estático de eliminado de tildes en palabras.
+	Incluye un método estático de eliminado de tildes en palabras.
+	Incluye un método estático que cuenta el número de ocurrencias de un string en una otro.
 */
 
 public class StringUtils {
@@ -33,7 +34,6 @@ public class StringUtils {
 					numberOfOcurrences++;
 			}
 		}
-			
 			
 		return numberOfOcurrences;
 	}

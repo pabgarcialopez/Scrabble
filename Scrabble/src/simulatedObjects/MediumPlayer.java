@@ -51,9 +51,13 @@ public class MediumPlayer extends Player {
 		}
 		
 		if(!wordWritten) {
-			int i = (int) (this.rdm.nextDouble() * 2);
-			if(i == 0 && !game.swapTile())
-				game.passTurn();
+			
+			if(this.rdm.nextDouble() > 0.5) {
+				if(!game.swapTile())
+					game.passTurn();
+			}
+			
+			else game.passTurn();
 		}
 	}
 
@@ -64,7 +68,10 @@ public class MediumPlayer extends Player {
 	
 	@Override
 	public void reset() {
-		--numMediumPlayers;
+		if(numMediumPlayers > 0)
+			--numMediumPlayers;
+		
+		this.rdm.setSeed(Game.getSeed());
 	}
 	
 	@Override

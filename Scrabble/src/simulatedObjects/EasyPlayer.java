@@ -38,10 +38,16 @@ public class EasyPlayer extends Player {
 		
 		wordWritten = tryWritingInBoard(FORMED_WORDS_LENGTH, tilesForWord, game);
 		
-		if(!wordWritten && !game.swapTile()) {
-			//if((int) (this.rdm.nextDouble() * 4) == 0) // 25% de probabilidad de pasar.
-				game.passTurn();
-		}		
+		if(!wordWritten) {
+			
+			// 25% probabilidad de pasar turno.
+			if(this.rdm.nextDouble() > 0.25) {
+				if(!game.swapTile())
+					game.passTurn();
+			}
+
+			else game.passTurn();
+		}
 	}
 
 	@Override
@@ -51,7 +57,10 @@ public class EasyPlayer extends Player {
 	
 	@Override
 	public void reset() {
-		--numEasyPlayers;
+		if(numEasyPlayers > 0)
+			--numEasyPlayers;
+		
+		this.rdm.setSeed(Game.getSeed());
 	}
 	
 	@Override

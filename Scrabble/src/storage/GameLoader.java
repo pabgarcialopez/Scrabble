@@ -48,23 +48,23 @@ public class GameLoader {
 	private static WordsBuilder wordsBuilder = new WordsBuilder();
 	
 	/* Método newGame:
-	 * Devuelve la instancia de Game creada por el método createGame.
+	 * Delega la creación de la partida al método createGame.
 	 * En este caso, se crea una nueva partida (fichero NEW_GAME).
 	 */
-	public static Game newGame(Game game) throws FileNotFoundException {
-		return createGame(new FileInputStream(NEW_GAME), game);
+	public static void newGame(Game game) throws FileNotFoundException {
+		createGame(new FileInputStream(NEW_GAME), game);
 	}
 	
 	/* Método loadGame:
-	 * Devuelve la instancia de Game creada por el método createGame.
+	 * Delega la creación de la partida al método createGame.
 	 * En este caso, se carga la partida guardada en el fichero recibido por parámetro.
 	 */
-	public static Game loadGame(Game game, String file) throws FileNotFoundException {
+	public static void loadGame(Game game, String file) throws FileNotFoundException {
 		
 		if(!file.endsWith(".json"))
 			file += ".json";
 		
-		return createGame(new FileInputStream(file), game);
+		createGame(new FileInputStream(file), game);
 	}
 	
 	/* Método createGame:
@@ -75,6 +75,12 @@ public class GameLoader {
 	private static Game createGame(InputStream input, Game game) {
 		
 		JSONObject json = new JSONObject(new JSONTokener(input));
+		
+		if(!Game.getGameInitiated())
+			Game.setSeed(json.has("seed") ? json.getInt("seed") : Game.getSeed());
+		else Game.setSeed(Game.getSeed());
+		
+		game.resetPlayers();
 		
 		int currentTurn = json.getInt("current_turn"); // -1 si es partida nueva
 		int numConsecutivePassedTurns = json.getInt("consecutive_turns_passed");
@@ -88,14 +94,8 @@ public class GameLoader {
 		
 		List<String> usedWords = wordsBuilder.createInstance(json.getJSONObject("used_words"));
 		
-		int _seed;
-		if(!Game.getGameInitiated())
-			_seed = (json.has("seed") ? json.getInt("seed") : Game.getSeed());
-		else _seed = Game.getSeed();
-		
-		
 		game.reset(currentTurn, numConsecutivePassedTurns, wordsInBoard, gameFinished, 
-				players, tiles, board, usedWords, _seed);
+				players, tiles, board, usedWords);
 		
 		return game;
 

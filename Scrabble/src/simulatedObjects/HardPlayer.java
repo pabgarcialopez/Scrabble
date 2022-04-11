@@ -53,7 +53,10 @@ public class HardPlayer extends Player{
 	
 	@Override
 	public void reset() {
-		--numHardPlayers;
+		if(numHardPlayers > 0)
+			--numHardPlayers;
+		
+		this.rdm.setSeed(Game.getSeed());
 	}
 	
 	@Override

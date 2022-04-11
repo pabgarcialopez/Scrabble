@@ -80,7 +80,6 @@ public class Main {
 	}
 	
 	private static void parseInFileOption(CommandLine line) {
-		
 		inFile = line.getOptionValue("i");
 	}
 
@@ -88,7 +87,6 @@ public class Main {
 		outFile = line.getOptionValue("o");
 	}
 
-	
 	private static void parseSeedOption(CommandLine line) throws ParseException {
 		
 		if(line.hasOption('s')) {

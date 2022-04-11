@@ -51,7 +51,7 @@ public class ResetCommand extends Command {
 			throw new CommandParseException(String.format("[ERROR]: Comando %s: %s%n", words[0], INCORRECT_NUMBER_OF_ARGS_MSG));
 		
 		try {
-			Game._seed = Integer.parseInt(words[1]);
+			Game.setSeed(Integer.parseInt(words[1]));
 		}
 		
 		catch(NumberFormatException nfe) {

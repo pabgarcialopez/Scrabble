@@ -53,7 +53,7 @@ public abstract class Player {
 		this.name = name;
 		this.tiles = tiles;
 		this.totalPoints = totalPoints;
-		this.rdm = new Random();
+		this.rdm = new Random(Game.getSeed());
 	}
 
 	/* Método addTile:

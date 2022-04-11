@@ -89,7 +89,7 @@ public class Controller {
 	 */
 	public void newGame() throws FileNotFoundException {
 		
-		this.game.resetPlayers();
+		//this.game.resetPlayers();
 		this.lastFileUsed = null;
 		GameLoader.newGame(game);
 	}
@@ -103,7 +103,8 @@ public class Controller {
 	 * el método execute de la clase LoadCommand.
 	 */
 	public void loadGame(String file) throws FileNotFoundException {
-		this.game.resetPlayers();
+		
+		//this.game.resetPlayers();
 		this.lastFileUsed = file;
 		GameLoader.loadGame(game, file);
 		

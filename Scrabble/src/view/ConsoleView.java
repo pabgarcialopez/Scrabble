@@ -305,8 +305,12 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 	
 	private void pausa() {
-		this.out.print("Pulsa enter para continuar..." + StringUtils.LINE_SEPARATOR);
-		this.in.nextLine();
+		
+		if(Game.isPausePermitted()) {
+			this.out.print("Pulsa enter para continuar..." + StringUtils.LINE_SEPARATOR);
+			this.in.nextLine();
+		}
+		
 	}
 
 	private Command askCommand() {
@@ -382,7 +386,7 @@ public class ConsoleView implements ScrabbleObserver {
 			}
 		}
 		
-		this.out.println();
+		this.out.print(StringUtils.LINE_SEPARATOR);
 		
 		JSONObject data = new JSONObject();
 		data.put("players", players);
@@ -487,10 +491,11 @@ public class ConsoleView implements ScrabbleObserver {
 
 				
 				if(option != 1 && option != 2)
-					this.out.println("Opción no valida.");
+					this.out.println("Opción no válida.");
 			}
 			
 			catch(InputMismatchException ime) {
+				this.out.print("[ERROR]" + StringUtils.LINE_SEPARATOR);
 				this.in.nextLine();
 				this.out.println("¡La entrada debe ser un número!");
 			}
@@ -560,7 +565,7 @@ public class ConsoleView implements ScrabbleObserver {
 		}
 	}
 	
-	@Override
+	@Override // Sobrescritura del método default de la interfaz
 	public void printHelpMessage(Command[] commands) {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append(StringUtils.LINE_SEPARATOR)
