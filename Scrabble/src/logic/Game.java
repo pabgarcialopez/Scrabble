@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import command.Command;
 import containers.Board;
 import containers.GamePlayers;
 import containers.GameTiles;
@@ -84,24 +85,7 @@ public class Game {
 		
 		this.wordChecker = new WordChecker(this);
 		this.observers = new ArrayList<ScrabbleObserver>();
-
-		
-//		gameInitiated = false;
-//		
-//		this.observers = new ArrayList<ScrabbleObserver>();
-//		this.wordChecker = new WordChecker(this);
-//		this.players = new GamePlayers((List<Player>) new ArrayList<Player>());
 	}
-	
-//	public Game(int currentTurn, int numConsecutivePassedTurns, boolean wordsInBoard,
-//			boolean gameFinished, GamePlayers players, GameTiles tiles, Board board, List<String> usedWords) {
-//		
-//		this.observers = new ArrayList<ScrabbleObserver>();
-//		this.wordChecker = new WordChecker(this);
-//		
-//		reset(currentTurn, numConsecutivePassedTurns, wordsInBoard, 
-//				gameFinished, players, tiles, board, usedWords);
-//	}
 	
 	/* Método reset:
 	 * 
@@ -145,34 +129,6 @@ public class Game {
 		
 		for(int i = 0; i < this.observers.size(); ++i)
 			this.observers.get(i).onReset(this);
-		
-		/* VERSION ANTERIOR
-		
-		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
-		this.wordsInBoard = wordsInBoard;
-		this.gameFinished = gameFinished;
-		
-		this.tiles = tiles;
-		this.board = board;
-		this.usedWords = usedWords;
-		this.random = new Random();
-		this.currentTurn = currentTurn;
-		
-		if(players.getNumPlayers() != 0) {
-			addPlayers(players);
-		}
-		
-		else {
-			for(ScrabbleObserver o : this.observers)
-				o.onPlayersNotAdded(this);
-		}
-		
-		gameInitiated = true;
-		
-		for(int i = 0; i < this.observers.size(); ++i)
-			this.observers.get(i).onReset(this);
-			
-		 */
 	}
 	
 	/* Método writeAWord:
@@ -196,8 +152,8 @@ public class Game {
 	public boolean writeAWord(String word, int posX, int posY, String direction) {
 		
 		try {
-			word = word.toLowerCase();
 			word = StringUtils.removeAccents(word);
+			word = word.toLowerCase();
 			this.wordChecker.checkArguments(word, posX, posY, direction);
 		}
 		catch(CommandExecuteException cee) {
@@ -570,6 +526,20 @@ public class Game {
 	 */
 	public void resetPlayers() {
 		this.players.reset();
+	}
+	
+	/* Método printHelpMessage:
+	 * Notifica a ConsoleView la impresión del mensaje de ayuda.
+	 * 
+	 * NOTA DE DISEÑO: el método printHelpMessage de la interfaz ScrabbleObserver
+	 * es default porque solo es coherente que ConsoleView lo implemente.
+	 * Sin embargo, para no romper la abstracción, se sigue recorriendo el
+	 * array de ScrrableObservers para llevar a cabo la acción.
+	 */
+	public void printHelpMessage(Command[] commands) {
+		for(ScrabbleObserver o : observers) {
+			o.printHelpMessage(commands);
+		}
 	}
 	
 	// Getters

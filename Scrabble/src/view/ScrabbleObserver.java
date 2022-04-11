@@ -1,5 +1,6 @@
 package view;
 
+import command.Command;
 import logic.Game;
 
 /* APUNTES GENERALES:
@@ -60,4 +61,6 @@ public interface ScrabbleObserver {
 	 * Es llamado al detectarse que el juego no tiene jugadores.
 	 */
 	void onPlayersNotAdded(Game game);
+	
+	default void printHelpMessage(Command[] commands) {}
 }

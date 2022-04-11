@@ -261,8 +261,8 @@ private static final long serialVersionUID = 1L;
 			
 			String typeSelected = (String) this.typesCombo.getSelectedItem();
 			
-			typeSelected = typeSelected.toLowerCase();
 			typeSelected = StringUtils.removeAccents(typeSelected);
+			typeSelected = typeSelected.toLowerCase();
 			
 			if("facil".equalsIgnoreCase(typeSelected))
 				return "easy_player";

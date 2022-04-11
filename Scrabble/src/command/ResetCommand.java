@@ -12,7 +12,7 @@ public class ResetCommand extends Command {
 
 	private static final String NAME = "reset";
 
-	private static final String DETAILS = "[r]eset";
+	private static final String DETAILS = "[r]eset [semilla]";
 
 	private static final String SHORTCUT = "r";
 

@@ -19,8 +19,8 @@ public class GameSaver {
 	public static void saveGame(Game game, String file) throws FileNotFoundException, IllegalArgumentException {
 		
 		checkFileFormat(file);
-		file = file.toLowerCase();
 		file = StringUtils.removeAccents(file);
+		file = file.toLowerCase();
 		if(!file.endsWith(".json"))
 			file += ".json";
 		

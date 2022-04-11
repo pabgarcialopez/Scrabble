@@ -2,6 +2,7 @@ package scrabble;
 
 import java.io.FileNotFoundException;
 
+import command.Command;
 import containers.GamePlayers;
 import logic.Game;
 import storage.GameLoader;
@@ -108,13 +109,6 @@ public class Controller {
 		
 	}
 	
-	/* Método addPlayers:
-	 * Delega en la clase Game la inicialización de los jugadores del juego.
-	 */
-	public void addPlayers(GamePlayers players) {
-		this.game.addPlayers(players);
-	}
-	
 	/* Método saveGame:
 	 * Delega en la clase GameSaver el guardado de partida.
 	 * La excepción lanzada (fichero no encontrado), es recogida en
@@ -122,6 +116,21 @@ public class Controller {
 	 */
 	public void saveGame(String file) throws FileNotFoundException {
 		GameSaver.saveGame(this.game, file);
+	}
+	
+	/* Método printHelpMessage:
+	 * Delega en la clase Game la impresión del mensaje de ayuda
+	 * de los comandos disponibles.
+	 */
+	public void printHelpMessage(Command[] commands) {
+		this.game.printHelpMessage(commands);
+	}
+	
+	/* Método addPlayers:
+	 * Delega en la clase Game la inicialización de los jugadores del juego.
+	 */
+	public void addPlayers(GamePlayers players) {
+		this.game.addPlayers(players);
 	}
 
 	/* Método addObserver:
@@ -142,7 +151,6 @@ public class Controller {
 	 * Delega en la clase Game la acción de juego de un jugador automático.
 	 */
 	public void automaticPlay() {
-		//if(!game.humanIsPlaying()) 
-			game.automaticPlay();
+		this.game.automaticPlay();
 	}
 }

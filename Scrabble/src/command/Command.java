@@ -28,8 +28,8 @@ public abstract class Command {
 		new SkipCommand(),
 		new ExitCommand(),
 		new HelpCommand(),
-		new ResetCommand(),
 		new NewGameCommand(),
+		new ResetCommand(),
 		new SwapTileCommand(),
 		new LoadCommand(),
 		new SaveCommand(),
@@ -109,11 +109,11 @@ public abstract class Command {
 
 	// Getters
 	
-	protected String getDetails() {
+	public String getDetails() {
 		return this.details;
 	}
 	
-	protected String getHelp() {
+	public String getHelp() {
 		return this.help;
 	}
 

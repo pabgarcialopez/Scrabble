@@ -86,7 +86,8 @@ public abstract class Player {
 	public String getStatus() {
 		StringBuilder buffer = new StringBuilder();
 		
-		buffer.append("Turno de ").append(this.name).append(":")
+		buffer.append(StringUtils.LINE_SEPARATOR).append("Turno de ")
+		      .append(this.name).append(":")
 			  .append(StringUtils.LINE_SEPARATOR);
 		
 		buffer.append("Puntos totales: ").append(totalPoints).append(StringUtils.LINE_SEPARATOR);

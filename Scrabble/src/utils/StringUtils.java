@@ -15,10 +15,11 @@ public class StringUtils {
 
 	public static String removeAccents(String word) {
 		
-		word = word.toLowerCase();
 		return word.replace('á', 'a').replace('é', 'e')
 		    .replace('í', 'i').replace('ó', 'o')
-		    .replace('ú', 'u');
+		    .replace('ú', 'u').replace('A', 'A')
+		    .replace('É', 'E').replace('Í', 'I')
+		    .replace('Ó', 'O').replace('Ú', 'U');
 	}
 
 	public static int numberOfOcurrencesOf(String wordToBeFound, String word) {

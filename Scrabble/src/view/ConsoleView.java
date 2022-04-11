@@ -25,6 +25,9 @@ import utils.StringUtils;
 
 public class ConsoleView implements ScrabbleObserver {
 	
+	// Para no estar creando un new Scanner(System.in) cada vez que compruebo.
+	private static final Scanner consoleInput = new Scanner(System.in);
+	
 	private static final String PROMPT = "Comando ([h]elp) > ";
 	private static final String CENTRE_SYMBOL = "*";
 	private static final String DOUBLE_LETTER_SYMBOL = "•";
@@ -81,6 +84,8 @@ public class ConsoleView implements ScrabbleObserver {
 
 	public void showBoard(Game game) {
 		
+		//this.out.print(StringUtils.LINE_SEPARATOR);
+
 		// Numero de digitos del tamaño del tablero.
 		int max_indentation_length = (int) Math.log10(game.getBoardSize()) + 1;
 		String max_left_indentation = createIndentation(max_indentation_length) + "   ";
@@ -156,7 +161,7 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		printRowSeparator(row_separator_length - 1, max_left_indentation);
 		
-		this.out.print("Doble letra: " + DOUBLE_LETTER_SYMBOL + " || " +
+		this.out.print(" Doble letra: " + DOUBLE_LETTER_SYMBOL + " || " +
 				         "Doble palabra: " + DOUBLE_WORD_SYMBOL + " || " +
 				         "Triple letra: " + TRIPLE_LETTER_SYMBOL + " || " + 
 				         "Triple palabra: " + TRIPLE_WORD_SYMBOL + 
@@ -300,7 +305,7 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 	
 	private void pausa() {
-		this.out.println("Pulsa enter para continuar...");
+		this.out.print("Pulsa enter para continuar..." + StringUtils.LINE_SEPARATOR);
 		this.in.nextLine();
 	}
 
@@ -310,6 +315,11 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		this.out.print(PROMPT);
 		String s = this.in.nextLine();
+		
+		s = StringUtils.removeAccents(s);
+		
+		if(this.in != consoleInput)
+			this.out.print(s + StringUtils.LINE_SEPARATOR);
 
 		String[] parameters = s.toLowerCase().trim().split(" ");
 		
@@ -333,10 +343,17 @@ public class ConsoleView implements ScrabbleObserver {
 			
 			this.out.print(StringUtils.LINE_SEPARATOR);
 			this.out.print("Tipo del jugador " + (players.length() + 1) + " " + Arrays.asList(PLAYER_TYPES).toString() + ": ");
+			
+			String notTreatedType = this.in.nextLine().trim();
+			
+			notTreatedType = StringUtils.removeAccents(notTreatedType);
+			String type = takeType(notTreatedType);
+			
+			if(this.in != consoleInput)
+				this.out.print(notTreatedType);
+			
 			this.out.print(StringUtils.LINE_SEPARATOR);
-			
-			String type = takeType(this.in.nextLine().trim());
-			
+
 			if(type != null) {
 				
 				JSONObject player = new JSONObject();
@@ -347,6 +364,9 @@ public class ConsoleView implements ScrabbleObserver {
 					this.out.print("Nombre del jugador " + (players.length() + 1) + ": ");
 					String name = this.in.nextLine().trim();
 					
+					if(this.in != consoleInput)
+						this.out.print(name + StringUtils.LINE_SEPARATOR);
+					
 					if(checkPlayerNames(name, players)) {
 						player.put("name", name);
 						players.put(player);
@@ -356,8 +376,10 @@ public class ConsoleView implements ScrabbleObserver {
 				}
 				else players.put(player);
 			}
-			else
-				this.out.println("El tipo introducido no es válido.");
+			else {
+				this.out.print("El tipo introducido no es válido.");
+				this.out.print(StringUtils.LINE_SEPARATOR);
+			}
 		}
 		
 		this.out.println();
@@ -373,29 +395,35 @@ public class ConsoleView implements ScrabbleObserver {
 		int numPlayers = 0;
 		boolean done = false;
 		this.out.print("Selecciona el número de jugadores (2-4): ");
-		this.out.print(StringUtils.LINE_SEPARATOR);
-
 		
 		while (!done) {
 			try {
 				numPlayers = this.in.nextInt();
 				
+				if(this.in != consoleInput)
+					this.out.print(numPlayers);
+				
+				this.out.print(StringUtils.LINE_SEPARATOR);
+
 				if (numPlayers < 2 || numPlayers > 4) {
-					this.out.print(StringUtils.LINE_SEPARATOR);
 					this.out.print("El número de jugadores debe estar entre 2 y 4.");
 					this.out.print(StringUtils.DOUBLE_LINE_SEPARATOR);
 					this.out.print("Selecciona el número de jugadores (2-4): ");
 				}
+				
 				else done = true;
 				
 			}
 			catch (InputMismatchException ime) {
+				this.out.print("[ERROR]");
 				this.out.print(StringUtils.LINE_SEPARATOR);
 				this.out.print("¡La entrada debe ser un número!");
 				this.out.print(StringUtils.DOUBLE_LINE_SEPARATOR);
 				this.out.print("Selecciona el número de jugadores (2-4): ");
 				this.in.nextLine();
 			}
+			
+
 		}
 		
 		// Para que la entrada sea correcta.
@@ -418,7 +446,8 @@ public class ConsoleView implements ScrabbleObserver {
 	
 	private static String takeType(String type) {
 
-		type = StringUtils.removeAccents(type.toLowerCase());
+		type = StringUtils.removeAccents(type);
+		type = type.toLowerCase();
 		
 		switch(type) {
 		case "facil":
@@ -447,8 +476,15 @@ public class ConsoleView implements ScrabbleObserver {
 		while(option != 1 && option != 2) {
 			
 			try {
-				this.out.print(StringUtils.LINE_SEPARATOR + "Selecciona opción: ");
+				this.out.print(StringUtils.LINE_SEPARATOR);
+				this.out.print("Selecciona opción: ");
 				option = this.in.nextInt();
+				
+				if(this.in != consoleInput)
+					this.out.print(option);
+				
+				this.out.print(StringUtils.LINE_SEPARATOR);
+
 				
 				if(option != 1 && option != 2)
 					this.out.println("Opción no valida.");
@@ -462,7 +498,7 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		this.in.nextLine();
 		
-		this.out.print(StringUtils.DOUBLE_LINE_SEPARATOR);
+		this.out.print(StringUtils.LINE_SEPARATOR);
 		
 		// Nueva partida
 		if(option == 1)
@@ -484,7 +520,12 @@ public class ConsoleView implements ScrabbleObserver {
 				this.out.print(StringUtils.LINE_SEPARATOR);
 				this.out.print("Introduce el nombre de la partida a cargar: ");
 				
-				String file = this.in.nextLine();
+				String file = this.in.nextLine().trim();
+				
+				if(this.in != consoleInput)
+					this.out.print(file + StringUtils.LINE_SEPARATOR);
+				
+				file = StringUtils.removeAccents(file);
 				
 				if(!file.endsWith(".json"))
 					file += ".json";
@@ -496,6 +537,11 @@ public class ConsoleView implements ScrabbleObserver {
 					this.out.print("Introduce el nombre de la partida a cargar: ");
 					
 					file = this.in.nextLine();
+					
+					if(this.in != consoleInput)
+						this.out.print(file + StringUtils.LINE_SEPARATOR);
+					
+					file = StringUtils.removeAccents(file);
 					
 					if(!file.endsWith(".json"))
 						file += ".json";
@@ -513,6 +559,22 @@ public class ConsoleView implements ScrabbleObserver {
 			}
 		}
 	}
-
+	
+	@Override
+	public void printHelpMessage(Command[] commands) {
+		StringBuilder buffer = new StringBuilder();
+		buffer.append(StringUtils.LINE_SEPARATOR)
+		      .append("Comandos disponibles:")
+		      .append(StringUtils.LINE_SEPARATOR);
+		
+		for (int i = 0; i < commands.length; ++i) {
+			buffer.append(commands[i].getDetails()).append(": ")
+			      .append(commands[i].getHelp())
+			      .append(StringUtils.LINE_SEPARATOR);
+		}
+		
+		buffer.append(StringUtils.LINE_SEPARATOR);
+		this.out.print(buffer.toString());	
+	}
 	
 }
