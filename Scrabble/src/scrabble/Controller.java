@@ -68,7 +68,6 @@ public class Controller {
 	 */
 	public void reset() throws FileNotFoundException {
 		
-		
 		if(this.lastFileUsed == null)
 			newGame();
 		
@@ -148,10 +147,14 @@ public class Controller {
 		this.game.removeObserver(o);
 	}
 
-	/* Método automaticPlay:
-	 * Delega en la clase Game la acción de juego de un jugador automático.
-	 */
-	public void automaticPlay() {
-		this.game.automaticPlay();
+//	/* Método automaticPlay:
+//	 * Delega en la clase Game la acción de juego de un jugador automático.
+//	 */
+//	public void automaticPlay() {
+//		this.game.automaticPlay();
+//	}
+
+	public void playTurn() {
+		this.game.playTurn();
 	}
 }

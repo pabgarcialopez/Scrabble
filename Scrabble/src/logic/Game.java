@@ -50,6 +50,7 @@ public class Game {
 	
 	private static boolean _gameInitiated;
 	private static boolean _wordsInBoard;
+	public static Random _random;
 	
 	public static int _seed;
 
@@ -67,8 +68,6 @@ public class Game {
 	private static List<String> words;
 	
 	private WordChecker wordChecker;
-	
-	private Random random;
 	
 	private List<ScrabbleObserver> observers;
 
@@ -111,7 +110,7 @@ public class Game {
 		this.board = board;
 		this.tiles = tiles;
 		
-		this.random = new Random(Game.getSeed());
+		_random = new Random(Game.getSeed());
 
 		this.currentTurn = currentTurn;
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
@@ -134,6 +133,10 @@ public class Game {
 		
 		for(int i = 0; i < this.observers.size(); ++i)
 			this.observers.get(i).onReset(this);
+	}
+	
+	public void playTurn() {
+		this.players.playTurn(this);
 	}
 	
 	/* Método writeAWord:
@@ -162,10 +165,10 @@ public class Game {
 			this.wordChecker.checkArguments(word, posX, posY, direction);
 		}
 		catch(CommandExecuteException cee) {
-			if(humanIsPlaying()) {
+			//if(humanIsPlaying()) {
 				for(ScrabbleObserver o : this.observers)
 					o.onError(cee.getMessage());
-			}
+			//}
 			return false;
 		}
 		
@@ -273,10 +276,10 @@ public class Game {
 	public boolean swapTile() {
 		
 		if(tiles.getSize() <= 0) {
-			if(humanIsPlaying()) {
+			//if(humanIsPlaying()) {
 				for(ScrabbleObserver o : this.observers)
 					o.onError("No hay fichas para robar.");
-			}
+			//}
 			
 			return false;
 		}
@@ -447,8 +450,8 @@ public class Game {
 		status += "Fichas restantes: " + this.getRemainingTiles() + StringUtils.LINE_SEPARATOR;
 		status += players.getPlayerStatus(currentTurn) + StringUtils.LINE_SEPARATOR;
 
-		if (!humanIsPlaying())
-			status += "Cargando... Por favor, espera." + StringUtils.LINE_SEPARATOR;
+		//if (!humanIsPlaying())
+			//status += "Cargando... Por favor, espera." + StringUtils.LINE_SEPARATOR;
 
 		return status;
 	}
@@ -529,9 +532,9 @@ public class Game {
 	/* Método resetPlayers:
 	 * Delega en la clase GamePlayers el reseteo de los jugadores.
 	 */
-	public void resetPlayers() {
-		this.players.reset();
-	}
+//	public void resetPlayers() {
+//		this.players.reset();
+//	}
 	
 	/* Método printHelpMessage:
 	 * Notifica a ConsoleView la impresión del mensaje de ayuda.
@@ -565,6 +568,10 @@ public class Game {
 		return _seed;
 	}
 	
+	public static Random getRandom() {
+		return _random;
+	}
+	
 	public int getBoardSize() {
 		return board.getBoardSize();
 	}
@@ -585,9 +592,9 @@ public class Game {
 		return this.players;
 	}
 	
-	public boolean humanIsPlaying() {
-		return players.humanIsPlaying(currentTurn);
-	}
+//	public boolean humanIsPlaying() {
+//		return players.humanIsPlaying(currentTurn);
+//	}
 
 	public int getRemainingTiles() {
 		return this.tiles.getNumTiles();
@@ -610,7 +617,7 @@ public class Game {
 	}
 
 	private Double getRandomDouble() {
-		return this.random.nextDouble();
+		return _random.nextDouble();
 	}
 	
 	public static void setSeed(int seed) {
@@ -642,6 +649,10 @@ public class Game {
 
 		return jo;
 	}
+
+	
+
+	
 
 	
 

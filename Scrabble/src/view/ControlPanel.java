@@ -205,7 +205,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						controller.automaticPlay();
+						controller.playTurn();
 					}
 				});
 			}
@@ -281,7 +281,8 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	public void onReset(Game game) {
 		enableButtons(this.buttonsToBlockGameNotInitiated, true);
 		enableButtons(this.buttonsToBlockCPUTurn, game.humanIsPlaying());
-		if(game.humanIsPlaying()) continueButton.setEnabled(false);
+		if(game.humanIsPlaying()) 
+			continueButton.setEnabled(false);
 	}
 
 	@Override

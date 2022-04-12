@@ -25,6 +25,13 @@ public class GamePlayers {
 	public GamePlayers(List<Player> players) {
 		this.players = players;
 	}
+	
+	/* Método playTurn:
+	 * Delega en el player correspondiente la acción de jugar su turno.
+	 */
+	public void playTurn(Game game) {
+		this.players.get(game.getCurrentTurn()).play(game);
+	}
 
 	/* Método drawTiles:
 	 * 
@@ -119,11 +126,11 @@ public class GamePlayers {
 	/* Método reset:
 	 * Delega la acción de resetear al método reset de la clase Player (método abstracto).
 	 */
-	public void reset() {
-		for(Player p: players) {
-			p.reset();
-		}
-	}
+//	public void reset() {
+//		for(Player p: players) {
+//			p.reset();
+//		}
+//	}
 	
 	// Getters
 	
@@ -151,12 +158,16 @@ public class GamePlayers {
 		return this.players.get(player).getTile(letter);
 	}
 	
-	public boolean humanIsPlaying(int currentTurn) {
-		return players.get(currentTurn).isHuman();
-	}
+//	public boolean humanIsPlaying(int currentTurn) {
+//		return players.get(currentTurn).isHuman();
+//	}
 
 	public int getPlayerPoints(int player) {
 		return this.players.get(player).getPoints();
+	}
+	
+	public Player getPlayer(int currentTurn) {
+		return players.get(currentTurn);
 	}
 
 	public JSONObject report() {
@@ -171,4 +182,8 @@ public class GamePlayers {
 		
 		return jo;
 	}
+
+	
+
+	
 }

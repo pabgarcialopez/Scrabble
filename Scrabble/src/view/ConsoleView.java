@@ -37,7 +37,7 @@ public class ConsoleView implements ScrabbleObserver {
 	private static final String ROW_SEPARATOR_SYMBOL = "-";
 	private static final String COLUMN_SEPARATOR_SYMBOL = "|";
 	
-	private static final String[] PLAYER_TYPES = {"humano", "fácil", "medio", "difícil"};
+	private static final String[] PLAYER_STRATEGIES = {"humana", "fácil", "media", "difícil"};
 	
 	private Controller controller;
 	
@@ -45,7 +45,7 @@ public class ConsoleView implements ScrabbleObserver {
 	
 	private PrintStream out;
 	
-	private boolean humanIsPlaying;
+	//private boolean humanIsPlaying;
 	
 	public ConsoleView(Controller controller, InputStream in, OutputStream out) {
 		this.controller = controller;
@@ -229,16 +229,16 @@ public class ConsoleView implements ScrabbleObserver {
 	public void onReset(Game game) {
 		
 		this.out.println("Partida iniciada con éxito." + StringUtils.LINE_SEPARATOR);
-		this.humanIsPlaying = game.humanIsPlaying();
+		//this.humanIsPlaying = game.humanIsPlaying();
 		showBoard(game);
 		showStatus(game);
-		playTurn();
+		controller.playTurn();
 	}
 
 	@Override
 	public void onError(String error) {
 		this.out.println(error);
-		playTurn();
+		controller.playTurn();
 	}
 
 	@Override
@@ -247,9 +247,9 @@ public class ConsoleView implements ScrabbleObserver {
 		showBoard(game);
 		
 		if(!game.gameIsFinished()) {
-			this.humanIsPlaying = game.humanIsPlaying();
+			//this.humanIsPlaying = game.humanIsPlaying();
 			showStatus(game);
-			playTurn();
+			controller.playTurn();
 		}
 	}
 
@@ -269,41 +269,6 @@ public class ConsoleView implements ScrabbleObserver {
 		this.controller.addPlayers(createPlayers());
 	}
 	
-	private void playTurn() {
-		
-		Command command = null;
-		
-		if(this.humanIsPlaying) {
-			
-			while (command == null)
-				command = askCommand();
-			
-			boolean playAnotherTurn = true;
-			
-			try {
-				playAnotherTurn = command.execute(this.controller);
-			}
-			
-			catch(CommandExecuteException cee) {
-				this.out.println(cee.getMessage() + StringUtils.LINE_SEPARATOR);
-			}
-			
-			if(playAnotherTurn)
-				playTurn();
-			
-			else {				
-				pausa();
-				controller.update();
-			}
-		}
-		
-		else {
-			controller.automaticPlay();
-			pausa();
-			controller.update();
-		}
-	}
-	
 	private void pausa() {
 		
 		if(Game.isPausePermitted()) {
@@ -313,29 +278,7 @@ public class ConsoleView implements ScrabbleObserver {
 		
 	}
 
-	private Command askCommand() {
-		
-		Command command = null;
-		
-		this.out.print(PROMPT);
-		String s = this.in.nextLine();
-		
-		s = StringUtils.removeAccents(s);
-		
-		if(this.in != consoleInput)
-			this.out.print(s + StringUtils.LINE_SEPARATOR);
-
-		String[] parameters = s.toLowerCase().trim().split(" ");
-		
-		try {
-			command = Command.getCommand(parameters);
-		}
-		catch(CommandParseException cpe) {
-			this.out.println(cpe.getMessage());
-		}
-		
-		return command;		
-	}
+	
 	
 	private GamePlayers createPlayers() {
 		
@@ -346,26 +289,26 @@ public class ConsoleView implements ScrabbleObserver {
 		while(players.length() < numPlayers) {
 			
 			this.out.print(StringUtils.LINE_SEPARATOR);
-			this.out.print("Tipo del jugador " + (players.length() + 1) + " " + Arrays.asList(PLAYER_TYPES).toString() + ": ");
+			this.out.print("Estrategia del jugador " + (players.length() + 1) + " " + Arrays.asList(PLAYER_STRATEGIES).toString() + ": ");
 			
-			String notTreatedType = this.in.nextLine().trim();
+			String notTreatedStrategy = this.in.nextLine().trim();
 			
-			notTreatedType = StringUtils.removeAccents(notTreatedType);
-			String type = takeType(notTreatedType);
+			notTreatedStrategy = StringUtils.removeAccents(notTreatedStrategy);
+			String strategy = takeType(notTreatedStrategy);
 			
 			if(this.in != consoleInput)
-				this.out.print(notTreatedType);
+				this.out.print(notTreatedStrategy);
 			
 			this.out.print(StringUtils.LINE_SEPARATOR);
 
-			if(type != null) {
+			if(strategy != null) {
 				
 				JSONObject player = new JSONObject();
-				player.put("type", type);
+				player.put("strategy", strategy);
 				player.put("total_points", 0);
 				
-				if(type.equalsIgnoreCase("human_player")) {
-					this.out.print("Nombre del jugador " + (players.length() + 1) + ": ");
+				if(strategy.equalsIgnoreCase("human_strategy")) {
+					this.out.print("Nombre del jugador humano " + (players.length() + 1) + ": ");
 					String name = this.in.nextLine().trim();
 					
 					if(this.in != consoleInput)
@@ -381,7 +324,7 @@ public class ConsoleView implements ScrabbleObserver {
 				else players.put(player);
 			}
 			else {
-				this.out.print("El tipo introducido no es válido.");
+				this.out.print("La estrategia introducida no es válida.");
 				this.out.print(StringUtils.LINE_SEPARATOR);
 			}
 		}
@@ -455,13 +398,13 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		switch(type) {
 		case "facil":
-			return "easy_player";
-		case "medio":
-			return "medium_player";
+			return "easy_strategy";
+		case "media":
+			return "medium_strategy";
 		case "dificil":
-			return "hard_player";
-		case "humano":
-			return "human_player";
+			return "hard_strategy";
+		case "humana":
+			return "human_strategy";
 		default:
 			return null;
 		}

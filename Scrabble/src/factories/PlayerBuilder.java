@@ -1,12 +1,14 @@
 package factories;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import simulatedObjects.Player;
+import simulatedObjects.Strategy;
 import simulatedObjects.Tile;
 
 /* APUNTES GENERALES
@@ -18,13 +20,15 @@ import simulatedObjects.Tile;
    clasificados por dificultad.
    
  */
-public abstract class PlayerBuilder extends Builder<Player>{
+public class PlayerBuilder extends Builder<Player>{
 
 	protected TileBuilder tileBuilder;
+	private List<StrategyBuilder> strategyBuilders;
 	
-	public PlayerBuilder(String type, TileBuilder tileBuilder) {
-		super(type);
+	public PlayerBuilder(TileBuilder tileBuilder, List<StrategyBuilder> strategyBuilders) {
+		super("player");
 		this.tileBuilder = tileBuilder;
+		this.strategyBuilders = strategyBuilders;
 	}
 	
 	/* Sobrescritura del método createTheInstance:
@@ -66,20 +70,21 @@ public abstract class PlayerBuilder extends Builder<Player>{
 				
 			}
 			
-			return createThePlayer(name, totalPoints, tiles);
+			Strategy strategy = null;
+			for(StrategyBuilder sb : strategyBuilders) {
+				strategy = sb.createTheInstance(data.getJSONObject("strategy"));
+				
+				if(strategy != null)
+					break;
+			}
+			
+			if(strategy == null)
+				throw new InputMismatchException("El JSON no es válido (strategy).");
+			
+			return new Player(name, totalPoints, tiles, strategy);
 		}
 		
 		else return null;
 
 	}
-	
-	// Métodos abstractos
-	
-	/* Método createThePlayer:
-	 * 
-	 * Recibe la información necesaria para inicializar a un jugador,
-	 * y devuelve una instancia de tipo estático Player, y de tipo dinámico
-	 * HumanPlayer, EasyPlayer, MediumPlayer o HardPlayer.
-	 */
-	protected abstract Player createThePlayer(String name, int totalPoints, List<Tile> tiles);
 }

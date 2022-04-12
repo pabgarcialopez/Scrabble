@@ -28,7 +28,7 @@ import utils.StringUtils;
    para recorrer las posiciones del tablero de forma ordenada.
    
  */
-public abstract class Player {
+public class Player {
 	
 	protected static final List<Pair<Integer, Integer>> movingBoxes = 
 			Collections.unmodifiableList(
@@ -47,13 +47,15 @@ public abstract class Player {
 	protected String name;
 	protected List<Tile> tiles;
 	private int totalPoints;
-	protected Random rdm;
+	private Random rdm;
+	private Strategy strategy;
 	
-	public Player(String name, int totalPoints, List<Tile> tiles) {
+	public Player(String name, int totalPoints, List<Tile> tiles, Strategy strategy) {
 		this.name = name;
 		this.tiles = tiles;
 		this.totalPoints = totalPoints;
-		this.rdm = new Random(Game.getSeed());
+		this.strategy = strategy;
+		this.rdm = Game.getRandom();
 	}
 
 	/* Método addTile:
@@ -75,6 +77,13 @@ public abstract class Player {
 	 */
 	public void removeTile(Tile tile) {
 		this.tiles.remove(tile);
+	}
+	
+	/* Método play:
+	 * Llama al método play de su estrategia correspondiente.
+	 */
+	public void play(Game game) {
+		this.strategy.play(game);
 	}
 	
 	/* Método getStatus:
@@ -411,6 +420,10 @@ public abstract class Player {
 	public int getPoints() {
 		return this.totalPoints;
 	}
+
+	public List<Tile> getTiles() {
+		return Collections.unmodifiableList(this.tiles);
+	}
 	
 	public JSONObject report() {
 		
@@ -424,27 +437,37 @@ public abstract class Player {
 		
 		jo.put("tiles", tiles);
 		
+		if(this.strategy == null)
+			jo.put("strategy", "human");
+		
+		else jo.put("strategy", this.strategy.toString());
+		
 		return jo;
 	}
+	
+	
 
+	/*
 	// Métodos abstractos
 	
-	/* Método play:
+	* Método play:
 	 * Sobrescrito (funcionalmente) por EasyPlayer, MediumPlayer y 
 	 * HardPlayer para realizar la estrategia de juego correspondiente.
-	 */
+	 *
 	public abstract void play(Game game);
 
-	/* Método isHuman:
+	* Método isHuman:
 	 * Sobrescrito por todos los hijos de esta clase, para indicar si representan
 	 * un jugador humano, o un jugador automático.
-	 */
+	 *
 	public abstract boolean isHuman();
 	
-	/* Método reset:
+	* Método reset:
 	 * Sobrescrito (funcionalmente) por EasyPlayer, MediumPlayer y 
 	 * HardPlayer para, a la hora de cargar o resetear un juego, ajustar
 	 * el número de jugadores automáticos de cada tipo.
-	 */
+	 *
 	public abstract void reset();
+	*/
+	
 }

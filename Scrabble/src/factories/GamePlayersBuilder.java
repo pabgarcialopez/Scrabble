@@ -12,11 +12,11 @@ import simulatedObjects.Player;
 
 public class GamePlayersBuilder extends Builder<GamePlayers> {
 
-	private List<PlayerBuilder> playerBuilders;
+	private PlayerBuilder playerBuilder;
 	
-	public GamePlayersBuilder(List<PlayerBuilder> playerBuilders) {
+	public GamePlayersBuilder(PlayerBuilder playerBuilder) {
 		super("gamePlayers");
-		this.playerBuilders = playerBuilders;
+		this.playerBuilder = playerBuilder;
 	}
 
 	/* Sobrescritura del método createTheInstance:
@@ -37,17 +37,14 @@ public class GamePlayersBuilder extends Builder<GamePlayers> {
 		List<Player> players = new ArrayList<Player>();
 		
 		for(int i = 0; i < jsonArrayPlayers.length(); i++) {
+			
 			Player playerToAdd = null;
-			for(PlayerBuilder pb : this.playerBuilders) {
-				playerToAdd = pb.createTheInstance(jsonArrayPlayers.getJSONObject(i));
-				if(playerToAdd != null) 
-					break;
-			}
+			playerToAdd = playerBuilder.createTheInstance(jsonArrayPlayers.getJSONObject(i));
 			
 			if(playerToAdd != null)
 				players.add(playerToAdd);
-			
-			else throw new InputMismatchException("El JSON no es válido.");
+				
+			else throw new InputMismatchException("El JSON no es válido (GamePlayers).");
 		}
 		
 		return new GamePlayers(players);

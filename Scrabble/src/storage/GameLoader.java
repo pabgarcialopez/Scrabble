@@ -15,13 +15,13 @@ import containers.GamePlayers;
 import containers.GameTiles;
 import factories.BoardBuilder;
 import factories.BoxBuilder;
-import factories.EasyPlayerBuilder;
+import factories.EasyStrategyBuilder;
 import factories.GamePlayersBuilder;
 import factories.GameTilesBuilder;
-import factories.HardPlayerBuilder;
-import factories.HumanPlayerBuilder;
-import factories.MediumPlayerBuilder;
+import factories.HardStrategyBuilder;
+import factories.MediumStrategyBuilder;
 import factories.PlayerBuilder;
+import factories.StrategyBuilder;
 import factories.TileBuilder;
 import factories.WordsBuilder;
 import logic.Game;
@@ -72,7 +72,7 @@ public class GameLoader {
 	 * Delega la inicialización de los atributos del parámetro recibido de la clase Game, en
 	 * el método reset.
 	 */
-	private static Game createGame(InputStream input, Game game) {
+	private static void createGame(InputStream input, Game game) {
 		
 		JSONObject json = new JSONObject(new JSONTokener(input));
 		
@@ -80,7 +80,7 @@ public class GameLoader {
 			Game.setSeed(json.has("seed") ? json.getInt("seed") : Game.getSeed());
 		else Game.setSeed(Game.getSeed());
 		
-		game.resetPlayers();
+		//game.resetPlayers();
 		
 		int currentTurn = json.getInt("current_turn"); // -1 si es partida nueva
 		int numConsecutivePassedTurns = json.getInt("consecutive_turns_passed");
@@ -96,9 +96,6 @@ public class GameLoader {
 		
 		game.reset(currentTurn, numConsecutivePassedTurns, wordsInBoard, gameFinished, 
 				players, tiles, board, usedWords);
-		
-		return game;
-
 	}
 		
 	/* Método createPlayers:
@@ -129,12 +126,14 @@ public class GameLoader {
 		
 		gameTilesBuilder = new GameTilesBuilder(tileBuilder);
 		
-		List<PlayerBuilder> playerBuilders= new ArrayList<PlayerBuilder>();
-		playerBuilders.add(new EasyPlayerBuilder(tileBuilder));
-		playerBuilders.add(new MediumPlayerBuilder(tileBuilder));
-		playerBuilders.add(new HardPlayerBuilder(tileBuilder));
-		playerBuilders.add(new HumanPlayerBuilder(tileBuilder));
+		List<StrategyBuilder> strategyBuilders = new ArrayList<StrategyBuilder>();
 		
-		gamePlayersBuilder = new GamePlayersBuilder(playerBuilders);
+		strategyBuilders.add(new EasyStrategyBuilder());
+		strategyBuilders.add(new MediumStrategyBuilder());
+		strategyBuilders.add(new HardStrategyBuilder());
+		
+		
+		PlayerBuilder playerBuilder = new PlayerBuilder(tileBuilder, strategyBuilders);
+		gamePlayersBuilder = new GamePlayersBuilder(playerBuilder);
 	}
 }
