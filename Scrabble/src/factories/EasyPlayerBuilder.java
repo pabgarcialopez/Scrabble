@@ -2,11 +2,12 @@ package factories;
 
 import java.util.List;
 
-import gameObjects.EasyPlayer;
-import gameObjects.Player;
-import gameObjects.Tile;
+import simulatedObjects.EasyPlayer;
+import simulatedObjects.Player;
+import simulatedObjects.Tile;
 
-public class EasyPlayerBuilder extends PlayerBuilder{
+// Ver apuntes de la clase padre PlayerBuilder
+public class EasyPlayerBuilder extends PlayerBuilder {
 
 	public EasyPlayerBuilder(TileBuilder tileBuilder) {
 		super("easy_player", tileBuilder);
@@ -14,7 +15,6 @@ public class EasyPlayerBuilder extends PlayerBuilder{
 
 	@Override
 	protected Player createThePlayer(String name, int totalPoints, List<Tile> tiles) {
-		
 		return new EasyPlayer(name, totalPoints, tiles);
 	}
 }

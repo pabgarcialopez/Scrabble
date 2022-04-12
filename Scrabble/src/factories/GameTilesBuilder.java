@@ -6,8 +6,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import gameContainers.GameTiles;
-import gameObjects.Tile;
+import containers.GameTiles;
+import simulatedObjects.Tile;
 
 public class GameTilesBuilder extends Builder<GameTiles>{
 
@@ -16,6 +16,13 @@ public class GameTilesBuilder extends Builder<GameTiles>{
 		super("gameTiles");
 		this.tileBuilder = tileBuilder;
 	}
+
+	/* Sobrescritura del método createTheInstance:
+	 * 
+	 * Construye y devuelve una instancia de la clase GameTiles,
+	 * es decir, las fichas del "saco" que los jugadores irán cogiendo
+	 * según avance la partida.
+	 */
 
 	@Override
 	protected GameTiles createTheInstance(JSONObject data) {

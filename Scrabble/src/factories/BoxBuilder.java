@@ -2,9 +2,9 @@ package factories;
 
 import org.json.JSONObject;
 
-import gameObjects.Box;
-import gameObjects.SpecialEffects;
-import gameObjects.Tile;
+import simulatedObjects.Box;
+import simulatedObjects.SpecialEffects;
+import simulatedObjects.Tile;
 
 public class BoxBuilder extends Builder<Box>{
 	
@@ -14,6 +14,14 @@ public class BoxBuilder extends Builder<Box>{
 		super("Box");
 		this.tileBuilder = tileBuilder;
 	}
+	
+	/* Sobrescritura del método createTheInstance:
+	 * 
+	 * Este método construye un objeto de la clase Box, es decir,
+	 * una casilla del tablero. La casilla tiene la posibilidad de
+	 * tener asociados un efecto especial y una letra, las cuales vienen
+	 * especificadas en el JSONObject recibido por parámetro.
+	 */
 	
 	@Override
 	protected Box createTheInstance(JSONObject data) {
@@ -25,10 +33,10 @@ public class BoxBuilder extends Builder<Box>{
 		
 		if(data.has("tile")) {
 			Tile tile = tileBuilder.createTheInstance(data.getJSONObject("tile"));
-			return new Box(specialEffect, tile);
+			return new Box(specialEffect, tile, true);
 		}
 		
-		else return new Box(specialEffect);
+		else return new Box(specialEffect, null, false);
 	}
 
 }

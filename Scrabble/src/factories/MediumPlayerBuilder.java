@@ -2,10 +2,11 @@ package factories;
 
 import java.util.List;
 
-import gameObjects.MediumPlayer;
-import gameObjects.Player;
-import gameObjects.Tile;
+import simulatedObjects.MediumPlayer;
+import simulatedObjects.Player;
+import simulatedObjects.Tile;
 
+// Ver apuntes de la clase padre PlayerBuilder
 public class MediumPlayerBuilder extends PlayerBuilder {
 
 	public MediumPlayerBuilder(TileBuilder tileBuilder) {
@@ -14,7 +15,6 @@ public class MediumPlayerBuilder extends PlayerBuilder {
 
 	@Override
 	protected Player createThePlayer(String name, int totalPoints, List<Tile> tiles) {
-		
 		return new MediumPlayer(name, totalPoints, tiles);
 	}
 }

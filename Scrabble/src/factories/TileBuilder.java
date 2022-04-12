@@ -2,7 +2,7 @@ package factories;
 
 import org.json.JSONObject;
 
-import gameObjects.Tile;
+import simulatedObjects.Tile;
 
 public class TileBuilder extends Builder<Tile>{
 
@@ -10,6 +10,11 @@ public class TileBuilder extends Builder<Tile>{
 		super("tile");
 	}
 
+	/* Sobrescritura del método createTheInstance:
+	 * 
+	 * Construye y devuelve una instancia de la clase Tile,
+	 * obteniendo la información necesaria del JSONObject recibido por parámetro.
+	 */
 	@Override
 	protected Tile createTheInstance(JSONObject data) {
 		
