@@ -1,5 +1,8 @@
 package command;
 
+import java.io.PrintStream;
+import java.util.Scanner;
+
 import exceptions.CommandParseException;
 import scrabble.Controller;
 
@@ -26,7 +29,7 @@ public class WriteWordCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(Controller controller) {
+	public boolean execute(Controller controller, Scanner in, PrintStream out) {
 		
 		return !controller.writeAWord(word, posX, posY, direction);
 	}

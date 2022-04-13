@@ -1,5 +1,7 @@
 package view;
 
+import java.util.List;
+
 import command.Command;
 import logic.Game;
 
@@ -57,10 +59,7 @@ public interface ScrabbleObserver {
 	 */
 	void onFirstTurnDecided(Game game, String[] lettersObtained);
 	
-	/* Método onPlayersNotAdded:
-	 * Es llamado al detectarse que el juego no tiene jugadores.
-	 */
-	void onPlayersNotAdded(Game game);
+	default void printHelpMessage(List<Command> AVAILABLE_COMMANDS) {}
 	
-	default void printHelpMessage(Command[] commands) {}
+	void onMovementNeeded();
 }

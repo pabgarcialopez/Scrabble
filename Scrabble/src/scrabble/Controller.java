@@ -1,6 +1,7 @@
 package scrabble;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 import command.Command;
 import containers.GamePlayers;
@@ -122,8 +123,8 @@ public class Controller {
 	 * Delega en la clase Game la impresión del mensaje de ayuda
 	 * de los comandos disponibles.
 	 */
-	public void printHelpMessage(Command[] commands) {
-		this.game.printHelpMessage(commands);
+	public void printHelpMessage(List<Command> aVAILABLE_COMMANDS) {
+		this.game.printHelpMessage(aVAILABLE_COMMANDS);
 	}
 	
 	/* Método addPlayers:

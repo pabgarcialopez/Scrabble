@@ -1,6 +1,8 @@
 package command;
 
 import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.util.Scanner;
 
 import exceptions.CommandExecuteException;
 import exceptions.CommandParseException;
@@ -27,7 +29,7 @@ public class ResetCommand extends Command {
 	 */
 	
 	@Override
-	public boolean execute(Controller controller) throws CommandExecuteException {
+	public boolean execute(Controller controller, Scanner in, PrintStream out) throws CommandExecuteException {
 		
 		try {
 			controller.reset();

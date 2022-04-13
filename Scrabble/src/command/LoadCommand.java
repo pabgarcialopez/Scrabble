@@ -1,6 +1,8 @@
 package command;
 
 import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.util.Scanner;
 
 import org.json.JSONException;
 
@@ -30,7 +32,7 @@ public class LoadCommand extends Command {
 	 */
 	
 	@Override
-	public boolean execute(Controller controller) throws CommandExecuteException {
+	public boolean execute(Controller controller, Scanner in, PrintStream out) throws CommandExecuteException {
 		
 		try {
 			controller.loadGame(this.file);

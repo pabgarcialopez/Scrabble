@@ -52,39 +52,33 @@ public class PlayerBuilder extends Builder<Player>{
 	@Override
 	protected Player createTheInstance(JSONObject data) {
 		
-		if(data.getString("type").equalsIgnoreCase(this._type)) {
+		String name;
+		if(data.has("name"))
+			name = data.getString("name");
+		else name = "CPU";
+		
+		int totalPoints = data.getInt("total_points");
+		List <Tile> tiles = new ArrayList<Tile>();
+		
+		if(data.has("tiles")) {
 			
-			String name;
-			if(data.has("name"))
-				name = data.getString("name");
-			else name = "CPU";
+			JSONArray jsonArrayTiles = data.getJSONArray("tiles");
+			for(int i = 0; i < jsonArrayTiles.length(); i++)
+				tiles.add(tileBuilder.createTheInstance(jsonArrayTiles.getJSONObject(i)));
 			
-			int totalPoints = data.getInt("total_points");
-			List <Tile> tiles = new ArrayList<Tile>();
-			
-			if(data.has("tiles")) {
-				
-				JSONArray jsonArrayTiles = data.getJSONArray("tiles");
-				for(int i = 0; i < jsonArrayTiles.length(); i++)
-					tiles.add(tileBuilder.createTheInstance(jsonArrayTiles.getJSONObject(i)));
-				
-			}
-			
-			Strategy strategy = null;
-			for(StrategyBuilder sb : strategyBuilders) {
-				strategy = sb.createTheInstance(data.getJSONObject("strategy"));
-				
-				if(strategy != null)
-					break;
-			}
-			
-			if(strategy == null)
-				throw new InputMismatchException("El JSON no es válido (strategy).");
-			
-			return new Player(name, totalPoints, tiles, strategy);
 		}
 		
-		else return null;
-
+		Strategy strategy = null;
+		for(StrategyBuilder sb : strategyBuilders) {
+			strategy = sb.createTheInstance(data.getJSONObject("strategy"));
+			
+			if(strategy != null)
+				break;
+		}
+		
+		if(strategy == null)
+			throw new InputMismatchException("El JSON no es válido (strategy).");
+		
+		return new Player(name, totalPoints, tiles, strategy);
 	}
 }

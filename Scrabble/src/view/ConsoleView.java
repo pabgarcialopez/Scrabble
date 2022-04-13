@@ -1,16 +1,10 @@
 package view;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import command.Command;
 import containers.GamePlayers;
@@ -20,7 +14,6 @@ import logic.Game;
 import scrabble.Controller;
 import simulatedObjects.Box;
 import simulatedObjects.SpecialEffects;
-import storage.GameLoader;
 import utils.StringUtils;
 
 public class ConsoleView implements ScrabbleObserver {
@@ -36,8 +29,6 @@ public class ConsoleView implements ScrabbleObserver {
 	private static final String TRIPLE_WORD_SYMBOL = "█";
 	private static final String ROW_SEPARATOR_SYMBOL = "-";
 	private static final String COLUMN_SEPARATOR_SYMBOL = "|";
-	
-	private static final String[] PLAYER_STRATEGIES = {"humana", "fácil", "media", "difícil"};
 	
 	private Controller controller;
 	
@@ -216,12 +207,13 @@ public class ConsoleView implements ScrabbleObserver {
 
 	@Override
 	public void onRegister(Game game) {
-		if (!Game.getGameInitiated()) {
-			try {
-				initGame();
-			} catch (FileNotFoundException fnfe) {
-				throw new RuntimeException("No ha sido posible iniciar la partida", fnfe);
-			}
+		if (Game.getGameInitiated() && game.playersAdded()) {
+			controller.update();
+		}
+		else {
+			Command.gameInitiated(Game.getGameInitiated());
+			Command.playersAdded(game.playersAdded());
+			executeCommand();
 		}
 	}
 
@@ -229,10 +221,15 @@ public class ConsoleView implements ScrabbleObserver {
 	public void onReset(Game game) {
 		
 		this.out.println("Partida iniciada con éxito." + StringUtils.LINE_SEPARATOR);
-		//this.humanIsPlaying = game.humanIsPlaying();
-		showBoard(game);
-		showStatus(game);
-		controller.playTurn();
+		
+		if (Game.getGameInitiated() && game.playersAdded()) {
+			controller.update();
+		}
+		else {
+			Command.gameInitiated(Game.getGameInitiated());
+			Command.playersAdded(game.playersAdded());
+			executeCommand();
+		}
 	}
 
 	@Override
@@ -244,12 +241,18 @@ public class ConsoleView implements ScrabbleObserver {
 	@Override
 	public void onUpdate(Game game) {
 		
-		showBoard(game);
-		
-		if(!game.gameIsFinished()) {
-			//this.humanIsPlaying = game.humanIsPlaying();
-			showStatus(game);
-			controller.playTurn();
+		if(Game.getGameInitiated() && game.playersAdded()) {
+			showBoard(game);
+			
+			if(!game.gameIsFinished()) {
+				showStatus(game);
+				controller.playTurn();
+			}
+		}
+		else {
+			Command.gameInitiated(Game.getGameInitiated());
+			Command.playersAdded(game.playersAdded());
+			executeCommand();
 		}
 	}
 
@@ -265,8 +268,8 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onPlayersNotAdded(Game game) {
-		this.controller.addPlayers(createPlayers());
+	public void onMovementNeeded() {
+		executeCommand();
 	}
 	
 	private void pausa() {
@@ -278,138 +281,7 @@ public class ConsoleView implements ScrabbleObserver {
 		
 	}
 
-	
-	
-	private GamePlayers createPlayers() {
-		
-		int numPlayers = selectNumPlayers();
-		
-		JSONArray players = new JSONArray();
-		
-		while(players.length() < numPlayers) {
-			
-			this.out.print(StringUtils.LINE_SEPARATOR);
-			this.out.print("Estrategia del jugador " + (players.length() + 1) + " " + Arrays.asList(PLAYER_STRATEGIES).toString() + ": ");
-			
-			String notTreatedStrategy = this.in.nextLine().trim();
-			
-			notTreatedStrategy = StringUtils.removeAccents(notTreatedStrategy);
-			String strategy = takeType(notTreatedStrategy);
-			
-			if(this.in != consoleInput)
-				this.out.print(notTreatedStrategy);
-			
-			this.out.print(StringUtils.LINE_SEPARATOR);
-
-			if(strategy != null) {
-				
-				JSONObject player = new JSONObject();
-				player.put("strategy", strategy);
-				player.put("total_points", 0);
-				
-				if(strategy.equalsIgnoreCase("human_strategy")) {
-					this.out.print("Nombre del jugador humano " + (players.length() + 1) + ": ");
-					String name = this.in.nextLine().trim();
-					
-					if(this.in != consoleInput)
-						this.out.print(name + StringUtils.LINE_SEPARATOR);
-					
-					if(checkPlayerNames(name, players)) {
-						player.put("name", name);
-						players.put(player);
-					}
-					else 
-						this.out.println("Ya hay un jugador con el nombre " + name);
-				}
-				else players.put(player);
-			}
-			else {
-				this.out.print("La estrategia introducida no es válida.");
-				this.out.print(StringUtils.LINE_SEPARATOR);
-			}
-		}
-		
-		this.out.print(StringUtils.LINE_SEPARATOR);
-		
-		JSONObject data = new JSONObject();
-		data.put("players", players);
-	
-		return GameLoader.createPlayers(data);
-	}
-		
-	private int selectNumPlayers() {
-			
-		int numPlayers = 0;
-		boolean done = false;
-		this.out.print("Selecciona el número de jugadores (2-4): ");
-		
-		while (!done) {
-			try {
-				numPlayers = this.in.nextInt();
-				
-				if(this.in != consoleInput)
-					this.out.print(numPlayers);
-				
-				this.out.print(StringUtils.LINE_SEPARATOR);
-
-				if (numPlayers < 2 || numPlayers > 4) {
-					this.out.print("El número de jugadores debe estar entre 2 y 4.");
-					this.out.print(StringUtils.DOUBLE_LINE_SEPARATOR);
-					this.out.print("Selecciona el número de jugadores (2-4): ");
-				}
-				
-				else done = true;
-				
-			}
-			catch (InputMismatchException ime) {
-				this.out.print("[ERROR]");
-				this.out.print(StringUtils.LINE_SEPARATOR);
-				this.out.print("¡La entrada debe ser un número!");
-				this.out.print(StringUtils.DOUBLE_LINE_SEPARATOR);
-				this.out.print("Selecciona el número de jugadores (2-4): ");
-				this.in.nextLine();
-			}
-			
-
-		}
-		
-		// Para que la entrada sea correcta.
-		this.in.nextLine();  
-		
-		return numPlayers;
-	}
-
-	private static boolean checkPlayerNames(String name, JSONArray players) {
-		
-		int i = 0;
-		while(i < players.length()) {
-			if(players.getJSONObject(i).has("name") && players.getJSONObject(i).getString("name").equalsIgnoreCase(name))
-				return false;
-			++i;
-		}
-		
-		return true;
-	}
-	
-	private static String takeType(String type) {
-
-		type = StringUtils.removeAccents(type);
-		type = type.toLowerCase();
-		
-		switch(type) {
-		case "facil":
-			return "easy_strategy";
-		case "media":
-			return "medium_strategy";
-		case "dificil":
-			return "hard_strategy";
-		case "humana":
-			return "human_strategy";
-		default:
-			return null;
-		}
-	}
-
+	/*
 	private void initGame() throws FileNotFoundException {
 		
 		this.out.println("¡Bienvenido a Scrabble!" + StringUtils.LINE_SEPARATOR);
@@ -507,22 +379,63 @@ public class ConsoleView implements ScrabbleObserver {
 			}
 		}
 	}
+	*/
 	
 	@Override // Sobrescritura del método default de la interfaz
-	public void printHelpMessage(Command[] commands) {
+	public void printHelpMessage(List<Command> AVAILABLE_COMMANDS) {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append(StringUtils.LINE_SEPARATOR)
 		      .append("Comandos disponibles:")
 		      .append(StringUtils.LINE_SEPARATOR);
 		
-		for (int i = 0; i < commands.length; ++i) {
-			buffer.append(commands[i].getDetails()).append(": ")
-			      .append(commands[i].getHelp())
+		for (int i = 0; i < AVAILABLE_COMMANDS.size(); ++i) {
+			buffer.append(AVAILABLE_COMMANDS.get(i).getDetails()).append(": ")
+			      .append(AVAILABLE_COMMANDS.get(i).getHelp())
 			      .append(StringUtils.LINE_SEPARATOR);
 		}
 		
 		buffer.append(StringUtils.LINE_SEPARATOR);
 		this.out.print(buffer.toString());	
 	}
+
 	
+	private void executeCommand() {
+		
+		Command command = askCommand();
+		
+		if(command != null)
+			try {
+				command.execute(this.controller, in, out);
+			} catch (CommandExecuteException e) {
+				this.out.println(e.getMessage());
+			}
+		
+		pausa();
+		controller.update();
+	}
+	
+	private Command askCommand() {
+		
+		Command command = null;
+		
+		this.out.print(PROMPT);
+		String s = this.in.nextLine();
+		
+		s = StringUtils.removeAccents(s);
+		
+		if(this.in != consoleInput)
+			this.out.print(s + StringUtils.LINE_SEPARATOR);
+
+		String[] parameters = s.toLowerCase().trim().split(" ");
+		
+		try {
+			command = Command.getCommand(parameters);
+		}
+		catch(CommandParseException cpe) {
+			this.out.println(cpe.getMessage());
+		}
+		
+		return command;		
+	}
+
 }

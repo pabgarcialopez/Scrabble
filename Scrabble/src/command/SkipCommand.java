@@ -1,5 +1,8 @@
 package command;
 
+import java.io.PrintStream;
+import java.util.Scanner;
+
 import scrabble.Controller;
 
 // Ver apuntes de la clase padre Command.
@@ -22,7 +25,7 @@ public class SkipCommand extends Command {
 	 */
 	
 	@Override
-	public boolean execute(Controller controller) {
+	public boolean execute(Controller controller, Scanner in, PrintStream out) {
 		controller.passTurn();
 		return false;
 	}

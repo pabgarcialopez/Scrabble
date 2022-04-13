@@ -119,11 +119,6 @@ public class Game {
 			addPlayers(players);
 		}
 		
-		else {
-			for(ScrabbleObserver o : this.observers)
-				o.onPlayersNotAdded(this);
-		}
-		
 		_wordsInBoard = wordsInBoard;
 		this.gameFinished = gameFinished;
 		
@@ -387,20 +382,22 @@ public class Game {
 	 */
 	public void update() {
 		
-		// Si no quedan fichas en el saco, y el jugador actual no tiene fichas
-		if(this.getRemainingTiles() == 0 && 
-				this.players.getNumPlayerTiles((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers()) == 0) {
-			this.gameFinished = true;
+		if(_gameInitiated) {
+			// Si no quedan fichas en el saco, y el jugador actual no tiene fichas
+			if(this.getRemainingTiles() == 0 && 
+					this.players.getNumPlayerTiles((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers()) == 0) {
+				this.gameFinished = true;
+				
+				this.gameFinishedCause = "La partida ha finalizado: no quedan fichas para robar y el jugador " 
+				+ this.players.getPlayerName(this.currentTurn + this.getNumPlayers() - 1)
+				+ " se ha quedado sin fichas."+ StringUtils.DOUBLE_LINE_SEPARATOR;
+			}
 			
-			this.gameFinishedCause = "La partida ha finalizado: no quedan fichas para robar y el jugador " 
-			+ this.players.getPlayerName(this.currentTurn + this.getNumPlayers() - 1)
-			+ " se ha quedado sin fichas."+ StringUtils.DOUBLE_LINE_SEPARATOR;
-		}
-		
-		if(this.numConsecutivePassedTurns == this.getNumPlayers() * PASSED_TURNS_TO_END_GAME) {
-			this.gameFinished = true;
-			this.gameFinishedCause = "La partida ha finalizado: todos los jugadores han pasado " 
-					+ PASSED_TURNS_TO_END_GAME + " turnos." + StringUtils.LINE_SEPARATOR;
+			if(this.numConsecutivePassedTurns == this.getNumPlayers() * PASSED_TURNS_TO_END_GAME) {
+				this.gameFinished = true;
+				this.gameFinishedCause = "La partida ha finalizado: todos los jugadores han pasado " 
+						+ PASSED_TURNS_TO_END_GAME + " turnos." + StringUtils.LINE_SEPARATOR;
+			}
 		}
 		
 		for(ScrabbleObserver o : this.observers)
@@ -544,9 +541,9 @@ public class Game {
 	 * Sin embargo, para no romper la abstracción, se sigue recorriendo el
 	 * array de ScrrableObservers para llevar a cabo la acción.
 	 */
-	public void printHelpMessage(Command[] commands) {
+	public void printHelpMessage(List<Command> AVAILABLE_COMMANDS) {
 		for(ScrabbleObserver o : observers) {
-			o.printHelpMessage(commands);
+			o.printHelpMessage(AVAILABLE_COMMANDS);
 		}
 	}
 	
@@ -650,11 +647,12 @@ public class Game {
 		return jo;
 	}
 
+	public void commandNeeded() {
+		for(ScrabbleObserver o : this.observers)
+			o.onMovementNeeded();
+	}	
 	
-
-	
-
-	
-
-	
+	public boolean playersAdded() {
+		return this.players.getNumPlayers() != 0;
+	}
 }
