@@ -19,6 +19,7 @@ import factories.EasyStrategyBuilder;
 import factories.GamePlayersBuilder;
 import factories.GameTilesBuilder;
 import factories.HardStrategyBuilder;
+import factories.HumanStrategyBuilder;
 import factories.MediumStrategyBuilder;
 import factories.PlayerBuilder;
 import factories.StrategyBuilder;
@@ -131,7 +132,7 @@ public class GameLoader {
 		strategyBuilders.add(new EasyStrategyBuilder());
 		strategyBuilders.add(new MediumStrategyBuilder());
 		strategyBuilders.add(new HardStrategyBuilder());
-		
+		strategyBuilders.add(new HumanStrategyBuilder());
 		
 		PlayerBuilder playerBuilder = new PlayerBuilder(tileBuilder, strategyBuilders);
 		gamePlayersBuilder = new GamePlayersBuilder(playerBuilder);

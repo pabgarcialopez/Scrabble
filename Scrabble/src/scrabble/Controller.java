@@ -1,9 +1,7 @@
 package scrabble;
 
 import java.io.FileNotFoundException;
-import java.util.List;
 
-import command.Command;
 import containers.GamePlayers;
 import logic.Game;
 import storage.GameLoader;
@@ -117,14 +115,6 @@ public class Controller {
 	 */
 	public void saveGame(String file) throws FileNotFoundException {
 		GameSaver.saveGame(this.game, file);
-	}
-	
-	/* Método printHelpMessage:
-	 * Delega en la clase Game la impresión del mensaje de ayuda
-	 * de los comandos disponibles.
-	 */
-	public void printHelpMessage(List<Command> aVAILABLE_COMMANDS) {
-		this.game.printHelpMessage(aVAILABLE_COMMANDS);
 	}
 	
 	/* Método addPlayers:

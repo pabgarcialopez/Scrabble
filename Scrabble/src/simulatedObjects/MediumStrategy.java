@@ -4,15 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import logic.Game;
+import logic.WordChecker;
 
 public class MediumStrategy implements Strategy {
 
 	@Override
-	public void play(Game game) {
+	public void play(Game game, WordChecker wordChecker, List<Tile> tilesForWord) {
 		boolean wordWritten = false;
-		
-		Player currentPlayer = game.getPlayers().getPlayer(game.getCurrentTurn());
-		List<Tile> tilesForWord = currentPlayer.getTiles();
 		
 		List<Integer> lengths = new ArrayList<Integer>();
 		for(int i = 2; i <= tilesForWord.size(); ++i)
@@ -23,7 +21,7 @@ public class MediumStrategy implements Strategy {
 
 		while(!wordWritten && lengths.size() > 0) {
 			int i = (int) (Game.getRandom().nextDouble() * lengths.size());
-			wordWritten = currentPlayer.tryWritingInBoard(lengths.remove(i), tilesForWord, game);
+			wordWritten = tryWritingInBoard(lengths.remove(i), tilesForWord, game, wordChecker);
 		}
 		
 		if(!wordWritten) {

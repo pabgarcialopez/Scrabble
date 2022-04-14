@@ -63,8 +63,11 @@ public class AddPlayersCommand extends Command {
 
 			if(strategy != null) {
 				
+				JSONObject strategyJO = new JSONObject();
+				strategyJO.put("type", strategy);
+				
 				JSONObject player = new JSONObject();
-				player.put("strategy", strategy);
+				player.put("strategy", strategyJO);
 				player.put("total_points", 0);
 				
 				if(strategy.equalsIgnoreCase("human_strategy")) {

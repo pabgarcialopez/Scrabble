@@ -10,7 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import command.Command;
 import containers.Board;
 import containers.GamePlayers;
 import containers.GameTiles;
@@ -46,7 +45,7 @@ public class Game {
 	
 	// Para poder jugar partidas por fichero sin tener 
 	// que incluir saltos de línea en el fichero de entrada.
-	private static final boolean _pausePermitted = false;
+	private static final boolean _pausePermitted = true;
 	
 	private static boolean _gameInitiated;
 	private static boolean _wordsInBoard;
@@ -131,7 +130,7 @@ public class Game {
 	}
 	
 	public void playTurn() {
-		this.players.playTurn(this);
+		this.players.playTurn(this, wordChecker);
 	}
 	
 	/* Método writeAWord:
@@ -154,20 +153,23 @@ public class Game {
 	 */
 	public boolean writeAWord(String word, int posX, int posY, String direction) {
 		
+		List<String> wordsToAdd;
+		
 		try {
 			word = StringUtils.removeAccents(word);
 			word = word.toLowerCase();
-			this.wordChecker.checkArguments(word, posX, posY, direction);
+			wordsToAdd = this.wordChecker.checkArguments(word, posX, posY, direction);
 		}
 		catch(CommandExecuteException cee) {
-			//if(humanIsPlaying()) {
-				for(ScrabbleObserver o : this.observers)
-					o.onError(cee.getMessage());
-			//}
+			for(ScrabbleObserver o : this.observers)
+				o.onError(cee.getMessage());
+			
 			return false;
 		}
 		
-		addUsedWord(word);
+		wordsToAdd.add(word);
+		
+		addUsedWords(wordsToAdd);
 		
 		int numPlayerTilesBefore = this.players.getNumPlayerTiles(this.currentTurn);
 		
@@ -254,7 +256,7 @@ public class Game {
 	 * Delega en GamePlayers el juego de jugadores automáticos.
 	 */
 	public void automaticPlay() {
-		this.players.automaticPlay(this.currentTurn, this);
+		this.players.automaticPlay(this.currentTurn, this, wordChecker);
 	}
 
 	/* Método swapTile:
@@ -457,8 +459,8 @@ public class Game {
 	 * Añade la palabra recibida por parámetro a la lista de palabras usadas.
 	 * La lista se mantiene siempre ordenada para poder realizar una búsqueda eficiente.
 	 */
-	public void addUsedWord(String word) {
-		this.usedWords.add(word.toLowerCase());
+	public void addUsedWords(List<String> words) {
+		this.usedWords.addAll(words);
 		Collections.sort(this.usedWords);
 	}
 	
@@ -533,19 +535,6 @@ public class Game {
 //		this.players.reset();
 //	}
 	
-	/* Método printHelpMessage:
-	 * Notifica a ConsoleView la impresión del mensaje de ayuda.
-	 * 
-	 * NOTA DE DISEÑO: el método printHelpMessage de la interfaz ScrabbleObserver
-	 * es default porque solo es coherente que ConsoleView lo implemente.
-	 * Sin embargo, para no romper la abstracción, se sigue recorriendo el
-	 * array de ScrrableObservers para llevar a cabo la acción.
-	 */
-	public void printHelpMessage(List<Command> AVAILABLE_COMMANDS) {
-		for(ScrabbleObserver o : observers) {
-			o.printHelpMessage(AVAILABLE_COMMANDS);
-		}
-	}
 	
 	// Getters
 	

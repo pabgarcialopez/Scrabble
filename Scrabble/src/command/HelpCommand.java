@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 import scrabble.Controller;
+import utils.StringUtils;
 
 // Ver apuntes de la clase padre Command.
 public class HelpCommand extends Command {
@@ -27,7 +28,20 @@ public class HelpCommand extends Command {
 	@Override
 	public boolean execute(Controller controller, Scanner in, PrintStream out) {
 		
-		controller.printHelpMessage(AVAILABLE_COMMANDS);
+		StringBuilder buffer = new StringBuilder();
+		buffer.append(StringUtils.LINE_SEPARATOR)
+		      .append("Comandos disponibles:")
+		      .append(StringUtils.LINE_SEPARATOR);
+		
+		for (int i = 0; i < AVAILABLE_COMMANDS.size(); ++i) {
+			buffer.append(AVAILABLE_COMMANDS.get(i).getDetails()).append(": ")
+			      .append(AVAILABLE_COMMANDS.get(i).getHelp())
+			      .append(StringUtils.LINE_SEPARATOR);
+		}
+		
+		buffer.append(StringUtils.LINE_SEPARATOR);
+		out.print(buffer.toString());	
+	
 		return true;
 	}
 }

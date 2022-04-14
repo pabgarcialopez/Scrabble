@@ -1,8 +1,5 @@
 package view;
 
-import java.util.List;
-
-import command.Command;
 import logic.Game;
 
 /* APUNTES GENERALES:
@@ -58,8 +55,6 @@ public interface ScrabbleObserver {
 	 * Es llamado cuando se ha elegido el orden de turnos de la partida.
 	 */
 	void onFirstTurnDecided(Game game, String[] lettersObtained);
-	
-	default void printHelpMessage(List<Command> AVAILABLE_COMMANDS) {}
 	
 	void onMovementNeeded();
 }

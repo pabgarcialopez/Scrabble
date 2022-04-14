@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import logic.Game;
+import logic.WordChecker;
 import simulatedObjects.Player;
 import simulatedObjects.Tile;
 
@@ -29,8 +30,8 @@ public class GamePlayers {
 	/* Método playTurn:
 	 * Delega en el player correspondiente la acción de jugar su turno.
 	 */
-	public void playTurn(Game game) {
-		this.players.get(game.getCurrentTurn()).play(game);
+	public void playTurn(Game game, WordChecker wordChecker) {
+		this.players.get(game.getCurrentTurn()).play(game, wordChecker);
 	}
 
 	/* Método drawTiles:
@@ -91,8 +92,8 @@ public class GamePlayers {
 	 * Delega el juego automático del jugador recibido por parámetro
 	 * a la función play de la clase Player (método abstracto).
 	 */
-	public void automaticPlay(int player, Game game) {
-		this.players.get(player).play(game);
+	public void automaticPlay(int player, Game game, WordChecker wordChecker) {
+		this.players.get(player).play(game, wordChecker);
 	}
 	
 	/* Método getWinners:

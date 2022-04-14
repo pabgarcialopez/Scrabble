@@ -3,20 +3,18 @@ package simulatedObjects;
 import java.util.List;
 
 import logic.Game;
+import logic.WordChecker;
 
 public class EasyStrategy implements Strategy {
 
 	private static final int FORMED_WORDS_LENGTH = 2;
 	
 	@Override
-	public void play(Game game) {
+	public void play(Game game, WordChecker wordChecker, List<Tile> tilesForWord) {
 		
 		boolean wordWritten = false;
 		
-		Player currentPlayer = game.getPlayers().getPlayer(game.getCurrentTurn());
-		List<Tile> tilesForWord = currentPlayer.getTiles();
-		
-		wordWritten = currentPlayer.tryWritingInBoard(FORMED_WORDS_LENGTH, tilesForWord, game);
+		wordWritten = tryWritingInBoard(FORMED_WORDS_LENGTH, tilesForWord, game, wordChecker);
 		
 		if(!wordWritten) {
 			

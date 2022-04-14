@@ -144,10 +144,11 @@ public class Main {
 			InputStream in = (inFile == null ? System.in : new FileInputStream(new File(inFile)));
 			OutputStream out = (outFile == null ? System.out : new FileOutputStream(new File(outFile)));
 			
+			/*
 			if(inFile == null && outFile != null) {
 				in = System.in;
 				out = System.out;
-			}
+			}*/
 					
 			new ConsoleView(controller, in, out);
 		}
@@ -158,7 +159,6 @@ public class Main {
 		
 		catch(NoSuchElementException nsee) {
 			throw new NoSuchElementException(StringUtils.DOUBLE_LINE_SEPARATOR + "El fichero de entrada \"" + inFile + "\" no tiene el formato correcto." + StringUtils.LINE_SEPARATOR);
-			
 		}
 	}
 	

@@ -1,15 +1,13 @@
 package simulatedObjects;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import logic.Game;
-import utils.Pair;
+import logic.WordChecker;
 import utils.StringUtils;
 
 /* APUNTES GENERALES:
@@ -30,24 +28,9 @@ import utils.StringUtils;
  */
 public class Player {
 	
-	protected static final List<Pair<Integer, Integer>> movingBoxes = 
-			Collections.unmodifiableList(
-					new ArrayList<Pair<Integer, Integer>>() {
-						private static final long serialVersionUID = 1L;
-
-						{
-							add(new Pair<Integer, Integer>(0, -1));
-							add(new Pair<Integer, Integer>(-1, 0));
-							add(new Pair<Integer, Integer>(0, 1));
-							add(new Pair<Integer, Integer>(1, 0));
-						}
-					}
-			);
-	
 	protected String name;
 	protected List<Tile> tiles;
 	private int totalPoints;
-	private Random rdm;
 	private Strategy strategy;
 	
 	public Player(String name, int totalPoints, List<Tile> tiles, Strategy strategy) {
@@ -55,7 +38,6 @@ public class Player {
 		this.tiles = tiles;
 		this.totalPoints = totalPoints;
 		this.strategy = strategy;
-		this.rdm = Game.getRandom();
 	}
 
 	/* Método addTile:
@@ -82,8 +64,8 @@ public class Player {
 	/* Método play:
 	 * Llama al método play de su estrategia correspondiente.
 	 */
-	public void play(Game game) {
-		this.strategy.play(game);
+	public void play(Game game, WordChecker wordChecker) {
+		this.strategy.play(game, wordChecker, tiles);
 	}
 	
 	/* Método getStatus:
@@ -146,65 +128,7 @@ public class Player {
 		this.totalPoints += points;
 	}
 	
-	/* Método tryWritingInBoard:
-	 * 
-	 * Este método es usado por los jugadores automáticos para intentar 
-	 * colocar una palabra en el tablero, y devuelve un booleano
-	 * indicando si se ha podido escribir una palabra o no.
-	 * 
-	 * Primero se comprueba si el tablero es vacío o no, pues dependiendo de ello, se podrá usar
-	 * una ficha más o no (extraTile).
-	 * 
-	 * Después, se crea un marcaje para las letras usadas y así poder controlar cuáles se han usado ya.
-	 * 
-	 * Si el tablero no está vacío (extraTile == 1), con el objetivo de que el jugador automático sea 
-	 * lo más uniforme posible al colocar palabras, se crean una fila y una columna aleatorias (dentro del rango del tablero),
-	 * desde las cuales el jugador automático empezará a intentar formar palabras (método tryWritingAWord).
-	 * 
-	 *	   Puesto que se desea encadenar palabras, si la posición comprobada no tiene una ficha, seguimos buscando.
-	 *	  
-	 *	   En caso contrario:
-	 *	   - Se añade esta ficha a la lista de fichas disponibles recibida por parámetro.
-	 *	   - Se intenta escribir una palabra con los parámetros indicados (la palabra empieza siendo vacía).
-	 *	   - Se elimina la última ficha añadida de la lista de fichas disponibles recibida por parámetro.
-	 * 
-	 * En caso de que el tablero estuviese vacío (extraTile == 0), 
-	 * simplemente se llamará al método tryWritingAWord, indicando que no hay palabras en el tablero.
-	 */
-	protected boolean tryWritingInBoard(int wordLength, List<Tile> tilesForWord, Game game) {
-		
-		int extraTile = (Game.getWordsInBoard() ? 1 : 0);
-		
-		if(wordLength > tilesForWord.size() + extraTile)
-			return false;
-		
-		boolean wordWritten = false;
-		List<Boolean> marks = createMarks(tilesForWord.size() + extraTile);
-		
-		if(extraTile == 1) {
-			
-			int randomRow = (int) this.rdm.nextDouble() * game.getBoardSize();
-			int randomColumn = (int) this.rdm.nextDouble() * game.getBoardSize();
-			
-			for(int i = 0; i < game.getBoardSize() && !wordWritten; ++i)
-				for(int j = 0; j < game.getBoardSize() && !wordWritten; ++j)  {
-					
-					int posX = (i + randomRow) % game.getBoardSize();
-					int posY = (j + randomColumn) % game.getBoardSize();
-					
-					if(game.getBoard().getTile(posX, posY) != null) {
-						tilesForWord.add(game.getBoard().getTile(posX, posY));
-						wordWritten = tryWritingAWord("", wordLength, tilesForWord, marks, posX, posY, -1, game, true);
-						tilesForWord.remove(tilesForWord.size() - 1);
-					}
-				}
-			}
-		
-		else wordWritten = tryWritingAWord("", wordLength, tilesForWord, marks, -1, -1, -1, game, false);
-		
-		return wordWritten;
-	}
-	
+
 	/*
 //	* Método tryWritingInNotEmptyBoard:
 //	 * 
@@ -287,112 +211,7 @@ public class Player {
 	}
 	*/
 	
-	/* Método tryWritingAWord:
-	 * 
-	 * Se trata de un método que sigue la técnica de vuelta atrás (backtracking) para realizar
-	 * combinaciones con repetición de las letras de las fichas de la lista "tiles" y de longitud "length".
-	 * 
-	 * Cuando existe una posible solución (se ha formado una palabra de tamaño length), se llama al método
-	 * tryDirectionsForWord. Si no, se llama recursivamente al método tryWritingAWord hasta que se alcance el tamaño length.
-	 * 
-	 * En el momento en el que una palabra haya sido escrita, se devolverá true en todas las llamadas recursivas.
-	 */
-	private boolean tryWritingAWord(String word, int wordLength, List<Tile> tilesForWord, List<Boolean> marks, int posX, int posY, int posBoardTile, Game game, boolean wordsInBoard) {
-		
-		for(int i = 0; i < tilesForWord.size(); ++i) {
-			
-			// Si la letra ya se ha usado, no entra.
-			if(!marks.get(i)) {
-				
-				marks.set(i, Boolean.TRUE);
-				
-				if(i == tilesForWord.size() - 1)
-					posBoardTile = word.length();
-				
-				word += tilesForWord.get(i).getLetter();
-				
-				boolean wordWritten = false;
-				
-				// Hay posible solución
-				if(word.length() == wordLength)
-					wordWritten = tryDirectionsForWord(word, posX, posY, posBoardTile, game, wordsInBoard);
-				
-				else wordWritten = tryWritingAWord(word, wordLength, tilesForWord, marks, posX, posY, posBoardTile, game, wordsInBoard);
-				
-				if(wordWritten) 
-					return true;
-				
-				word = word.substring(0, word.length() - 1);
-				
-				marks.set(i, Boolean.FALSE);
-			}
-		}
-		
-		return false;
-	}
-	
-	/* Método tryDirectionsForWord:
-	 * Devuelve un booleano indicando si se ha podido escribir la palabra recibida por parámetro.
-	 * 
-	 * Si no hay palabras en el tablero, se intenta escribir en la casilla central (50% de probabilidad para la dirección).
-	 * 
-	 * Si posBoardTile != -1, se recorre el array de posiciones y se intenta escribir una palabra
-	 * con las características establecidas.
-	 */
-	private boolean tryDirectionsForWord(String word, int posX, int posY, int posBoardTile, Game game, boolean wordsInBoard) {
-		
-		if(wordsInBoard && posBoardTile == -1)
-			return false;
-		
-		if(!wordsInBoard) {
-			
-			Pair<Integer, Integer> center = game.getBoard().getCenter();
-			
-			int newPosX = center.getFirst(), newPosY = center.getSecond();
-			String direction = (this.rdm.nextDouble() < 0.5 ? "V" : "H");
-			
-			if(game.writeAWord(word, newPosX, newPosY, direction))
-				return true;
-		}
-		
-		else if(posBoardTile != -1){
-			
-			for(Pair<Integer, Integer> move : movingBoxes) {
-				
-				int newPosX = posX, newPosY = posY;
-				
-				String direction;
-				
-				if(move.getFirst().equals(0)) {
-					direction = "H";
-					newPosY -= posBoardTile;
-				}
-				
-				else {
-					direction = "V";
-					newPosX -= posBoardTile;
-				}
-				
-				if(game.writeAWord(word, newPosX, newPosY, direction))
-					return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	/* Método createMarks:
-	 * Crea un marcaje de booleanos inicializados a false
-	 * de tamaño el recibido por parámetro.
-	 */
-	private List<Boolean> createMarks(int size) {
-		
-		List<Boolean> marks = new ArrayList<Boolean>();
-		for(int i = 0; i < size; ++i)
-			marks.add(Boolean.FALSE);
-		
-		return marks;
-	}
+
 	
 	// Getters
 	

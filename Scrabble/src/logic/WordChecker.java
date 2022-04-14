@@ -1,7 +1,9 @@
 package logic;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import exceptions.CommandExecuteException;
@@ -27,7 +29,7 @@ public final class WordChecker {
 	 * Contiene la estructura principal de comprobación, llamando a otros métodos de la misma clase para ello.
 	 * Además, no captura la excepción que pueda lanzar alguno de los métodos.
 	 */
-	public void checkArguments(String word, int posX, int posY, String direction) throws CommandExecuteException {
+	public List<String> checkArguments(String word, int posX, int posY, String direction) throws CommandExecuteException {
 				
 		checkWordExists(word);
 		checkWordNotUsed(word);
@@ -44,7 +46,7 @@ public final class WordChecker {
 		if (!Game.getWordsInBoard()) checkWordInCentre(word, posX, posY, direction);
 		else checkWordNextToOther(word, posX, posY, direction);
 		
-		checkNewFormedWords(word, posX, posY, direction);
+		return checkNewFormedWords(word, posX, posY, direction);
 	}
 	
 	/* Método checkWordExists:
@@ -202,10 +204,12 @@ public final class WordChecker {
 	 * que se hayan podido formar al colocar una palabra en tablero sean válidas.
 	 * En caso contrario, se lanza una excepción.
 	 */
-	private void checkNewFormedWords(String word, int posX, int posY, String direction) throws CommandExecuteException {
+	private List<String> checkNewFormedWords(String word, int posX, int posY, String direction) throws CommandExecuteException {
 		
 		int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
 		int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
+		
+		List<String> newFormedWords = new ArrayList<String>();
 		
 		for(int i = 0; i < word.length(); i++) {
 			String newWord = getWordFormed(String.valueOf(word.charAt(i)), posX + i * vertical, posY + i * horizontal, horizontal, vertical);
@@ -214,14 +218,19 @@ public final class WordChecker {
 				try {
 					checkWordExists(newWord);
 					checkWordNotUsed(newWord);
-					game.addUsedWord(newWord);
+					
+					if(Collections.binarySearch(newFormedWords, newWord) > 0)
+						throw new CommandExecuteException("La palabra " + "\"" + newWord.toUpperCase() + "\" ya se encuentra en el tablero.");
+					
+					newFormedWords.add(newWord);
 				}
 				catch(CommandExecuteException cee) {
-					throw new CommandExecuteException("Se forma la palabra adicional " + "\"" + newWord.toUpperCase() + "\".\n" + cee.getMessage(), cee);
+					throw new CommandExecuteException("Se forma la palabra adicional " + "\"" + newWord.toUpperCase() + "\".%n" + cee.getMessage(), cee);
 				}
 			}
 		}
 		
+		return newFormedWords;
 	}
 	
 	/* Método getWordFormed:

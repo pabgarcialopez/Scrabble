@@ -3,7 +3,6 @@ package view;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.List;
 import java.util.Scanner;
 
 import command.Command;
@@ -69,8 +68,6 @@ public class ConsoleView implements ScrabbleObserver {
 		buffer.append(StringUtils.LINE_SEPARATOR);
 		
 		this.out.println(buffer);
-		
-		pausa();
 	}
 
 	public void showBoard(Game game) {
@@ -193,28 +190,42 @@ public class ConsoleView implements ScrabbleObserver {
 			this.out.println(String.format(" Además, ¡gana %s puntos extra!%n", extraPoints));
 		else
 			this.out.print(StringUtils.DOUBLE_LINE_SEPARATOR);
+			
+		pausa();
+		
+		showBoard(game);
 	}
 
 	@Override
 	public void onPassed(Game game) {
 		this.out.println(String.format("El jugador %s pasa de turno.%n", game.getPlayers().getPlayerName(game.getCurrentTurn())));
+
+		pausa();
+		
+		showBoard(game);
 	}
 
 	@Override
 	public void onSwapped(Game game) {
 		this.out.println(String.format("El jugador %s intercambia una ficha.%n", game.getPlayers().getPlayerName(game.getCurrentTurn())));
+	
+		pausa();
+		
+		showBoard(game);
 	}
 
 	@Override
 	public void onRegister(Game game) {
 		if (Game.getGameInitiated() && game.playersAdded()) {
-			controller.update();
+			showBoard(game);
 		}
 		else {
 			Command.gameInitiated(Game.getGameInitiated());
 			Command.playersAdded(game.playersAdded());
 			executeCommand();
 		}
+		
+		controller.update();
 	}
 
 	@Override
@@ -223,26 +234,28 @@ public class ConsoleView implements ScrabbleObserver {
 		this.out.println("Partida iniciada con éxito." + StringUtils.LINE_SEPARATOR);
 		
 		if (Game.getGameInitiated() && game.playersAdded()) {
-			controller.update();
+			showBoard(game);
 		}
 		else {
 			Command.gameInitiated(Game.getGameInitiated());
 			Command.playersAdded(game.playersAdded());
 			executeCommand();
 		}
+		
+		controller.update();
 	}
 
 	@Override
 	public void onError(String error) {
 		this.out.println(error);
-		controller.playTurn();
+		
+		controller.update();
 	}
 
 	@Override
 	public void onUpdate(Game game) {
 		
 		if(Game.getGameInitiated() && game.playersAdded()) {
-			showBoard(game);
 			
 			if(!game.gameIsFinished()) {
 				showStatus(game);
@@ -254,6 +267,8 @@ public class ConsoleView implements ScrabbleObserver {
 			Command.playersAdded(game.playersAdded());
 			executeCommand();
 		}
+		
+		controller.update();
 	}
 
 	@Override
@@ -265,6 +280,8 @@ public class ConsoleView implements ScrabbleObserver {
 	@Override
 	public void onFirstTurnDecided(Game game, String[] lettersObtained) {
 		showFirstTurn(lettersObtained, game.getPlayers(), game.getCurrentTurn());
+		pausa();
+		showBoard(game);
 	}
 	
 	@Override
@@ -381,24 +398,6 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 	*/
 	
-	@Override // Sobrescritura del método default de la interfaz
-	public void printHelpMessage(List<Command> AVAILABLE_COMMANDS) {
-		StringBuilder buffer = new StringBuilder();
-		buffer.append(StringUtils.LINE_SEPARATOR)
-		      .append("Comandos disponibles:")
-		      .append(StringUtils.LINE_SEPARATOR);
-		
-		for (int i = 0; i < AVAILABLE_COMMANDS.size(); ++i) {
-			buffer.append(AVAILABLE_COMMANDS.get(i).getDetails()).append(": ")
-			      .append(AVAILABLE_COMMANDS.get(i).getHelp())
-			      .append(StringUtils.LINE_SEPARATOR);
-		}
-		
-		buffer.append(StringUtils.LINE_SEPARATOR);
-		this.out.print(buffer.toString());	
-	}
-
-	
 	private void executeCommand() {
 		
 		Command command = askCommand();
@@ -409,9 +408,6 @@ public class ConsoleView implements ScrabbleObserver {
 			} catch (CommandExecuteException e) {
 				this.out.println(e.getMessage());
 			}
-		
-		pausa();
-		controller.update();
 	}
 	
 	private Command askCommand() {

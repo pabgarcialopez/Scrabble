@@ -8,13 +8,13 @@ import simulatedObjects.Strategy;
 public class HardStrategyBuilder extends StrategyBuilder {
 	
 	public HardStrategyBuilder() {
-		super("medium_strategy");
+		super("hard_strategy");
 	}
 
 	@Override
 	protected Strategy createTheStrategy(JSONObject data) {
 		
-		if(data.getString("strategy").equalsIgnoreCase(_type))
+		if(data.getString("type").equalsIgnoreCase(_type))
 			return new HardStrategy();
 		
 		return null;
