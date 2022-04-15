@@ -125,15 +125,22 @@ public abstract class Command {
 	}
 
 	public static void gameInitiated(boolean gameInitiated) {
-		if(gameInitiated)
-			AVAILABLE_COMMANDS.add(addPlayersCommand);
+		if(gameInitiated) {
+			if (!AVAILABLE_COMMANDS.contains(addPlayersCommand))
+				AVAILABLE_COMMANDS.add(addPlayersCommand);
+		}
 		else
 			AVAILABLE_COMMANDS.remove(addPlayersCommand);
 	}
 	
 	public static void playersAdded(boolean playersAdded) {
-		if(playersAdded)
-			AVAILABLE_COMMANDS.addAll(playersAddedCommands);
+		
+		if(playersAdded) {
+			for(Command command : playersAddedCommands) {
+				if(!AVAILABLE_COMMANDS.contains(command))
+					AVAILABLE_COMMANDS.add(command);
+			}
+		}
 		else AVAILABLE_COMMANDS.removeAll(playersAddedCommands);
 	}
 	

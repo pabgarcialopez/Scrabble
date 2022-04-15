@@ -215,20 +215,17 @@ public class ConsoleView implements ScrabbleObserver {
 	@Override
 	public void onRegister(Game game) {
 		
-		
+		Command.gameInitiated(Game.getGameInitiated());
+		Command.playersAdded(game.getPlayersAdded());
 		
 		if (Game.getGameInitiated() && game.getPlayersAdded()) {
 			showBoard(game);
-			
 		}
 		else {
-			Command.gameInitiated(Game.getGameInitiated());
-			Command.playersAdded(game.getPlayersAdded());
 			executeCommand();
 		}
 		
 		controller.update();
-		
 	}
 
 	@Override
@@ -236,13 +233,13 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		this.out.println("Partida iniciada con éxito." + StringUtils.LINE_SEPARATOR);
 		
+		Command.gameInitiated(Game.getGameInitiated());
+		Command.playersAdded(game.getPlayersAdded());
+		
 		if (Game.getGameInitiated() && game.getPlayersAdded()) {
 			showBoard(game);
-			
 		}
 		else {
-			Command.gameInitiated(Game.getGameInitiated());
-			Command.playersAdded(game.getPlayersAdded());
 			executeCommand();
 		}
 		
@@ -260,16 +257,16 @@ public class ConsoleView implements ScrabbleObserver {
 	@Override
 	public void onUpdate(Game game) {
 		
+		Command.gameInitiated(Game.getGameInitiated());
+		Command.playersAdded(game.getPlayersAdded());
+		
 		if(Game.getGameInitiated() && game.getPlayersAdded()) {
-			
 			if(!game.gameIsFinished()) {
 				showStatus(game);
 				controller.playTurn();
 			}
 		}
 		else {
-			Command.gameInitiated(Game.getGameInitiated());
-			Command.playersAdded(game.getPlayersAdded());
 			executeCommand();
 		}
 		
