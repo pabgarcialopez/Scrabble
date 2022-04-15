@@ -11,21 +11,21 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import containers.Board;
+import containers.BoardBuilder;
 import containers.GamePlayers;
+import containers.GamePlayersBuilder;
 import containers.GameTiles;
-import factories.BoardBuilder;
-import factories.BoxBuilder;
-import factories.EasyStrategyBuilder;
-import factories.GamePlayersBuilder;
-import factories.GameTilesBuilder;
-import factories.HardStrategyBuilder;
-import factories.HumanStrategyBuilder;
-import factories.MediumStrategyBuilder;
-import factories.PlayerBuilder;
-import factories.StrategyBuilder;
-import factories.TileBuilder;
-import factories.WordsBuilder;
+import containers.GameTilesBuilder;
 import logic.Game;
+import logic.WordsBuilder;
+import simulatedObjects.BoxBuilder;
+import simulatedObjects.PlayerBuilder;
+import simulatedObjects.TileBuilder;
+import strategies.EasyStrategyBuilder;
+import strategies.HardStrategyBuilder;
+import strategies.HumanStrategyBuilder;
+import strategies.MediumStrategyBuilder;
+import strategies.StrategyBuilder;
 
 /* APUNTES GENERALES:
    
@@ -89,12 +89,12 @@ public class GameLoader {
 		boolean wordsInBoard = json.getBoolean("words_in_board");
 		boolean gameFinished = json.getBoolean("game_finished");
 		
-		GamePlayers players = gamePlayersBuilder.createInstance(json.getJSONObject("game_players"));
+		GamePlayers players = gamePlayersBuilder.createGamePlayers(json.getJSONObject("game_players"));
 		
-		GameTiles tiles = gameTilesBuilder.createInstance(json.getJSONObject("game_tiles"));
-		Board board = boardBuilder.createInstance(json.getJSONObject("game_board"));
+		GameTiles tiles = gameTilesBuilder.createGameTiles(json.getJSONObject("game_tiles"));
+		Board board = boardBuilder.createBoard(json.getJSONObject("game_board"));
 		
-		List<String> usedWords = wordsBuilder.createInstance(json.getJSONObject("used_words"));
+		List<String> usedWords = wordsBuilder.createWords(json.getJSONObject("used_words"));
 		
 		game.reset(currentTurn, numConsecutivePassedTurns, wordsInBoard, gameFinished, 
 				players, tiles, board, usedWords);
@@ -104,7 +104,7 @@ public class GameLoader {
 	 * Devuelve una instancia de la clase GamePlayers, creada por el builder de la clase GamePlayersBuilder.
 	 */
 	public static GamePlayers createPlayers(JSONObject data) {
-		return gamePlayersBuilder.createInstance(data);
+		return gamePlayersBuilder.createGamePlayers(data);
 	}
 
 	/* Método loadWordList:
@@ -113,7 +113,7 @@ public class GameLoader {
 	public static List<String> loadWordList() throws JSONException, FileNotFoundException {
 		
 		JSONObject jo = new JSONObject(new JSONTokener(new FileInputStream(wordsFile)));
-		return wordsBuilder.createInstance(jo);
+		return wordsBuilder.createWords(jo);
 	}
 	
 	/* Método initBuilders:

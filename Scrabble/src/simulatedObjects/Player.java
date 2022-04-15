@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import logic.Game;
 import logic.WordChecker;
+import strategies.Strategy;
 import utils.StringUtils;
 
 /* APUNTES GENERALES:
@@ -129,90 +130,6 @@ public class Player {
 	}
 	
 
-	/*
-//	* Método tryWritingInNotEmptyBoard:
-//	 * 
-//	 * Este método es usado por los jugadores automáticos para intentar 
-//	 * colocar una palabra en un tablero no vacío, y devuelve un booleano
-//	 * indicando si se ha podido escribir una palabra o no.
-//	 * 
-//	 * Primero se comprueba si el tamaño de la palabra que se quiere escribir es estrictamente
-//	 * mayor que el número de fichas que tiene más una (resultante del encadenamiento).
-//	 * 
-//	 * Después, se crea un marcaje para las letras usadas y así poder controlar cuáles se han usado ya.
-//	 * 
-//	 * Con el objetivo de que el jugador automático sea lo más uniforme posible al colocar palabras,
-//	 * se crean una fila y una columna aleatorias (dentro del rango del tablero), desde las cuales el
-//	 * jugador automático empezará a intentar formar palabras.
-//	 * 
-//	 * Puesto que se desea encadenar palabras, si la posición comprobada no tiene una ficha, seguimos buscando.
-//	 * 
-//	 * En caso contrario:
-//	 * - Se añade esta ficha a la lista de fichas disponibles recibida por parámetro.
-//	 * - Se intenta escribir una palabra con los parámetros indicados (la palabra empieza siendo vacía).
-//	 * - Se elimina la última ficha añadida de la lista de fichas disponibles recibida por parámetro.
-//	 *
-	protected boolean tryWritingInNotEmptyBoard(int wordLength, List<Tile> tilesForWord, Game game) {
-		
-		if(wordLength > tilesForWord.size() + 1)
-			return false;
-		
-		boolean wordWritten = false;
-		List<Boolean> marcaje = createMarcaje(tilesForWord.size() + 1);
-		
-		int randomRow = (int) this.rdm.nextDouble() * game.getBoardSize();
-		int randomColumn = (int) this.rdm.nextDouble() * game.getBoardSize();
-		
-		for(int i = 0; i < game.getBoardSize() && !wordWritten; ++i)
-			for(int j = 0; j < game.getBoardSize() && !wordWritten; ++j)  {
-				
-				int posX = (i + randomRow) % game.getBoardSize();
-				int posY = (j + randomColumn) % game.getBoardSize();
-				
-				if(game.getBoard().getTile(posX, posY) != null) {
-					tilesForWord.add(game.getBoard().getTile(posX, posY));
-					wordWritten = tryWritingAWord("", wordLength, tilesForWord, marcaje, posX, posY, -1, game, true);
-					tilesForWord.remove(tilesForWord.size() - 1);
-				}
-			}
-				
-		
-		return wordWritten;
-	}
-	*/
-	
-	/*
-//	 * Método tryWritingInEmptyBoard:
-//	 * 
-//	 * Este método es usado por los jugadores automáticos para intentar 
-//	 * colocar una palabra en un tablero vacío, y devuelve un booleano
-//	 * indicando si se ha podido escribir una palabra o no.
-//	 * 
-//	 * Primero se comprueba si el tamaño de la palabra que se quiere escribir es estrictamente
-//	 * mayor que el número de fichas que tiene.
-//	 * 
-//	 * Después, se crea un marcaje para las letras usadas y así poder controlar cuáles se han usado ya.
-//	 * 
-//	 * Finalmente, se intenta escribir una palabra (posX == -1 == posY para reconocer que estamos ante un tablero
-//	 * vacío y así colocar la palabra en el centro del tablero), y se devuelve el resultado de ello.
-//	 *
-	protected boolean tryWritingInEmptyBoard(int wordLength, List<Tile> tilesForWord, Game game) {
-		
-		if(wordLength > tilesForWord.size())
-			return false;
-		
-		boolean wordWritten = false;
-		
-		List<Boolean> marcaje = createMarcaje(tilesForWord.size());
-		
-		wordWritten = tryWritingAWord("", wordLength, tilesForWord, marcaje, -1, -1, -1, game, false);
-		
-		return wordWritten;
-	}
-	*/
-	
-
-	
 	// Getters
 	
 	public String getName() {

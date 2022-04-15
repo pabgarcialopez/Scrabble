@@ -1,4 +1,4 @@
-package factories;
+package simulatedObjects;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -7,9 +7,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import simulatedObjects.Player;
-import simulatedObjects.Strategy;
-import simulatedObjects.Tile;
+import strategies.Strategy;
+import strategies.StrategyBuilder;
 
 /* APUNTES GENERALES
    
@@ -20,13 +19,12 @@ import simulatedObjects.Tile;
    clasificados por dificultad.
    
  */
-public class PlayerBuilder extends Builder<Player>{
+public class PlayerBuilder {
 
-	protected TileBuilder tileBuilder;
+	private TileBuilder tileBuilder;
 	private List<StrategyBuilder> strategyBuilders;
 	
 	public PlayerBuilder(TileBuilder tileBuilder, List<StrategyBuilder> strategyBuilders) {
-		super("player");
 		this.tileBuilder = tileBuilder;
 		this.strategyBuilders = strategyBuilders;
 	}
@@ -49,8 +47,7 @@ public class PlayerBuilder extends Builder<Player>{
 	 * - Si el jugador tiene fichas asociadas, se crea el correspondiente array de objetos Tile.
 	 */
 
-	@Override
-	protected Player createTheInstance(JSONObject data) {
+	public Player createPlayer(JSONObject data) {
 		
 		String name;
 		if(data.has("name"))
@@ -64,13 +61,13 @@ public class PlayerBuilder extends Builder<Player>{
 			
 			JSONArray jsonArrayTiles = data.getJSONArray("tiles");
 			for(int i = 0; i < jsonArrayTiles.length(); i++)
-				tiles.add(tileBuilder.createTheInstance(jsonArrayTiles.getJSONObject(i)));
+				tiles.add(tileBuilder.createTile(jsonArrayTiles.getJSONObject(i)));
 			
 		}
 		
 		Strategy strategy = null;
 		for(StrategyBuilder sb : strategyBuilders) {
-			strategy = sb.createTheInstance(data.getJSONObject("strategy"));
+			strategy = sb.createStrategy(data.getJSONObject("strategy"));
 			
 			if(strategy != null)
 				break;

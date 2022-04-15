@@ -1,4 +1,4 @@
-package factories;
+package containers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,14 +6,14 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import containers.GameTiles;
 import simulatedObjects.Tile;
+import simulatedObjects.TileBuilder;
 
-public class GameTilesBuilder extends Builder<GameTiles>{
+public class GameTilesBuilder {
 
 	private TileBuilder tileBuilder;
+	
 	public GameTilesBuilder(TileBuilder tileBuilder) {
-		super("gameTiles");
 		this.tileBuilder = tileBuilder;
 	}
 
@@ -24,14 +24,13 @@ public class GameTilesBuilder extends Builder<GameTiles>{
 	 * según avance la partida.
 	 */
 
-	@Override
-	protected GameTiles createTheInstance(JSONObject data) {
+	public GameTiles createGameTiles(JSONObject data) {
 		
 		JSONArray jsonArrayTiles = data.getJSONArray("tiles");
 		List<Tile> tiles = new ArrayList<Tile>();
 		
 		for(int i = 0; i < jsonArrayTiles.length(); i++)
-			tiles.add(tileBuilder.createTheInstance(jsonArrayTiles.getJSONObject(i)));
+			tiles.add(tileBuilder.createTile(jsonArrayTiles.getJSONObject(i)));
 		
 		return new GameTiles(tiles);
 	}

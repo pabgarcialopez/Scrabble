@@ -1,4 +1,4 @@
-package simulatedObjects;
+package strategies;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,6 +7,7 @@ import java.util.List;
 import exceptions.CommandExecuteException;
 import logic.Game;
 import logic.WordChecker;
+import simulatedObjects.Tile;
 import utils.Pair;
 
 public interface Strategy {

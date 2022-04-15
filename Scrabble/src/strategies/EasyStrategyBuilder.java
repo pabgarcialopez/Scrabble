@@ -1,9 +1,6 @@
-package factories;
+package strategies;
 
 import org.json.JSONObject;
-
-import simulatedObjects.EasyStrategy;
-import simulatedObjects.Strategy;
 
 public class EasyStrategyBuilder extends StrategyBuilder {
 	

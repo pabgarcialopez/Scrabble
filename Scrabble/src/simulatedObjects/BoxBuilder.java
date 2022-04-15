@@ -1,17 +1,12 @@
-package factories;
+package simulatedObjects;
 
 import org.json.JSONObject;
 
-import simulatedObjects.Box;
-import simulatedObjects.SpecialEffects;
-import simulatedObjects.Tile;
-
-public class BoxBuilder extends Builder<Box>{
+public class BoxBuilder {
 	
 	private TileBuilder tileBuilder;
 
 	public BoxBuilder(TileBuilder tileBuilder) {
-		super("Box");
 		this.tileBuilder = tileBuilder;
 	}
 	
@@ -23,8 +18,7 @@ public class BoxBuilder extends Builder<Box>{
 	 * especificadas en el JSONObject recibido por parámetro.
 	 */
 	
-	@Override
-	protected Box createTheInstance(JSONObject data) {
+	public Box createBox(JSONObject data) {
 		
 		SpecialEffects specialEffect = null;
 		
@@ -32,7 +26,7 @@ public class BoxBuilder extends Builder<Box>{
 			specialEffect = SpecialEffects.valueOf(data.getString("special_effect"));
 		
 		if(data.has("tile")) {
-			Tile tile = tileBuilder.createTheInstance(data.getJSONObject("tile"));
+			Tile tile = tileBuilder.createTile(data.getJSONObject("tile"));
 			return new Box(specialEffect, tile, true);
 		}
 		

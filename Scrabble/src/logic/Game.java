@@ -528,14 +528,6 @@ public class Game {
 			o.onEnd(gameFinishedCause + getWinnerName());
 	}
 	
-	/* Método resetPlayers:
-	 * Delega en la clase GamePlayers el reseteo de los jugadores.
-	 */
-//	public void resetPlayers() {
-//		this.players.reset();
-//	}
-	
-	
 	// Getters
 	
 	public static boolean getGameInitiated() {
@@ -577,10 +569,6 @@ public class Game {
 	public GamePlayers getPlayers() {
 		return this.players;
 	}
-	
-//	public boolean humanIsPlaying() {
-//		return players.humanIsPlaying(currentTurn);
-//	}
 
 	public int getRemainingTiles() {
 		return this.tiles.getNumTiles();

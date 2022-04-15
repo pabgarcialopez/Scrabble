@@ -1,10 +1,11 @@
-package simulatedObjects;
+package strategies;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import logic.Game;
 import logic.WordChecker;
+import simulatedObjects.Tile;
 
 public class MediumStrategy implements Strategy {
 

@@ -1,4 +1,4 @@
-package factories;
+package logic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,18 +6,13 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class WordsBuilder extends Builder<List<String>>{
-
-	public WordsBuilder() {
-		super("used_words");
-	}
+public class WordsBuilder {
 
 	/* Sobrescritura del método createTheInstance:
 	 * Construye y devuelve la lista que contiene las palabras usadas del juego.
 	 */
 
-	@Override
-	protected List<String> createTheInstance(JSONObject data) {
+	public List<String> createWords(JSONObject data) {
 		
 		JSONArray jsonArrayWords = data.getJSONArray("words");
 		
@@ -28,5 +23,4 @@ public class WordsBuilder extends Builder<List<String>>{
 		
 		return words;
 	}
-
 }

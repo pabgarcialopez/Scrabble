@@ -1,4 +1,4 @@
-package factories;
+package containers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,15 +6,15 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import containers.Board;
 import simulatedObjects.Box;
+import simulatedObjects.BoxBuilder;
 
 //Ver apuntes de la clase padre Builder.
-public class BoardBuilder extends Builder<Board> {
+public class BoardBuilder {
 
 	private BoxBuilder boxBuilder;
+	
 	public BoardBuilder(BoxBuilder boxBuilder) {
-		super("board");
 		this.boxBuilder = boxBuilder;
 	}
 	
@@ -29,8 +29,7 @@ public class BoardBuilder extends Builder<Board> {
 	 * añadiendo a la matriz de objetos Box "board".
 	 */
 
-	@Override
-	protected Board createTheInstance(JSONObject data) {
+	public Board createBoard(JSONObject data) {
 		
 		JSONArray jsonArrayRows = data.getJSONArray("board");
 		List<List<Box>> board = new ArrayList<List<Box>>();
@@ -41,7 +40,7 @@ public class BoardBuilder extends Builder<Board> {
 			List<Box> rowOfBoxes = new ArrayList<Box>();
 			
 			for(int j = 0; j < jsonArrayBoxes.length(); j++)
-				rowOfBoxes.add(boxBuilder.createTheInstance(jsonArrayBoxes.getJSONObject(j)));
+				rowOfBoxes.add(boxBuilder.createBox(jsonArrayBoxes.getJSONObject(j)));
 			
 			board.add(rowOfBoxes);
 		}

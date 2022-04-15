@@ -1,4 +1,4 @@
-package factories;
+package containers;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -7,15 +7,14 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import containers.GamePlayers;
 import simulatedObjects.Player;
+import simulatedObjects.PlayerBuilder;
 
-public class GamePlayersBuilder extends Builder<GamePlayers> {
+public class GamePlayersBuilder {
 
 	private PlayerBuilder playerBuilder;
 	
 	public GamePlayersBuilder(PlayerBuilder playerBuilder) {
-		super("gamePlayers");
 		this.playerBuilder = playerBuilder;
 	}
 
@@ -29,8 +28,7 @@ public class GamePlayersBuilder extends Builder<GamePlayers> {
 	 * para recorrerlo y poder crear un tipo de player especifico. 
 	 */
 	
-	@Override
-	protected GamePlayers createTheInstance(JSONObject data) {
+	public GamePlayers createGamePlayers(JSONObject data) {
 		
 		JSONArray jsonArrayPlayers = data.getJSONArray("players");
 		
@@ -39,7 +37,7 @@ public class GamePlayersBuilder extends Builder<GamePlayers> {
 		for(int i = 0; i < jsonArrayPlayers.length(); i++) {
 			
 			Player playerToAdd = null;
-			playerToAdd = playerBuilder.createTheInstance(jsonArrayPlayers.getJSONObject(i));
+			playerToAdd = playerBuilder.createPlayer(jsonArrayPlayers.getJSONObject(i));
 			
 			if(playerToAdd != null)
 				players.add(playerToAdd);

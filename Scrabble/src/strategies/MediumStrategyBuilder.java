@@ -1,9 +1,6 @@
-package factories;
+package strategies;
 
 import org.json.JSONObject;
-
-import simulatedObjects.MediumStrategy;
-import simulatedObjects.Strategy;
 
 public class MediumStrategyBuilder extends StrategyBuilder {
 	

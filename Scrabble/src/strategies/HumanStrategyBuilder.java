@@ -1,9 +1,6 @@
-package factories;
+package strategies;
 
 import org.json.JSONObject;
-
-import simulatedObjects.HumanStrategy;
-import simulatedObjects.Strategy;
 
 public class HumanStrategyBuilder extends StrategyBuilder {
 
