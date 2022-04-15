@@ -641,7 +641,7 @@ public class Game {
 			o.onMovementNeeded();
 	}	
 	
-	public boolean playersAdded() {
+	public boolean getPlayersAdded() {
 		return this.players.getNumPlayers() != 0;
 	}
 }

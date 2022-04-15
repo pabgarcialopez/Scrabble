@@ -71,8 +71,6 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 
 	public void showBoard(Game game) {
-		
-		//this.out.print(StringUtils.LINE_SEPARATOR);
 
 		// Numero de digitos del tamaño del tablero.
 		int max_indentation_length = (int) Math.log10(game.getBoardSize()) + 1;
@@ -216,16 +214,21 @@ public class ConsoleView implements ScrabbleObserver {
 
 	@Override
 	public void onRegister(Game game) {
-		if (Game.getGameInitiated() && game.playersAdded()) {
+		
+		
+		
+		if (Game.getGameInitiated() && game.getPlayersAdded()) {
 			showBoard(game);
+			
 		}
 		else {
 			Command.gameInitiated(Game.getGameInitiated());
-			Command.playersAdded(game.playersAdded());
+			Command.playersAdded(game.getPlayersAdded());
 			executeCommand();
 		}
 		
 		controller.update();
+		
 	}
 
 	@Override
@@ -233,16 +236,18 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		this.out.println("Partida iniciada con éxito." + StringUtils.LINE_SEPARATOR);
 		
-		if (Game.getGameInitiated() && game.playersAdded()) {
+		if (Game.getGameInitiated() && game.getPlayersAdded()) {
 			showBoard(game);
+			
 		}
 		else {
 			Command.gameInitiated(Game.getGameInitiated());
-			Command.playersAdded(game.playersAdded());
+			Command.playersAdded(game.getPlayersAdded());
 			executeCommand();
 		}
 		
 		controller.update();
+		
 	}
 
 	@Override
@@ -255,7 +260,7 @@ public class ConsoleView implements ScrabbleObserver {
 	@Override
 	public void onUpdate(Game game) {
 		
-		if(Game.getGameInitiated() && game.playersAdded()) {
+		if(Game.getGameInitiated() && game.getPlayersAdded()) {
 			
 			if(!game.gameIsFinished()) {
 				showStatus(game);
@@ -264,7 +269,7 @@ public class ConsoleView implements ScrabbleObserver {
 		}
 		else {
 			Command.gameInitiated(Game.getGameInitiated());
-			Command.playersAdded(game.playersAdded());
+			Command.playersAdded(game.getPlayersAdded());
 			executeCommand();
 		}
 		
@@ -419,7 +424,7 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		s = StringUtils.removeAccents(s);
 		
-		if(this.in != consoleInput)
+		if(!this.in.equals(consoleInput))
 			this.out.print(s + StringUtils.LINE_SEPARATOR);
 
 		String[] parameters = s.toLowerCase().trim().split(" ");

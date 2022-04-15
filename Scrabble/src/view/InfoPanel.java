@@ -156,4 +156,10 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 
 	@Override
 	public void onPlayersNotAdded(Game game) {}
+
+	@Override
+	public void onMovementNeeded() {
+		// TODO Auto-generated method stub
+		
+	}
 }

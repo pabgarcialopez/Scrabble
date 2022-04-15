@@ -34,5 +34,10 @@ public class MediumStrategy implements Strategy {
 			else game.passTurn();
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return "medium_strategy";
+	}
 
 }

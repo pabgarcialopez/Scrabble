@@ -18,5 +18,10 @@ public class HardStrategy implements Strategy {
 		if(!wordWritten && !game.swapTile()) 
 			game.passTurn();
 	}
+	
+	@Override
+	public String toString() {
+		return "hard_strategy";
+	}
 
 }

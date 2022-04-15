@@ -29,9 +29,7 @@ public abstract class Command {
 	protected static final String INCORRECT_NUMBER_OF_ARGS_MSG = "Número incorrecto de argumentos";
 
 	protected static List<Command> AVAILABLE_COMMANDS = new ArrayList<Command>() {
-		/**
-		* 
-		*/
+		
 		private static final long serialVersionUID = 1L;
 
 		{
@@ -43,9 +41,7 @@ public abstract class Command {
 	};
 
 	private static final List<Command> playersAddedCommands = new ArrayList<Command>() {
-		/**
-		* 
-		*/
+		
 		private static final long serialVersionUID = 1L;
 
 		{
@@ -105,10 +101,10 @@ public abstract class Command {
 		return null;
 	}
 
-	/*
-	 * Método getCommand: Recibe un supuesto comando del usuario. Si no existe, se
-	 * devuelve null. Si existe, se devuelve el comando asociado. Este método nunca
-	 * es sobrescrito.
+	/* Método getCommand:
+	 * Recibe un supuesto comando del usuario. Si no existe, se
+	 * devuelve null. Si existe, se devuelve el comando asociado. 
+	 * Este método nunca es sobrescrito.
 	 */
 	public static Command getCommand(String[] commandWords) throws CommandParseException {
 
@@ -128,15 +124,15 @@ public abstract class Command {
 		return command;
 	}
 
-	public static void gameInitiated(boolean b) {
-		if(b)
+	public static void gameInitiated(boolean gameInitiated) {
+		if(gameInitiated)
 			AVAILABLE_COMMANDS.add(addPlayersCommand);
 		else
 			AVAILABLE_COMMANDS.remove(addPlayersCommand);
 	}
 	
-	public static void playersAdded(boolean b) {
-		if(b)
+	public static void playersAdded(boolean playersAdded) {
+		if(playersAdded)
 			AVAILABLE_COMMANDS.addAll(playersAddedCommands);
 		else AVAILABLE_COMMANDS.removeAll(playersAddedCommands);
 	}

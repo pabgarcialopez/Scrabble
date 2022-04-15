@@ -14,7 +14,7 @@ public class HardStrategyBuilder extends StrategyBuilder {
 	@Override
 	protected Strategy createTheStrategy(JSONObject data) {
 		
-		if(data.getString("type").equalsIgnoreCase(_type))
+		if(data.getString("strategy_type").equalsIgnoreCase(_type))
 			return new HardStrategy();
 		
 		return null;

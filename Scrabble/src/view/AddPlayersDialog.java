@@ -166,7 +166,9 @@ private static final long serialVersionUID = 1L;
 			String type = (String) this.playerPanelList.get(players.length()).getTypeSelected();
 			String name = (String) this.playerPanelList.get(players.length()).getNameSelected();
 			
-			player.put("type", type);
+			JSONObject strategy = new JSONObject();
+			strategy.put("strategy_type",type);
+			player.put("strategy", strategy);
 			player.put("total_points", 0);
 			
 			if(!"".equals(name))
@@ -212,9 +214,9 @@ private static final long serialVersionUID = 1L;
 
 		private static final long serialVersionUID = 1L;
 		
-		private DefaultComboBoxModel<String> typesModel;
-		private JComboBox<String> typesCombo;
-		private final String[] types = { "Humano", "Fácil", "Medio", "Difícil" };
+		private DefaultComboBoxModel<String> strategiesModel;
+		private JComboBox<String> strategiesCombo;
+		private final String[] strategies = { "Humano", "Fácil", "Medio", "Difícil" };
 		
 		private JTextField nameField;
 		
@@ -224,14 +226,14 @@ private static final long serialVersionUID = 1L;
 			
 			add(new JLabel("Jugador " + numPlayer + ":  "));
 			
-			JPanel playerTypePanel = new JPanel();
-			playerTypePanel.setLayout(new BoxLayout(playerTypePanel, BoxLayout.X_AXIS));
-			add(playerTypePanel);
+			JPanel playerStrategyPanel = new JPanel();
+			playerStrategyPanel.setLayout(new BoxLayout(playerStrategyPanel, BoxLayout.X_AXIS));
+			add(playerStrategyPanel);
 			
-			playerTypePanel.add(new JLabel("Tipo: "));
-			typesModel = new DefaultComboBoxModel<String>();
-			typesCombo = new JComboBox<String>(this.typesModel);
-			playerTypePanel.add(typesCombo);
+			playerStrategyPanel.add(new JLabel("Estrategia: "));
+			strategiesModel = new DefaultComboBoxModel<String>();
+			strategiesCombo = new JComboBox<String>(this.strategiesModel);
+			playerStrategyPanel.add(strategiesCombo);
 			
 			JPanel namePanel = new JPanel();
 			namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
@@ -246,35 +248,35 @@ private static final long serialVersionUID = 1L;
 		
 		public void reset() {
 			
-			this.typesModel.removeAllElements();
-			for(String type : types)
-				this.typesModel.addElement(type);
+			this.strategiesModel.removeAllElements();
+			for(String type : strategies)
+				this.strategiesModel.addElement(type);
 			
-			this.typesCombo.setSelectedItem(null);
+			this.strategiesCombo.setSelectedItem(null);
 			
 			this.nameField.setText(null);
 		}
 		
 		public String getTypeSelected() {
-			if(this.typesCombo.getSelectedItem() == null)
+			if(this.strategiesCombo.getSelectedItem() == null)
 				return null;
 			
-			String typeSelected = (String) this.typesCombo.getSelectedItem();
+			String typeSelected = (String) this.strategiesCombo.getSelectedItem();
 			
 			typeSelected = StringUtils.removeAccents(typeSelected);
 			typeSelected = typeSelected.toLowerCase();
 			
 			if("facil".equalsIgnoreCase(typeSelected))
-				return "easy_player";
+				return "easy_strategy";
 			
 			else if("medio".equalsIgnoreCase(typeSelected))
-				return "medium_player";
+				return "medium_strategy";
 			
 			else if("dificil".equalsIgnoreCase(typeSelected))
-				return "hard_player";
+				return "hard_strategy";
 			
 			else if("humano".equalsIgnoreCase(typeSelected))
-				return "human_player";
+				return "human_strategy";
 			
 			else
 				return null;

@@ -64,7 +64,7 @@ public class AddPlayersCommand extends Command {
 			if(strategy != null) {
 				
 				JSONObject strategyJO = new JSONObject();
-				strategyJO.put("type", strategy);
+				strategyJO.put("strategy_type", strategy.toString());
 				
 				JSONObject player = new JSONObject();
 				player.put("strategy", strategyJO);
@@ -132,8 +132,6 @@ public class AddPlayersCommand extends Command {
 				out.print("Selecciona el número de jugadores (2-4): ");
 				in.nextLine();
 			}
-			
-
 		}
 		
 		// Para que la entrada sea correcta.
