@@ -636,7 +636,7 @@ public class Game {
 		return jo;
 	}
 
-	public void commandNeeded() {
+	public void movementNeeded() {
 		for(ScrabbleObserver o : this.observers)
 			o.onMovementNeeded();
 	}	

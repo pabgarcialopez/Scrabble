@@ -15,7 +15,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -47,6 +46,8 @@ private static final long serialVersionUID = 1L;
 	private JButton ok;
 	private JPanel buttonsPanel;
 	
+	private int status;
+	
 	AddPlayersDialog(Component parent) {
 		this.parent = parent;
 		this.setModal(true);
@@ -57,6 +58,8 @@ private static final long serialVersionUID = 1L;
 	private void initGUI() {
 		
 		setTitle("Añadir jugadores");
+		
+		status = 0;
 		
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		
@@ -121,18 +124,19 @@ private static final long serialVersionUID = 1L;
 					String help = String.format("Los valores escogidos no son válidos.%nEl nombre solo es necesario para jugadores humanos y estos nombres no se pueden repetir.");
 					JOptionPane.showMessageDialog(AddPlayersDialog.this, help, "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
-				else
+				else {
+					status = 1;
 					setVisible(false);
+				}
 			}
 		});
 		
 		setContentPane(mainPanel);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		pack();
 		setVisible(false);
 	}
 	
-	public GamePlayers open() {
+	public int open() {
 		
 		buttonsPanel.removeAll();
 
@@ -151,10 +155,10 @@ private static final long serialVersionUID = 1L;
 		pack();
 		setVisible(true);
 		
-		return createPlayers();
+		return status;
 	}
 	
-	private GamePlayers createPlayers() {
+	public GamePlayers createPlayers() {
 		
 		int numPlayers = (int) this.numberOfPlayersCombo.getSelectedItem();
 		

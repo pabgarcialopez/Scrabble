@@ -67,6 +67,5 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	public void onFirstTurnDecided(Game game, String[] lettersObtained) {}
 
 	@Override
-	public void onPlayersNotAdded(Game game) {}
-	
+	public void onMovementNeeded() {}
 }

@@ -24,13 +24,9 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	
 	private Controller controller;
 	
-	private boolean humanIsPlaying;
-	
-	private boolean turnAlreadyDone;
+	private boolean enableButton;
 
 	BoxButton(Controller controller, int x, int y, ChooseWordDialog chooseWordDialog) {
-		
-		this.turnAlreadyDone = false;
 		
 		this.posX = x;
 		this.posY = y;
@@ -44,6 +40,8 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	
 	private void initGUI() {
 		
+		enableButton = false;
+		
 		setToolTipText(String.format("Casilla (%s, %s)", this.posX, this.posY));
 		setIcon(new ImageIcon("resources/icons/letters/box_default_icon.png"));
 		setPreferredSize(new Dimension(49, 49));
@@ -53,7 +51,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 		addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(box != null /*&& box.getTile() == null */&& humanIsPlaying && !turnAlreadyDone) {
+				if(box != null && box.getTile() == null && enableButton) {
 					int status = chooseWordDialog.open(posX, posY);
 					if(status == 1) {
 						String word = chooseWordDialog.getSelectedWord();
@@ -68,21 +66,20 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	@Override
 	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points, int extraPoints) {
 		setImage();
-		turnAlreadyDone = true;
 	}
 
 	@Override
 	public void onRegister(Game game) {
 		this.box = game.getBoxAt(this.posX, this.posY);
 		if(box != null) setImage();
-		//this.humanIsPlaying = game.humanIsPlaying();
+		enableButton = false;
 	}
 
 	@Override
 	public void onReset(Game game) {
 		this.box = game.getBoxAt(this.posX, this.posY);
 		setImage();
-		//this.humanIsPlaying = game.humanIsPlaying();
+		enableButton = false;
 	}
 	
 	private void setImage() {
@@ -95,22 +92,17 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onPassed(Game game) {
-		turnAlreadyDone = true;
-	}
+	public void onPassed(Game game) {}
 
 	@Override
-	public void onSwapped(Game game) {
-		turnAlreadyDone = true;
-	}
+	public void onSwapped(Game game) {}
 
 	@Override
 	public void onError(String error) {}
 
 	@Override
 	public void onUpdate(Game game) {
-		//this.humanIsPlaying = game.humanIsPlaying();
-		turnAlreadyDone = false;
+		enableButton = false;
 	}
 
 	@Override
@@ -120,5 +112,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	public void onFirstTurnDecided(Game game, String[] lettersObtained) {}
 
 	@Override
-	public void onPlayersNotAdded(Game game) {}
+	public void onMovementNeeded() {
+		enableButton = true;
+	}
 }

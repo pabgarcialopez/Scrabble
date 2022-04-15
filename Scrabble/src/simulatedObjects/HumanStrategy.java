@@ -9,6 +9,6 @@ public class HumanStrategy implements Strategy {
 	
 	@Override
 	public void play(Game game, WordChecker wordChecker, List<Tile> tilesForWord) {
-		game.commandNeeded();
+		game.movementNeeded();
 	}
 }

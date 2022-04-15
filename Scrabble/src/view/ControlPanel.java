@@ -162,6 +162,23 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		
 		bar.addSeparator();
 		
+		JButton addPlayersButton = new JButton();
+		addPlayersButton.setActionCommand("player");
+		addPlayersButton.setToolTipText("Añadir jugadores a la partida");
+		addPlayersButton.setIcon(new ImageIcon("resources/icons/control_panel/player.png"));
+		addPlayersButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int status = addPlayersDialog.open();
+				if(status == 1) {
+					controller.addPlayers(addPlayersDialog.createPlayers());
+				}
+			}
+		});
+		bar.add(addPlayersButton);
+		bar.addSeparator();
+		this.buttonsToBlockGameNotInitiated.add(addPlayersButton);
+		
 		JButton passButton = new JButton();
 		passButton.setActionCommand("pass");
 		passButton.setToolTipText("Pasar de turno");
@@ -253,44 +270,32 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	
 	@Override
 	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points, int extraPoints) {
-		enableButtons(this.buttonsToBlockCPUTurn, false);
-		continueButton.setEnabled(true);
+		resetEnabledButtons(game);
 	}
 
 	@Override
 	public void onPassed(Game game) {
-		enableButtons(this.buttonsToBlockCPUTurn, false);
-		continueButton.setEnabled(true);
+		resetEnabledButtons(game);
 	}
 
 	@Override
 	public void onSwapped(Game game) {
-		enableButtons(this.buttonsToBlockCPUTurn, false);
-		continueButton.setEnabled(true);
+		resetEnabledButtons(game);
 	}
 
 	@Override
 	public void onRegister(Game game) {
-		if(!Game.getGameInitiated())
-			enableButtons(this.buttonsToBlockGameNotInitiated, false);
-		else
-			if(game.humanIsPlaying()) continueButton.setEnabled(false);
+		resetEnabledButtons(game);
 	} 
 
 	@Override
 	public void onReset(Game game) {
-		enableButtons(this.buttonsToBlockGameNotInitiated, true);
-		enableButtons(this.buttonsToBlockCPUTurn, game.humanIsPlaying());
-		if(game.humanIsPlaying()) 
-			continueButton.setEnabled(false);
+		resetEnabledButtons(game);
 	}
 
 	@Override
 	public void onUpdate(Game game) {
-		if(game.humanIsPlaying()) {
-			enableButtons(this.buttonsToBlockCPUTurn, true);
-			continueButton.setEnabled(false);
-		}
+		resetEnabledButtons(game);
 	}
 
 	@Override
@@ -300,15 +305,27 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	public void onEnd(String message) {}
 
 	@Override
-	public void onFirstTurnDecided(Game game, String[] lettersObtained) {}
-
+	public void onFirstTurnDecided(Game game, String[] lettersObtained) {
+		resetEnabledButtons(game);
+	}
+	
 	@Override
-	public void onPlayersNotAdded(Game game) {
-		controller.addPlayers(this.addPlayersDialog.open());
+	public void onMovementNeeded() {
+		enableButtons(this.buttonsToBlockCPUTurn, true);
+		this.continueButton.setEnabled(false);
 	}
 	
 	private void enableButtons(List<JButton> buttons, boolean enable) {
 		for(JButton b : buttons)
 			b.setEnabled(enable);
+	}
+	
+	private void resetEnabledButtons(Game game) {
+		
+		enableButtons(this.buttonsToBlockGameNotInitiated, Game.getGameInitiated());
+		
+		enableButtons(this.buttonsToBlockCPUTurn, false);
+		
+		this.continueButton.setEnabled(Game.getGameInitiated() && game.getPlayersAdded());
 	}
 }

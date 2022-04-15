@@ -91,11 +91,16 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 
 	@Override
 	public void onReset(Game game) {
-		this.currentTurnName = game.getPlayers().getPlayerName(game.getCurrentTurn());
-		currentTurnLabel.setText("Turno de: " + this.currentTurnName);
-		infoLabel.setText("Nueva partida iniciada");
-		remainingTilesLabel.setText("Fichas restantes: " + game.getRemainingTiles());
-		pointsLabel.setText("");
+		if (Game.getGameInitiated() && game.getPlayersAdded()) {
+			infoLabel.setText("Nueva partida iniciada");
+			this.currentTurnName = game.getPlayers().getPlayerName(game.getCurrentTurn());
+			currentTurnLabel.setText("Turno de: " + this.currentTurnName);
+			remainingTilesLabel.setText("Fichas restantes: " + game.getRemainingTiles());
+			pointsLabel.setText("");
+		}
+		else if(Game.getGameInitiated()) {
+			infoLabel.setText("Nueva partida iniciada, pero... ¡hay que añadir jugadores!");
+		}
 	}
 
 	@Override
@@ -111,8 +116,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 			this.currentTurnLabel.setText("Turno de: " + this.currentTurnName);
 			this.remainingTilesLabel.setText("Fichas restantes: " + game.getRemainingTiles());
 			
-			if(!game.humanIsPlaying()) this.infoLabel.setText("Eligiendo movimiento...");
-			else this.infoLabel.setText("Elige tu siguiente movimiento");
+			this.infoLabel.setText("Eligiendo movimiento...");
 		}
 		
 		else {
@@ -122,7 +126,6 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 		}
 		
 		this.pointsLabel.setText("");
-		
 	}
 
 	@Override
@@ -153,13 +156,9 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 		
 		JOptionPane.showMessageDialog(parent, buffer.toString(), "Elección de Turnos", JOptionPane.INFORMATION_MESSAGE);
 	}
-
-	@Override
-	public void onPlayersNotAdded(Game game) {}
-
+	
 	@Override
 	public void onMovementNeeded() {
-		// TODO Auto-generated method stub
-		
+		this.infoLabel.setText("Elige tu siguiente movimienro");
 	}
 }

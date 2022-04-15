@@ -168,11 +168,5 @@ public class PlayerPanel extends JPanel implements ScrabbleObserver {
 	public void onFirstTurnDecided(Game game, String[] lettersObtained) {}
 
 	@Override
-	public void onPlayersNotAdded(Game game) {}
-
-	@Override
-	public void onMovementNeeded() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onMovementNeeded() {}
 }
