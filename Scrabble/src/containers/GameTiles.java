@@ -61,4 +61,8 @@ public class GameTiles {
 		
 		return jo;
 	}
+
+	public void addAll(List<Tile> tiles) {
+		this.tiles.addAll(tiles);
+	}
 }

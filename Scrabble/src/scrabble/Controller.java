@@ -121,7 +121,7 @@ public class Controller {
 	 * Delega en la clase Game la inicialización de los jugadores del juego.
 	 */
 	public void addPlayers(GamePlayers players) {
-		this.game.addPlayers(players);
+		this.game.addOrChangePlayers(players);
 	}
 
 	/* Método addObserver:

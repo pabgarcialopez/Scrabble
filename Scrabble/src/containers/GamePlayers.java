@@ -10,6 +10,8 @@ import logic.Game;
 import logic.WordChecker;
 import simulatedObjects.Player;
 import simulatedObjects.Tile;
+import strategies.Strategy;
+import utils.Pair;
 
 /* APUNTES GENERALES
 
@@ -182,6 +184,17 @@ public class GamePlayers {
 		jo.put("players", players);
 		
 		return jo;
+	}
+
+	public List<Tile> getTiles(int player) {
+		
+		return this.players.get(player).getTiles();
+	}
+
+	public void changeStrategies(List<Pair<Integer, Strategy>> is) {
+		for(int i = 0; i < is.size(); ++i) {
+			this.players.get(is.get(i).getFirst()).setStrategy(is.get(i).getSecond());
+		}
 	}
 
 	

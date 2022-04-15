@@ -18,6 +18,8 @@ import simulatedObjects.Box;
 import simulatedObjects.Player;
 import simulatedObjects.Tile;
 import storage.GameLoader;
+import strategies.Strategy;
+import utils.Pair;
 import utils.StringUtils;
 import view.ScrabbleObserver;
 
@@ -115,7 +117,7 @@ public class Game {
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
 		
 		if(players.getNumPlayers() != 0) {
-			addPlayers(players);
+			addOrChangePlayers(players);
 		}
 		
 		_wordsInBoard = wordsInBoard;
@@ -477,11 +479,19 @@ public class Game {
 	 * Además, completa las fichas que a los jugadores les pueda faltar (método initPlayerTiles) (caso de nueva partida).
 	 * Por último, si es necesario (nueva partida), se establece el orden de juego (método decideFirstTurn).
 	 */
-	public void addPlayers(GamePlayers players) {
+	public void addOrChangePlayers(GamePlayers players) {
 
+		for(int i = 0; i < this.getNumPlayers(); ++i) {
+			this.tiles.addAll(this.players.getTiles(i));
+		}
+		
 		this.players = players;
 		initPlayerTiles();
 		decideFirstTurn();	
+	}
+	
+	public void changeStrategies(List<Pair<Integer, Strategy>> is) {
+		this.players.changeStrategies(is);
 	}
 	
 	/* Método initPlayerTiles:

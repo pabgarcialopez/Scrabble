@@ -66,6 +66,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	@Override
 	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points, int extraPoints) {
 		setImage();
+		enableButton = false;
 	}
 
 	@Override
@@ -92,10 +93,14 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onPassed(Game game) {}
+	public void onPassed(Game game) {
+		enableButton = false;
+	}
 
 	@Override
-	public void onSwapped(Game game) {}
+	public void onSwapped(Game game) {
+		enableButton = false;
+	}
 
 	@Override
 	public void onError(String error) {}

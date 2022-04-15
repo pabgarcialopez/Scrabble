@@ -180,9 +180,11 @@ public class Player {
 		
 		return jo;
 	}
-	
-	
 
+	public void setStrategy(Strategy strategy) {
+		this.strategy = strategy;
+	}
+	
 	/*
 	// Métodos abstractos
 	

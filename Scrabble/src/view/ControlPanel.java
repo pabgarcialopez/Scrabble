@@ -35,6 +35,8 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	
 	private JButton continueButton;
 	
+	private JButton changeStrategyButton;
+	
 	private AddPlayersDialog addPlayersDialog;
 	
 	private JFileChooser fc;
@@ -164,7 +166,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		
 		JButton addPlayersButton = new JButton();
 		addPlayersButton.setActionCommand("player");
-		addPlayersButton.setToolTipText("Añadir jugadores a la partida");
+		addPlayersButton.setToolTipText("Añadir o cambiar jugadores a la partida");
 		addPlayersButton.setIcon(new ImageIcon("resources/icons/control_panel/player.png"));
 		addPlayersButton.addActionListener(new ActionListener() {
 			@Override
@@ -172,12 +174,27 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				int status = addPlayersDialog.open();
 				if(status == 1) {
 					controller.addPlayers(addPlayersDialog.createPlayers());
+					controller.update();
 				}
 			}
 		});
 		bar.add(addPlayersButton);
 		bar.addSeparator();
 		this.buttonsToBlockGameNotInitiated.add(addPlayersButton);
+		
+		changeStrategyButton = new JButton();
+		changeStrategyButton.setActionCommand("strategy");
+		changeStrategyButton.setToolTipText("Cambiar las estrategias actuales de los jugadores");
+		changeStrategyButton.setIcon(new ImageIcon("resources/icons/control_panel/strategy.png"));
+		changeStrategyButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+			}
+		});
+		bar.add(changeStrategyButton);
+		bar.addSeparator();
+		this.buttonsToBlockGameNotInitiated.add(changeStrategyButton);
 		
 		JButton passButton = new JButton();
 		passButton.setActionCommand("pass");
@@ -327,5 +344,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		enableButtons(this.buttonsToBlockCPUTurn, false);
 		
 		this.continueButton.setEnabled(Game.getGameInitiated() && game.getPlayersAdded());
+		
+		this.changeStrategyButton.setEnabled(Game.getGameInitiated() && game.getPlayersAdded());
 	}
 }

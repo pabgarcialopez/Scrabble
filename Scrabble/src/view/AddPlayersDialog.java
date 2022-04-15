@@ -198,7 +198,7 @@ private static final long serialVersionUID = 1L;
 			if(this.playerPanelList.get(i).getTypeSelected() == null)
 				return false;
 			
-			if(this.playerPanelList.get(i).getTypeSelected().equals("human_player")) {
+			if(this.playerPanelList.get(i).getTypeSelected().equals("human_strategy")) {
 				if(this.playerPanelList.get(i).getNameSelected() == null || ((String)this.playerPanelList.get(i).getNameSelected()).equals(""))
 					return false;
 				
@@ -220,7 +220,7 @@ private static final long serialVersionUID = 1L;
 		
 		private DefaultComboBoxModel<String> strategiesModel;
 		private JComboBox<String> strategiesCombo;
-		private final String[] strategies = { "Humano", "Fácil", "Medio", "Difícil" };
+		private final String[] strategies = { "Humano", "Fácil", "Media", "Difícil" };
 		
 		private JTextField nameField;
 		
@@ -273,7 +273,7 @@ private static final long serialVersionUID = 1L;
 			if("facil".equalsIgnoreCase(typeSelected))
 				return "easy_strategy";
 			
-			else if("medio".equalsIgnoreCase(typeSelected))
+			else if("media".equalsIgnoreCase(typeSelected))
 				return "medium_strategy";
 			
 			else if("dificil".equalsIgnoreCase(typeSelected))
