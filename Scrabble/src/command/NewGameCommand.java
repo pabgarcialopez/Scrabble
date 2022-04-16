@@ -16,7 +16,7 @@ public class NewGameCommand extends Command{
 
 	private static final String SHORTCUT = "n";
 
-	private static final String HELP = "Empezar una nueva partida";
+	private static final String HELP = "empezar una nueva partida";
 	
 	public NewGameCommand() {
 		super(NAME, SHORTCUT, DETAILS, HELP);

@@ -204,4 +204,7 @@ public interface Strategy {
 		
 		return marks;
 	}
+	
+	@Override
+	public String toString();
 }

@@ -45,6 +45,7 @@ public abstract class Command {
 		private static final long serialVersionUID = 1L;
 
 		{
+			add(new SkipCommand());
 			add(new NewGameCommand());
 			add(new ResetCommand());
 			add(new SwapTileCommand());
@@ -129,8 +130,7 @@ public abstract class Command {
 			if (!AVAILABLE_COMMANDS.contains(addPlayersCommand))
 				AVAILABLE_COMMANDS.add(addPlayersCommand);
 		}
-		else
-			AVAILABLE_COMMANDS.remove(addPlayersCommand);
+		else AVAILABLE_COMMANDS.remove(addPlayersCommand);
 	}
 	
 	public static void playersAdded(boolean playersAdded) {

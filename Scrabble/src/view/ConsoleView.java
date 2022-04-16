@@ -215,10 +215,13 @@ public class ConsoleView implements ScrabbleObserver {
 	@Override
 	public void onRegister(Game game) {
 		
+		this.out.print("¡Bienvenido al Scrabble!");
+		this.out.print(StringUtils.LINE_SEPARATOR);
+
 		Command.gameInitiated(Game.getGameInitiated());
-		Command.playersAdded(game.getPlayersAdded());
+		Command.playersAdded(game.getNumPlayers() != 0);
 		
-		if (Game.getGameInitiated() && game.getPlayersAdded()) {
+		if (Game.getGameInitiated() && game.getNumPlayers() != 0) {
 			showBoard(game);
 		}
 		else {
@@ -231,15 +234,18 @@ public class ConsoleView implements ScrabbleObserver {
 	@Override
 	public void onReset(Game game) {
 		
-		this.out.println("Partida iniciada con éxito." + StringUtils.LINE_SEPARATOR);
-		
+		this.out.print(StringUtils.LINE_SEPARATOR);
+		this.out.print("Partida iniciada con éxito.");
+		this.out.print(StringUtils.LINE_SEPARATOR);
+
 		Command.gameInitiated(Game.getGameInitiated());
-		Command.playersAdded(game.getPlayersAdded());
+		Command.playersAdded(game.getNumPlayers() != 0);
 		
-		if (Game.getGameInitiated() && game.getPlayersAdded()) {
+		if (Game.getGameInitiated() && game.getNumPlayers() != 0) {
 			showBoard(game);
 		}
 		else {
+			
 			executeCommand();
 		}
 		
@@ -258,9 +264,9 @@ public class ConsoleView implements ScrabbleObserver {
 	public void onUpdate(Game game) {
 		
 		Command.gameInitiated(Game.getGameInitiated());
-		Command.playersAdded(game.getPlayersAdded());
+		Command.playersAdded(game.getNumPlayers() != 0);
 		
-		if(Game.getGameInitiated() && game.getPlayersAdded()) {
+		if(Game.getGameInitiated() && game.getNumPlayers() != 0) {
 			if(!game.gameIsFinished()) {
 				showStatus(game);
 				controller.playTurn();
@@ -407,6 +413,7 @@ public class ConsoleView implements ScrabbleObserver {
 		if(command != null)
 			try {
 				command.execute(this.controller, in, out);
+				
 			} catch (CommandExecuteException e) {
 				this.out.println(e.getMessage());
 			}

@@ -165,6 +165,8 @@ public class Player {
 		
 		JSONObject jo = new JSONObject();
 		
+		jo.put("name", name);
+		
 		jo.put("total_points", this.totalPoints);
 		
 		JSONArray tiles = new JSONArray();
@@ -173,10 +175,9 @@ public class Player {
 		
 		jo.put("tiles", tiles);
 		
-		if(this.strategy == null)
-			jo.put("strategy", "human");
-		
-		else jo.put("strategy", this.strategy.toString());
+		JSONObject strategy = new JSONObject();
+		strategy.put("strategy_type", this.strategy.toString());
+		jo.put("strategy", strategy);
 		
 		return jo;
 	}
@@ -184,28 +185,4 @@ public class Player {
 	public void setStrategy(Strategy strategy) {
 		this.strategy = strategy;
 	}
-	
-	/*
-	// Métodos abstractos
-	
-	* Método play:
-	 * Sobrescrito (funcionalmente) por EasyPlayer, MediumPlayer y 
-	 * HardPlayer para realizar la estrategia de juego correspondiente.
-	 *
-	public abstract void play(Game game);
-
-	* Método isHuman:
-	 * Sobrescrito por todos los hijos de esta clase, para indicar si representan
-	 * un jugador humano, o un jugador automático.
-	 *
-	public abstract boolean isHuman();
-	
-	* Método reset:
-	 * Sobrescrito (funcionalmente) por EasyPlayer, MediumPlayer y 
-	 * HardPlayer para, a la hora de cargar o resetear un juego, ajustar
-	 * el número de jugadores automáticos de cada tipo.
-	 *
-	public abstract void reset();
-	*/
-	
 }

@@ -131,6 +131,9 @@ public class Game {
 			this.observers.get(i).onReset(this);
 	}
 	
+	/* Método playTurn:
+	 * Delega en la clase GamePlayers la acción de jugar un turno.
+	 */
 	public void playTurn() {
 		this.players.playTurn(this, wordChecker);
 	}
@@ -525,17 +528,40 @@ public class Game {
 	/* Método userExits:
 	 * Actualiza el estado del juego a finalizado, y establece la causa de ello.
 	 * Notifica a los observadores de la terminación de la partida.
+	 * Además, distingue si se ha terminado la partida con jugadores inicializados,
+	 * o nada más empezarla.
 	 */
 	public void userExits() {
 		
 		this.gameFinished = true;
 		
-		this.gameFinishedCause = "El jugador " 
-				+ this.players.getPlayerName(this.currentTurn) + " ha finalizado la partida." 
-				+ StringUtils.DOUBLE_LINE_SEPARATOR;
+		boolean anyPlayer = this.players.getNumPlayers() > 0;
+		
+		if(anyPlayer) {
+			this.gameFinishedCause = "El jugador " 
+					+ this.players.getPlayerName(this.currentTurn) 
+					+ " ha finalizado la partida." 
+					+ StringUtils.DOUBLE_LINE_SEPARATOR;
+		}
+			
+		else this.gameFinishedCause = "Juego finalizado.";
+		
+		String finalMessage = gameFinishedCause;
+		
+		if(anyPlayer)
+			finalMessage += getWinnerName();
 		
 		for(ScrabbleObserver o : this.observers)
-			o.onEnd(gameFinishedCause + getWinnerName());
+			o.onEnd(finalMessage);
+	}
+	
+	/* Método movementNeeded:
+	 * Notifica a cada observador que es necesario un movimiento
+	 * para continuar la partida.
+	 */
+	public void movementNeeded() {
+		for(ScrabbleObserver o : this.observers)
+			o.onMovementNeeded();
 	}
 	
 	// Getters
@@ -572,7 +598,7 @@ public class Game {
 		return this.board;
 	}
 	
-	private int getNumPlayers() {
+	public int getNumPlayers() {
 		return this.players.getNumPlayers();
 	}
 	
@@ -632,14 +658,5 @@ public class Game {
 		jo.put("seed", _seed);
 
 		return jo;
-	}
-
-	public void movementNeeded() {
-		for(ScrabbleObserver o : this.observers)
-			o.onMovementNeeded();
-	}	
-	
-	public boolean getPlayersAdded() {
-		return this.players.getNumPlayers() != 0;
 	}
 }

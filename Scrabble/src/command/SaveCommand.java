@@ -35,10 +35,10 @@ public class SaveCommand extends Command {
 		
 		try {
 			controller.saveGame(this.file);
-			System.out.print(StringUtils.LINE_SEPARATOR);
-			System.out.println("La partida ha sido guardada con éxito.");
-			System.out.print(StringUtils.LINE_SEPARATOR);
-
+			
+			out.print(StringUtils.LINE_SEPARATOR);
+			out.println("La partida ha sido guardada con éxito.");
+			out.print(StringUtils.LINE_SEPARATOR);
 		}
 		
 		catch(FileNotFoundException fnfe) {

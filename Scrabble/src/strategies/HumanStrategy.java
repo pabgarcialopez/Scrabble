@@ -12,4 +12,9 @@ public class HumanStrategy implements Strategy {
 	public void play(Game game, WordChecker wordChecker, List<Tile> tilesForWord) {
 		game.movementNeeded();
 	}
+	
+	@Override
+	public String toString() {
+		return "human_strategy";
+	}
 }

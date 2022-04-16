@@ -26,8 +26,6 @@ public class WordChecker {
 		
 		checkers.add(new CheckerDirection());
 		
-		//TODO
-		
 		checkers.add(new CheckerNewFormedWords(checkerWordExists, checkerWordNotUsed));
 	}
 	

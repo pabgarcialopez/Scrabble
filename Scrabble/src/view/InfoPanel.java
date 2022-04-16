@@ -91,7 +91,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 
 	@Override
 	public void onReset(Game game) {
-		if (Game.getGameInitiated() && game.getPlayersAdded()) {
+		if (Game.getGameInitiated() && game.getNumPlayers() != 0) {
 			infoLabel.setText("Nueva partida iniciada");
 			this.currentTurnName = game.getPlayers().getPlayerName(game.getCurrentTurn());
 			currentTurnLabel.setText("Turno de: " + this.currentTurnName);

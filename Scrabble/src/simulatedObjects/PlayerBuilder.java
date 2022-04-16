@@ -20,6 +20,8 @@ import strategies.StrategyBuilder;
    
  */
 public class PlayerBuilder {
+	
+	private static final String AUTOMATIC_PLAYER_NAME = "CPU";
 
 	private TileBuilder tileBuilder;
 	private List<StrategyBuilder> strategyBuilders;
@@ -52,7 +54,7 @@ public class PlayerBuilder {
 		String name;
 		if(data.has("name"))
 			name = data.getString("name");
-		else name = "CPU";
+		else name = AUTOMATIC_PLAYER_NAME;
 		
 		int totalPoints = data.getInt("total_points");
 		List <Tile> tiles = new ArrayList<Tile>();
@@ -62,15 +64,18 @@ public class PlayerBuilder {
 			JSONArray jsonArrayTiles = data.getJSONArray("tiles");
 			for(int i = 0; i < jsonArrayTiles.length(); i++)
 				tiles.add(tileBuilder.createTile(jsonArrayTiles.getJSONObject(i)));
-			
 		}
 		
 		Strategy strategy = null;
 		for(StrategyBuilder sb : strategyBuilders) {
 			strategy = sb.createStrategy(data.getJSONObject("strategy"));
 			
-			if(strategy != null)
+			if(strategy != null) {
+				if(name.equalsIgnoreCase(AUTOMATIC_PLAYER_NAME))
+					name += " (" + strategy + ")";
 				break;
+			}
+				
 		}
 		
 		if(strategy == null)
