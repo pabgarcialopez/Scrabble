@@ -43,8 +43,8 @@ public final class WordChecker {
 		checkWordInPosAndDirection(word, posX, posY, direction, lettersNeeded);
 		checkEnoughLetters(lettersNeeded);
 		
-		if (!Game.getWordsInBoard()) checkWordInCentre(word, posX, posY, direction);
-		else checkWordNextToOther(word, posX, posY, direction);
+		checkWordInCentre(word, posX, posY, direction);
+		checkWordNextToOther(word, posX, posY, direction);
 		
 		return checkNewFormedWords(word, posX, posY, direction);
 	}
@@ -152,14 +152,16 @@ public final class WordChecker {
 	 */
 	private void checkWordInCentre(String word, int posX, int posY, String direction) throws CommandExecuteException {
 	
-		int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
-		int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
-		
-		for (int i = 0; i < word.length(); ++i)
-			if (game.getBoard().isCenter(posX + i * vertical, posY + i * horizontal)) 
-				return;
-		
-		throw new CommandExecuteException("La primera palabra introducida en el tablero debe situarse en la casilla central.");
+		if(!Game.getWordsInBoard()) {
+			int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
+			int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
+			
+			for (int i = 0; i < word.length(); ++i)
+				if (game.getBoard().isCenter(posX + i * vertical, posY + i * horizontal)) 
+					return;
+			
+			throw new CommandExecuteException("La primera palabra introducida en el tablero debe situarse en la casilla central.");
+		}
 	}
 
 	/* Método checkWordNextToOther:
@@ -169,15 +171,17 @@ public final class WordChecker {
 	 */
 	private void checkWordNextToOther(String word, int posX, int posY, String direction) throws CommandExecuteException {
 		
-		int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
-		int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
-		
-		for (int i = 0; i < word.length(); ++i)
-			if (game.getBoard().getTile(posX + i * vertical, posY + i * horizontal) != null) 
-				return;
-		
-		
-		throw new CommandExecuteException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
+		if(Game.getWordsInBoard()) {
+			int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
+			int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
+			
+			for (int i = 0; i < word.length(); ++i)
+				if (game.getBoard().getTile(posX + i * vertical, posY + i * horizontal) != null) 
+					return;
+			
+			
+			throw new CommandExecuteException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
+		}
 	}
 	
 	/* Método checkWordUnion:

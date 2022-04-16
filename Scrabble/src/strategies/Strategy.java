@@ -54,9 +54,11 @@ public interface Strategy {
 	 * simplemente se llamará al método tryWritingAWord, indicando que no hay palabras en el tablero.
 	 */
 	
-	default boolean tryWritingInBoard(int wordLength, List<Tile> tilesForWord, Game game, WordChecker wordChecker) {
+	default boolean tryWritingInBoard(int wordLength, List<Tile> playerTiles, Game game, WordChecker wordChecker) {
 		
 		int extraTile = (Game.getWordsInBoard() ? 1 : 0);
+		
+		List<Tile> tilesForWord = new ArrayList<Tile>(playerTiles);
 		
 		if(wordLength > tilesForWord.size() + extraTile)
 			return false;

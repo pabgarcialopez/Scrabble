@@ -138,6 +138,8 @@ private static final long serialVersionUID = 1L;
 	
 	public int open() {
 		
+		status = 0;
+		
 		buttonsPanel.removeAll();
 
 		this.numberOfPlayersModel.removeAllElements();
