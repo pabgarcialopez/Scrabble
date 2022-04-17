@@ -159,12 +159,10 @@ public class Game {
 	 */
 	public boolean writeAWord(String word, int posX, int posY, String direction) {
 		
-		List<String> wordsToAdd;
-		
 		try {
 			word = StringUtils.removeAccents(word);
 			word = word.toLowerCase();
-			wordsToAdd = this.wordChecker.checkArguments(word, posX, posY, direction);
+			this.wordChecker.checkArguments(word, posX, posY, direction);
 		}
 		catch(CommandExecuteException cee) {
 			for(ScrabbleObserver o : this.observers)
@@ -172,6 +170,8 @@ public class Game {
 			
 			return false;
 		}
+		
+		List<String> wordsToAdd = getNewFormedWords(word, posX, posY, direction);
 		
 		wordsToAdd.add(word);
 		
@@ -397,7 +397,7 @@ public class Game {
 				this.gameFinished = true;
 				
 				this.gameFinishedCause = "La partida ha finalizado: no quedan fichas para robar y el jugador " 
-				+ this.players.getPlayerName(this.currentTurn + this.getNumPlayers() - 1)
+				+ this.players.getPlayerName((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers())
 				+ " se ha quedado sin fichas."+ StringUtils.DOUBLE_LINE_SEPARATOR;
 			}
 			
@@ -663,5 +663,50 @@ public class Game {
 		jo.put("seed", _seed);
 
 		return jo;
+	}
+	
+	private List<String> getNewFormedWords(String word, int posX, int posY, String direction) {
+		
+		int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
+		int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
+		
+		List<String> newFormedWords = new ArrayList<String>();
+		
+		for(int i = 0; i < word.length(); i++) {
+			String newWord = getWordFormed(String.valueOf(word.charAt(i)), posX + i * vertical, posY + i * horizontal, horizontal, vertical);
+			if(newWord != null && newWord.length() != 1) {
+				newFormedWords.add(newWord);
+			}
+		}
+		
+		return newFormedWords;
+	}
+	
+	private String getWordFormed(String letter, int posX, int posY, int vertical, int horizontal) {
+		
+		if(this.board.getTile(posX, posY) != null)
+			return null;
+		
+		int auxPosX = posX - vertical;
+		int auxPosY = posY - horizontal;
+		
+		String word = letter;
+		
+		while(auxPosX >= 0 && auxPosY >= 0 && this.board.getTile(auxPosX, auxPosY) != null) {
+			word = this.board.getTile(auxPosX, auxPosY).getLetter() + word;
+			auxPosX -= vertical;
+			auxPosY -= horizontal;
+		}
+		
+		auxPosX = posX + vertical;
+		auxPosY = posY + horizontal;
+		
+		while(auxPosX < this.getBoardSize() && auxPosY < this.getBoardSize() && this.board.getTile(auxPosX, auxPosY) != null) {
+			word += this.board.getTile(auxPosX, auxPosY).getLetter();
+			auxPosX += vertical;
+			auxPosY += horizontal;
+		}
+		
+		return word;
 	}
 }
