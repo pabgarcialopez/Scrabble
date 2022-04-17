@@ -408,13 +408,13 @@ public class Game {
 			}
 		}
 		
-		for(ScrabbleObserver o : this.observers)
-			o.onUpdate(this);
-		
 		if(gameIsFinished()) {
 			for(ScrabbleObserver o : this.observers)
 				o.onEnd(gameFinishedCause + getWinnerName());
 		}
+		
+		for(ScrabbleObserver o : this.observers)
+			o.onUpdate(this);
 	}
 	
 	/* Método getWinnerGame:
