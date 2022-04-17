@@ -6,9 +6,9 @@ import java.util.List;
 
 import exceptions.CommandExecuteException;
 import logic.Game;
-import logic.WordChecker;
 import simulatedObjects.Tile;
 import utils.Pair;
+import wordCheckers.WordChecker;
 
 public interface Strategy {
 	

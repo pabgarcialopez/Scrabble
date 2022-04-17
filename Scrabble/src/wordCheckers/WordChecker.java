@@ -14,19 +14,29 @@ public class WordChecker {
 	
 	private Game game;
 	
-	WordChecker(Game game) {
+	public WordChecker(Game game) {
 		this.game = game;
 		checkers = new ArrayList<Checker>();
 		
-		CheckerWordExists checkerWordExists = new CheckerWordExists();
-		checkers.add(checkerWordExists);
+		WordExistsChecker wordExistsChecker = new WordExistsChecker();
+		checkers.add(wordExistsChecker);
 		
-		CheckerWordNotUsed checkerWordNotUsed = new CheckerWordNotUsed();
-		checkers.add(checkerWordNotUsed);
+		WordNotUsedChecker wordNotUsedChecker = new WordNotUsedChecker();
+		checkers.add(wordNotUsedChecker);
 		
-		checkers.add(new CheckerDirection());
+		checkers.add(new DirectionChecker());
 		
-		checkers.add(new CheckerNewFormedWords(checkerWordExists, checkerWordNotUsed));
+		checkers.add(new WordLengthChecker());
+		checkers.add(new PosInRangeChecker());
+		checkers.add(new WordUnionChecker());
+		
+		checkers.add(new WordInPosAndDirectionChecker());
+		checkers.add(new EnoughLettersChecker());
+		
+		checkers.add(new WordInCentreChecker());
+		checkers.add(new WordNextToOtherChecker());
+		
+		checkers.add(new NewFormedWordsChecker(wordExistsChecker, wordNotUsedChecker));
 	}
 	
 	public List<String> checkArguments(String word, int posX, int posY, String direction) throws CommandExecuteException {

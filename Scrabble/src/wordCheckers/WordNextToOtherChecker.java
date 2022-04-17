@@ -5,15 +5,13 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
-public class CheckerWordNextToOther implements Checker{
+public class WordNextToOtherChecker implements Checker{
 	
-		
-		
-/* Método checkWordNextToOther:
- * Comprueba que alguna de las casillas ocupadas por la palabra, 
- * sea colindante a otra palabra ya existente en el tablero.
- * En caso contrario, lanza una excepción.
- */
+	/* Método checkWordNextToOther:
+	 * Comprueba que alguna de las casillas ocupadas por la palabra, 
+	 * sea colindante a otra palabra ya existente en el tablero.
+	 * En caso contrario, lanza una excepción.
+	 */
 
 	@Override
 	public void check(Game game, String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded)
@@ -28,6 +26,5 @@ public class CheckerWordNextToOther implements Checker{
 
 			throw new CommandExecuteException("La palabra introducida debe cortarse con alguna de las que ya están en el tablero.");
 		}
-		
 	}
 }

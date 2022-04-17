@@ -8,7 +8,7 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
-public class CheckerNewFormedWords implements Checker {
+public class NewFormedWordsChecker implements Checker {
 	
 	/* Clase CheckerNewFormedWords:
 	 * Comprueba que las palabras extras (obtenidas mediante el método getWordFormed), 
@@ -16,10 +16,10 @@ public class CheckerNewFormedWords implements Checker {
 	 * En caso contrario, se lanza una excepción.
 	 */
 	
-	private CheckerWordExists checkerWordExists;
-	private CheckerWordNotUsed checkerWordNotUsed;
+	private WordExistsChecker checkerWordExists;
+	private WordNotUsedChecker checkerWordNotUsed;
 	
-	public CheckerNewFormedWords(CheckerWordExists checkerWordExists, CheckerWordNotUsed checkerWordNotUsed) {
+	public NewFormedWordsChecker(WordExistsChecker checkerWordExists, WordNotUsedChecker checkerWordNotUsed) {
 		this.checkerWordExists = checkerWordExists;
 		this.checkerWordNotUsed = checkerWordNotUsed;
 	}
@@ -34,8 +34,7 @@ public class CheckerNewFormedWords implements Checker {
 		
 		for(int i = 0; i < word.length(); i++) {
 			String newWord = getWordFormed(game, String.valueOf(word.charAt(i)), posX + i * vertical, posY + i * horizontal, horizontal, vertical);
-			if(newWord != null && newWord.length() != 1) {
-				
+			if(newWord != null && newWord.length() > 1) {
 				try {
 					this.checkerWordExists.check(game, newWord, posX, posY, direction, lettersNeeded);
 					this.checkerWordNotUsed.check(game, newWord, posX, posY, direction, lettersNeeded);
@@ -45,13 +44,13 @@ public class CheckerNewFormedWords implements Checker {
 					
 					newFormedWords.add(newWord);
 				}
+				
 				catch(CommandExecuteException cee) {
 					throw new CommandExecuteException("Se forma la palabra adicional " + "\"" + newWord.toUpperCase() + "\".%n" + cee.getMessage(), cee);
 				}
 			}
 		}
 	}
-	
 	
 	/* Método getWordFormed:
 	 * Para cada letra, se recorre vertical u horizontalmente (solo una de ellas)

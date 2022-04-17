@@ -5,7 +5,8 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
-public class CheckerEnoughLetters implements Checker {
+public class EnoughLettersChecker implements Checker {
+	
 	/* Clase checkEnoughLetters:
 	 * Dado el mapa de las letras necesitadas, se comprueba si el jugador tiene todas ellas.
 	 * En caso contrario, se lanza una excepción.
@@ -18,8 +19,5 @@ public class CheckerEnoughLetters implements Checker {
 					&& game.getPlayers().numberOfTilesOf(game.getCurrentTurn(), letter) < lettersNeeded.get(letter))
 				throw new CommandExecuteException("No tienes suficientes letras para colocar la palabra.");
 		}
-
-		
 	}
-
 }

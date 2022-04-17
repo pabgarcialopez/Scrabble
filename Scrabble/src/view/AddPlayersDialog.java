@@ -37,7 +37,7 @@ private static final long serialVersionUID = 1L;
 	
 	private DefaultComboBoxModel<Integer> numberOfPlayersModel;
 	private JComboBox<Integer> numberOfPlayersCombo;
-	private static final Integer[] numberOfPlayers = { 2, 3, 4};
+	private static final Integer[] numberOfPlayers = {2, 3, 4};
 	
 	private List<PlayerPanel> playerPanelList;	
 	
@@ -222,7 +222,7 @@ private static final long serialVersionUID = 1L;
 		
 		private DefaultComboBoxModel<String> strategiesModel;
 		private JComboBox<String> strategiesCombo;
-		private final String[] strategies = { "Humano", "Fácil", "Media", "Difícil" };
+		private final String[] strategies = { "Humana", "Fácil", "Media", "Difícil" };
 		
 		private JTextField nameField;
 		

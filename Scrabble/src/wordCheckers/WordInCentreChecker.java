@@ -5,7 +5,7 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
-public class CheckerWordInCentre implements Checker{
+public class WordInCentreChecker implements Checker{
 
 	/* Clase checkWordInCentre:
 	 * Comprueba si alguna de las posiciones ocupadas por la palabra es la del centro.

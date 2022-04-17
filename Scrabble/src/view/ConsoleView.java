@@ -18,7 +18,7 @@ import utils.StringUtils;
 public class ConsoleView implements ScrabbleObserver {
 	
 	// Para no estar creando un new Scanner(System.in) cada vez que compruebo.
-	private static final Scanner consoleInput = new Scanner(System.in);
+	public static boolean isInputFromConsole;
 	
 	private static final String PROMPT = "Comando ([h]elp) > ";
 	private static final String CENTRE_SYMBOL = "*";
@@ -39,6 +39,9 @@ public class ConsoleView implements ScrabbleObserver {
 	
 	public ConsoleView(Controller controller, InputStream in, OutputStream out) {
 		this.controller = controller;
+		
+		isInputFromConsole = (System.in == in);
+		
 		this.in = new Scanner(in);
 		this.out = new PrintStream(out);
 		this.controller.addObserver(this);
@@ -415,7 +418,7 @@ public class ConsoleView implements ScrabbleObserver {
 				command.execute(this.controller, in, out);
 				
 			} catch (CommandExecuteException e) {
-				this.out.println(e.getMessage());
+				this.out.print(e.getMessage() + StringUtils.LINE_SEPARATOR);
 			}
 	}
 	
@@ -428,7 +431,7 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		s = StringUtils.removeAccents(s);
 		
-		if(!this.in.equals(consoleInput))
+		if(!isInputFromConsole)
 			this.out.print(s + StringUtils.LINE_SEPARATOR);
 
 		String[] parameters = s.toLowerCase().trim().split(" ");

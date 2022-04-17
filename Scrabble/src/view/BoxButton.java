@@ -51,7 +51,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 		addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(box != null && box.getTile() == null && enableButton) {
+				if(box != null /*&& box.getTile() == null*/ && enableButton) {
 					int status = chooseWordDialog.open(posX, posY);
 					if(status == 1) {
 						String word = chooseWordDialog.getSelectedWord();

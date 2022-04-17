@@ -7,11 +7,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import logic.Game;
-import logic.WordChecker;
 import simulatedObjects.Player;
 import simulatedObjects.Tile;
 import strategies.Strategy;
 import utils.Pair;
+import wordCheckers.WordChecker;
 
 /* APUNTES GENERALES
 

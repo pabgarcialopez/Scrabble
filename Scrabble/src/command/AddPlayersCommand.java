@@ -11,11 +11,10 @@ import containers.GamePlayers;
 import scrabble.Controller;
 import storage.GameLoader;
 import utils.StringUtils;
+import view.ConsoleView;
 
 public class AddPlayersCommand extends Command {
 	
-	private static final Scanner consoleInput = new Scanner(System.in);
-
 	private static final String NAME = "jugadores";
 
 	private static final String DETAILS = "[j]ugadores";
@@ -56,10 +55,10 @@ public class AddPlayersCommand extends Command {
 			notTreatedStrategy = StringUtils.removeAccents(notTreatedStrategy);
 			String strategy = takeType(notTreatedStrategy);
 			
-			if(in != consoleInput)
+			if(!ConsoleView.isInputFromConsole)
 				out.print(notTreatedStrategy);
 			
-			out.print(StringUtils.LINE_SEPARATOR);
+			//out.print(StringUtils.LINE_SEPARATOR);
 
 			if(strategy != null) {
 				
@@ -74,15 +73,14 @@ public class AddPlayersCommand extends Command {
 					out.print("Nombre del jugador humano " + (players.length() + 1) + ": ");
 					String name = in.nextLine().trim();
 					
-					if(in != consoleInput)
+					if(!ConsoleView.isInputFromConsole)
 						out.print(name + StringUtils.LINE_SEPARATOR);
 					
 					if(checkPlayerNames(name, players)) {
 						player.put("name", name);
 						players.put(player);
 					}
-					else 
-						out.println("Ya hay un jugador con el nombre " + name);
+					else out.print("Ya hay un jugador con el nombre " + name + StringUtils.LINE_SEPARATOR);
 				}
 				else players.put(player);
 			}
@@ -104,16 +102,17 @@ public class AddPlayersCommand extends Command {
 			
 		int numPlayers = 0;
 		boolean done = false;
+		out.print(StringUtils.LINE_SEPARATOR);
 		out.print("Selecciona el número de jugadores (2-4): ");
 		
 		while (!done) {
 			try {
 				numPlayers = in.nextInt();
 				
-				if(in != consoleInput)
+				if(!ConsoleView.isInputFromConsole)
 					out.print(numPlayers);
 				
-				out.print(StringUtils.LINE_SEPARATOR);
+				//out.print(StringUtils.LINE_SEPARATOR);
 
 				if (numPlayers < 2 || numPlayers > 4) {
 					out.print("El número de jugadores debe estar entre 2 y 4.");
@@ -125,8 +124,10 @@ public class AddPlayersCommand extends Command {
 				
 			}
 			catch (InputMismatchException ime) {
-				out.print("[ERROR]");
-				out.print(StringUtils.LINE_SEPARATOR);
+				
+				if(!ConsoleView.isInputFromConsole)
+					out.print("[ERROR]" + StringUtils.LINE_SEPARATOR);
+				
 				out.print("¡La entrada debe ser un número!");
 				out.print(StringUtils.DOUBLE_LINE_SEPARATOR);
 				out.print("Selecciona el número de jugadores (2-4): ");

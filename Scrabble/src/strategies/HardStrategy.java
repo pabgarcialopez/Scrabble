@@ -3,8 +3,8 @@ package strategies;
 import java.util.List;
 
 import logic.Game;
-import logic.WordChecker;
 import simulatedObjects.Tile;
+import wordCheckers.WordChecker;
 
 public class HardStrategy implements Strategy {
 	

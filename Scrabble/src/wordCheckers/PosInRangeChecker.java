@@ -5,7 +5,7 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
-public class CheckerPosInRange implements Checker{
+public class PosInRangeChecker implements Checker{
 	
 	/* Clase checkPosInRange:
 	 * Comprueba que la posición de la palabra introducida se encuentre en el rango permitido.
@@ -19,5 +19,4 @@ public class CheckerPosInRange implements Checker{
 			throw new CommandExecuteException("La posición introducida se sale del tablero.");
 		
 	}
-
 }

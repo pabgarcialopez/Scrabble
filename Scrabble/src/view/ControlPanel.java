@@ -85,7 +85,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		});
 		
 		bar.add(newGameButton);
-		bar.addSeparator();
+		bar.add(Box.createRigidArea(new Dimension(5, 1)));
 		
 		JButton loadButton = new JButton();
 		loadButton.setActionCommand("load");
@@ -106,8 +106,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 			}
 		});
 		bar.add(loadButton);
-		
-		bar.addSeparator();
+		bar.add(Box.createRigidArea(new Dimension(5, 1)));
 		
 		JButton saveButton = new JButton();
 		saveButton.setActionCommand("save");
@@ -162,7 +161,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		bar.add(resetButton);
 		this.buttonsToBlockGameNotInitiated.add(resetButton);
 		
-		bar.addSeparator();
+		bar.add(Box.createRigidArea(new Dimension(5, 1)));
 		
 		JButton addPlayersButton = new JButton();
 		addPlayersButton.setActionCommand("player");
@@ -179,7 +178,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 			}
 		});
 		bar.add(addPlayersButton);
-		bar.addSeparator();
+		bar.add(Box.createRigidArea(new Dimension(5, 1)));
 		this.buttonsToBlockGameNotInitiated.add(addPlayersButton);
 		
 		changeStrategyButton = new JButton();
@@ -193,7 +192,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 			}
 		});
 		bar.add(changeStrategyButton);
-		bar.addSeparator();
+		bar.add(Box.createRigidArea(new Dimension(5, 1)));
 		this.buttonsToBlockGameNotInitiated.add(changeStrategyButton);
 		
 		JButton passButton = new JButton();
@@ -208,7 +207,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		});
 		
 		bar.add(passButton);
-		bar.addSeparator();
+		bar.add(Box.createRigidArea(new Dimension(5, 1)));
 		this.buttonsToBlockCPUTurn.add(passButton);
 		this.buttonsToBlockGameNotInitiated.add(passButton);
 		
@@ -226,7 +225,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		this.buttonsToBlockCPUTurn.add(swapButton);
 		this.buttonsToBlockGameNotInitiated.add(swapButton);
 		
-		bar.addSeparator();
+		bar.add(Box.createRigidArea(new Dimension(5, 1)));
 		
 		continueButton = new JButton();
 		continueButton.setActionCommand("continue");

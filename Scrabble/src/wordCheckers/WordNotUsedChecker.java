@@ -6,7 +6,7 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
-public class CheckerWordNotUsed implements Checker {
+public class WordNotUsedChecker implements Checker {
 
 	/* Clase CheckerWordNotUsed:
 	 * Realiza una búsqueda binaria de la palabra recibida como parámetro en la lista de palabras usadas (ordenada), 

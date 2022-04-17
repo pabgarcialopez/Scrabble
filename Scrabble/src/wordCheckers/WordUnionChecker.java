@@ -5,7 +5,7 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
-public class CheckerWordUnion implements Checker {
+public class WordUnionChecker implements Checker {
 	
 	/* Clase checkWordUnion:
 	 * En función de si la dirección es vertical u horizontal, comprueba que la palabra introducida coincida

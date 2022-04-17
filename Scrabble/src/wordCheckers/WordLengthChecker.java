@@ -5,7 +5,7 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
-public class CheckerWordLength implements Checker {
+public class WordLengthChecker implements Checker {
 	
 	/* Clase checkWordLength:
 	 * Comprueba que el tamaño de la palabra no sea mayor al tamaño del tablero, y que se haya

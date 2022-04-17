@@ -6,7 +6,7 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
-public class CheckerWordExists implements Checker {
+public class WordExistsChecker implements Checker {
 	
 	/* Clase CheckerWordExists:
 	 * Realiza una búsqueda binaria de la palabra recibida como parámetro en la lista de palabras válidas (ordenada), 

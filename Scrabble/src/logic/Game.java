@@ -22,6 +22,7 @@ import strategies.Strategy;
 import utils.Pair;
 import utils.StringUtils;
 import view.ScrabbleObserver;
+import wordCheckers.WordChecker;
 
 /* APUNTES GENERALES
 
@@ -493,6 +494,10 @@ public class Game {
 		decideFirstTurn();	
 	}
 	
+	
+	/* Método changeStrategies:
+	 * Delega en la clase GamePlayers la acción de cambio de estrategia.
+	 */
 	public void changeStrategies(List<Pair<Integer, Strategy>> is) {
 		this.players.changeStrategies(is);
 	}

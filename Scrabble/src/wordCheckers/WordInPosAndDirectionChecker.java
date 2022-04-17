@@ -5,7 +5,9 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
-public class CheckerWordInPosAndDirection implements Checker{
+public class WordInPosAndDirectionChecker implements Checker {
+	
+	
 	
 	@Override
 	public void check(Game game, String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded)
@@ -16,7 +18,6 @@ public class CheckerWordInPosAndDirection implements Checker{
 		
 		for (int i = 0; i < word.length(); ++i)
 			checkLetterInPos(game, String.valueOf(word.charAt(i)), posX + i * vertical, posY + i * horizontal, lettersNeeded);
-		
 	}
 	
 	/* Método checkLetterInPos:

@@ -141,16 +141,16 @@ public class Main {
 		
 		try {
 			
-			InputStream in = (inFile == null ? System.in : new FileInputStream(new File(inFile)));
-			OutputStream out = (outFile == null ? System.out : new FileOutputStream(new File(outFile)));
+			InputStream input = (inFile == null ? System.in : new FileInputStream(new File(inFile)));
+			OutputStream output = (outFile == null ? System.out : new FileOutputStream(new File(outFile)));
 			
 			
 			if(inFile == null && outFile != null) {
-				in = System.in;
-				out = System.out;
+				input = System.in;
+				output = System.out;
 			}
 			
-			new ConsoleView(controller, in, out);
+			new ConsoleView(controller, input, output);
 		}
 		
 		catch(FileNotFoundException fnfe) {

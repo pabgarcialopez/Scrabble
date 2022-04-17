@@ -7,9 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import logic.Game;
-import logic.WordChecker;
 import strategies.Strategy;
 import utils.StringUtils;
+import wordCheckers.WordChecker;
 
 /* APUNTES GENERALES:
    
