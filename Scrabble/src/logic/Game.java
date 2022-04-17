@@ -48,7 +48,7 @@ public class Game {
 	
 	// Para poder jugar partidas por fichero sin tener 
 	// que incluir saltos de línea en el fichero de entrada.
-	private static final boolean _pausePermitted = true;
+	private static final boolean _pausePermitted = false;
 	
 	private static boolean _gameInitiated;
 	private static boolean _wordsInBoard;

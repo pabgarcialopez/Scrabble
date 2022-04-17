@@ -54,7 +54,9 @@ public class ConsoleView implements ScrabbleObserver {
 	private void showFirstTurn(String[] lettersObtained, GamePlayers players, int turn) {
 		
 		StringBuilder buffer = new StringBuilder();
-		buffer.append("Elección de turnos:").append(StringUtils.LINE_SEPARATOR);
+		buffer.append(StringUtils.LINE_SEPARATOR)
+			  .append("Elección de turnos:")
+			  .append(StringUtils.LINE_SEPARATOR);
 		
 		for(int i = 0; i < players.getNumPlayers(); i++) {
 			buffer.append(players.getPlayerName(i)).append(" ha cogido una ")
@@ -257,13 +259,6 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onError(String error) {
-		this.out.println(error);
-		
-		controller.update();
-	}
-
-	@Override
 	public void onUpdate(Game game) {
 		
 		Command.gameInitiated(Game.getGameInitiated());
@@ -272,12 +267,21 @@ public class ConsoleView implements ScrabbleObserver {
 		if(Game.getGameInitiated() && game.getNumPlayers() != 0) {
 			if(!game.gameIsFinished()) {
 				showStatus(game);
+				executeCommand();
 				controller.playTurn();
 			}
 		}
+		
 		else {
 			executeCommand();
 		}
+		
+		controller.update();
+	}
+	
+	@Override
+	public void onError(String error) {
+		this.out.println(error);
 		
 		controller.update();
 	}
