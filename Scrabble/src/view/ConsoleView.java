@@ -202,9 +202,7 @@ public class ConsoleView implements ScrabbleObserver {
 	@Override
 	public void onPassed(Game game) {
 		this.out.println(String.format("El jugador %s pasa de turno.%n", game.getPlayers().getPlayerName(game.getCurrentTurn())));
-
 		pausa();
-		
 		showBoard(game);
 	}
 
@@ -213,7 +211,6 @@ public class ConsoleView implements ScrabbleObserver {
 		this.out.println(String.format("El jugador %s intercambia una ficha.%n", game.getPlayers().getPlayerName(game.getCurrentTurn())));
 	
 		pausa();
-		
 		showBoard(game);
 	}
 
@@ -267,7 +264,6 @@ public class ConsoleView implements ScrabbleObserver {
 		if(Game.getGameInitiated() && game.getNumPlayers() != 0) {
 			if(!game.gameIsFinished()) {
 				showStatus(game);
-				executeCommand();
 				controller.playTurn();
 			}
 		}
