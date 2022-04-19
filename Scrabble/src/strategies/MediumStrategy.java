@@ -27,12 +27,10 @@ public class MediumStrategy implements Strategy {
 		
 		if(!wordWritten) {
 			
-			if(Game.getRandom().nextDouble() > 0.5) {
-				if(!game.swapTile())
-					game.passTurn();
-			}
-			
-			else game.passTurn();
+			if(Game.getRandom().nextDouble() > 0.5 && game.getRemainingTiles() > 0)
+				game.swapTile();
+			else 
+				game.passTurn();
 		}
 	}
 	

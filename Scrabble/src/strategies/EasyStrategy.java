@@ -20,12 +20,10 @@ public class EasyStrategy implements Strategy {
 		if(!wordWritten) {
 			
 			// 25% probabilidad de pasar turno.
-			if(Game.getRandom().nextDouble() > 0.25) {
-				if(!game.swapTile())
-					game.passTurn();
-			}
-
-			else game.passTurn();
+			if(Game.getRandom().nextDouble() > 0.25 && game.getRemainingTiles() > 0)
+				game.swapTile();
+			else 
+				game.passTurn();
 		}
 		
 	}

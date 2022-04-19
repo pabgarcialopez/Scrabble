@@ -16,8 +16,13 @@ public class HardStrategy implements Strategy {
 		for(int wordLength = tilesForWord.size() + extraTile; wordLength > 1 && !wordWritten; --wordLength)
 			wordWritten = tryWritingInBoard(wordLength, tilesForWord, game, wordChecker);
 		
-		if(!wordWritten && !game.swapTile()) 
-			game.passTurn();
+		if(!wordWritten) {
+			
+			if(game.getRemainingTiles() > 0)
+				game.swapTile();
+			else 
+				game.passTurn();
+		}
 	}
 	
 	@Override
