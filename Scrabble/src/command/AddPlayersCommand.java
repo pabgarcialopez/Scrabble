@@ -58,8 +58,6 @@ public class AddPlayersCommand extends Command {
 			if(!ConsoleView.isInputFromConsole)
 				out.print(notTreatedStrategy);
 			
-			//out.print(StringUtils.LINE_SEPARATOR);
-
 			if(strategy != null) {
 				
 				JSONObject strategyJO = new JSONObject();
@@ -112,8 +110,6 @@ public class AddPlayersCommand extends Command {
 				if(!ConsoleView.isInputFromConsole)
 					out.print(numPlayers);
 				
-				//out.print(StringUtils.LINE_SEPARATOR);
-
 				if (numPlayers < 2 || numPlayers > 4) {
 					out.print("El número de jugadores debe estar entre 2 y 4.");
 					out.print(StringUtils.DOUBLE_LINE_SEPARATOR);

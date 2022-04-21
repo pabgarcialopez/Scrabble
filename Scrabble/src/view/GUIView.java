@@ -23,7 +23,6 @@ public class GUIView extends JFrame {
 	
 	private void initGUI() {
 		
-		//this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setSize(new Dimension(1130, 1000));
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
@@ -41,29 +40,10 @@ public class GUIView extends JFrame {
 		boardPanel.add(new BoardPanel(this.controller), BorderLayout.CENTER);
 		boardPanel.add(new InfoPanel(this.controller, this), BorderLayout.NORTH);
 		
-		JPanel player0 = new JPanel();
-		player0.add(new PlayerPanel(this.controller, 0));
-		player0.setPreferredSize(new Dimension(1130, 100));
-		player0.setAlignmentY(CENTER_ALIGNMENT);
-		player0.setAlignmentX(CENTER_ALIGNMENT);
-		
-		JPanel player1 = new JPanel();
-		player1.add(new PlayerPanel(this.controller, 1));
-		player1.setPreferredSize(new Dimension(200, 960));
-		player1.setAlignmentY(CENTER_ALIGNMENT);
-		player1.setAlignmentX(CENTER_ALIGNMENT);
-		
-		JPanel player2 = new JPanel();
-		player2.add(new PlayerPanel(this.controller, 2));
-		player2.setPreferredSize(new Dimension(1130, 100));
-		player2.setAlignmentY(CENTER_ALIGNMENT);
-		player2.setAlignmentX(CENTER_ALIGNMENT);
-		
-		JPanel player3 = new JPanel();
-		player3.add(new PlayerPanel(this.controller, 3));
-		player3.setPreferredSize(new Dimension(200, 960));
-		player3.setAlignmentY(CENTER_ALIGNMENT);
-		player3.setAlignmentX(CENTER_ALIGNMENT);
+		JPanel player0 = createPlayerPanel(new Dimension(1130, 100), 0);
+		JPanel player1 = createPlayerPanel(new Dimension(200, 960), 1);
+		JPanel player2 = createPlayerPanel(new Dimension(1130, 100), 2);
+		JPanel player3 = createPlayerPanel(new Dimension(200, 960), 3);
 		
 		centerPanel.add(player0, BorderLayout.SOUTH);
 		centerPanel.add(player1, BorderLayout.EAST);
@@ -73,5 +53,17 @@ public class GUIView extends JFrame {
 		setContentPane(mainPanel);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setVisible(true);
+	}
+	
+	JPanel createPlayerPanel(Dimension d, int player_number) {
+		
+		JPanel player = new JPanel();
+		
+		player.add(new PlayerPanel(this.controller, player_number));
+		player.setPreferredSize(d);
+		player.setAlignmentY(CENTER_ALIGNMENT);
+		player.setAlignmentX(CENTER_ALIGNMENT);
+		
+		return player;
 	}
 }

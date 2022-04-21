@@ -38,21 +38,16 @@ class MainTest {
 	@Test
 	void test_1() {
 		assertTrue(run("resources/tests/inputs/ex1.json", "resources/tests/outputs/ex1.junit.out.json", "resources/tests/expectedOutputs/ex1.expout.json", "console"));
-
 	}
 
 	@Test
 	void test_2() {
 		assertTrue(run("resources/tests/inputs/ex2.json", "resources/tests/outputs/ex2.junit.out.json", "resources/tests/expectedOutputs/ex2.expout.json", "console"));
-				
-
 	}
 
 	@Test
 	void test_3() {
 		assertTrue(run("resources/tests/inputs/ex3.json", "resources/tests/outputs/ex3.junit.out.json", "resources/tests/expectedOutputs/ex3.expout.json", "console"));
-				
-
 	}
 
 }

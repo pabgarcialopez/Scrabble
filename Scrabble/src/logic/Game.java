@@ -417,6 +417,66 @@ public class Game {
 			o.onUpdate(this);
 	}
 	
+	/* Método getNewFormedWords:
+	 * Este método añade al array de palabras colocadas en el tablero
+	 * toda palabra que se haya podido formar al colocar otra.
+	 * Para cada letra de la palabra, dependiendo de si se colocó
+	 * vertical u horizontalmente, se recorren sus posiciones perpendiculares
+	 * para ver si efectivamente se ha formado alguna palabra nueva.
+	 */
+	
+	private List<String> getNewFormedWords(String word, int posX, int posY, String direction) {
+		
+		int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
+		int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
+		
+		List<String> newFormedWords = new ArrayList<String>();
+		
+		for(int i = 0; i < word.length(); i++) {
+			String newWord = getWordFormed(String.valueOf(word.charAt(i)), posX + i * vertical, posY + i * horizontal, horizontal, vertical);
+			if(newWord != null && newWord.length() != 1) {
+				newFormedWords.add(newWord);
+			}
+		}
+		
+		return newFormedWords;
+	}
+	
+	/* Método getWordFormed:
+	 * Dependiendo de la orientación (vertical u horizontal; vertical = 1
+	 * significa que esta es la dirección tomada y análogamente con horizontal),
+	 * devuelve la palabra formada por la letra recibida por parámetro
+	 * en las posiciones especificadas también por parámetro.
+	 */
+	
+	private String getWordFormed(String letter, int posX, int posY, int vertical, int horizontal) {
+		
+		if(this.board.getTile(posX, posY) != null)
+			return null;
+		
+		int auxPosX = posX - vertical;
+		int auxPosY = posY - horizontal;
+		
+		String word = letter;
+		
+		while(auxPosX >= 0 && auxPosY >= 0 && this.board.getTile(auxPosX, auxPosY) != null) {
+			word = this.board.getTile(auxPosX, auxPosY).getLetter() + word;
+			auxPosX -= vertical;
+			auxPosY -= horizontal;
+		}
+		
+		auxPosX = posX + vertical;
+		auxPosY = posY + horizontal;
+		
+		while(auxPosX < this.getBoardSize() && auxPosY < this.getBoardSize() && this.board.getTile(auxPosX, auxPosY) != null) {
+			word += this.board.getTile(auxPosX, auxPosY).getLetter();
+			auxPosX += vertical;
+			auxPosY += horizontal;
+		}
+		
+		return word;
+	}
+	
 	/* Método getWinnerGame:
 	 * 
 	 * Devuelve un mensaje detallando quién o quiénes han ganado la partida.
@@ -663,50 +723,5 @@ public class Game {
 		jo.put("seed", _seed);
 
 		return jo;
-	}
-	
-	private List<String> getNewFormedWords(String word, int posX, int posY, String direction) {
-		
-		int vertical = ("V".equalsIgnoreCase(direction) ? 1 : 0);
-		int horizontal = ("H".equalsIgnoreCase(direction) ? 1 : 0);
-		
-		List<String> newFormedWords = new ArrayList<String>();
-		
-		for(int i = 0; i < word.length(); i++) {
-			String newWord = getWordFormed(String.valueOf(word.charAt(i)), posX + i * vertical, posY + i * horizontal, horizontal, vertical);
-			if(newWord != null && newWord.length() != 1) {
-				newFormedWords.add(newWord);
-			}
-		}
-		
-		return newFormedWords;
-	}
-	
-	private String getWordFormed(String letter, int posX, int posY, int vertical, int horizontal) {
-		
-		if(this.board.getTile(posX, posY) != null)
-			return null;
-		
-		int auxPosX = posX - vertical;
-		int auxPosY = posY - horizontal;
-		
-		String word = letter;
-		
-		while(auxPosX >= 0 && auxPosY >= 0 && this.board.getTile(auxPosX, auxPosY) != null) {
-			word = this.board.getTile(auxPosX, auxPosY).getLetter() + word;
-			auxPosX -= vertical;
-			auxPosY -= horizontal;
-		}
-		
-		auxPosX = posX + vertical;
-		auxPosY = posY + horizontal;
-		
-		while(auxPosX < this.getBoardSize() && auxPosY < this.getBoardSize() && this.board.getTile(auxPosX, auxPosY) != null) {
-			word += this.board.getTile(auxPosX, auxPosY).getLetter();
-			auxPosX += vertical;
-			auxPosY += horizontal;
-		}
-		
-		return word;
 	}
 }
