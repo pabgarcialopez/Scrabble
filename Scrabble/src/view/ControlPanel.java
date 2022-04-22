@@ -259,7 +259,8 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE, null, options, null);
 				
-				if(n == 1) System.exit(0);
+				if(n == 1) 
+					System.exit(0);
 			}
 		});
 		exitButton.setIcon(new ImageIcon("resources/icons/control_panel/exit.png"));

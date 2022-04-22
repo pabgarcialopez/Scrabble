@@ -14,10 +14,13 @@ import containers.Board;
 import containers.GamePlayers;
 import containers.GameTiles;
 import exceptions.CommandExecuteException;
+import scrabble.Main;
+import scrabbleTests.MainTest;
 import simulatedObjects.Box;
 import simulatedObjects.Player;
 import simulatedObjects.Tile;
 import storage.GameLoader;
+import storage.GameSaver;
 import utils.StringUtils;
 import view.ScrabbleObserver;
 import wordCheckers.WordChecker;
@@ -47,6 +50,7 @@ public class Game {
 	// Para poder jugar partidas por fichero sin tener 
 	// que incluir saltos de línea en el fichero de entrada.
 	private static final boolean _pausePermitted = false;
+	private static final boolean _testMode = true;
 	
 	private static boolean _gameInitiated;
 	private static boolean _wordsInBoard;
@@ -173,7 +177,7 @@ public class Game {
 		
 		List<String> wordsToAdd = getNewFormedWords(word, posX, posY, direction);
 		
-		wordsToAdd.add(word);
+		wordsToAdd.add(StringUtils.removeAccents(word.toLowerCase()));
 		
 		addUsedWords(wordsToAdd);
 		
@@ -256,13 +260,6 @@ public class Game {
 	 */
 	private void nextTurn() {
 		this.currentTurn = (this.currentTurn + 1) % this.getNumPlayers();
-	}
-
-	/* Método automaticPlay:
-	 * Delega en GamePlayers el juego de jugadores automáticos.
-	 */
-	public void automaticPlay() {
-		this.players.automaticPlay(this.currentTurn, this, wordChecker);
 	}
 
 	/* Método swapTile:
@@ -409,8 +406,21 @@ public class Game {
 		}
 		
 		if(gameIsFinished()) {
-			for(ScrabbleObserver o : this.observers)
-				o.onEnd(gameFinishedCause + getWinnerName());
+			
+			if(Game.isTestMode()) {
+				try {
+					GameSaver.saveGame(this, Main.getOutFileName());
+					MainTest.compareOutputs();
+				} catch (FileNotFoundException | IllegalArgumentException | JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			else {
+				for(ScrabbleObserver o : this.observers)
+					o.onEnd(gameFinishedCause + getWinnerName());
+			}
+				
 		}
 		
 		for(ScrabbleObserver o : this.observers)
@@ -435,7 +445,7 @@ public class Game {
 		for(int i = 0; i < word.length(); i++) {
 			String newWord = getWordFormed(String.valueOf(word.charAt(i)), posX + i * vertical, posY + i * horizontal, horizontal, vertical);
 			if(newWord != null && newWord.length() != 1) {
-				newFormedWords.add(newWord);
+				newFormedWords.add(StringUtils.removeAccents(newWord.toLowerCase()));
 			}
 		}
 		
@@ -651,6 +661,10 @@ public class Game {
 	
 	public static boolean isPausePermitted() {
 		return _pausePermitted;
+	}
+	
+	public static boolean isTestMode() {
+		return _testMode;
 	}
 	
 	public static int getSeed() {

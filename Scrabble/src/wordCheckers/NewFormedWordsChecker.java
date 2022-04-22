@@ -7,6 +7,7 @@ import java.util.Map;
 
 import exceptions.CommandExecuteException;
 import logic.Game;
+import utils.StringUtils;
 
 public class NewFormedWordsChecker implements Checker {
 	
@@ -39,7 +40,7 @@ public class NewFormedWordsChecker implements Checker {
 					this.checkerWordExists.check(game, newWord, posX, posY, direction, lettersNeeded);
 					this.checkerWordNotUsed.check(game, newWord, posX, posY, direction, lettersNeeded);
 					
-					if(Collections.binarySearch(newFormedWords, newWord) > 0)
+					if(Collections.binarySearch(newFormedWords, StringUtils.removeAccents(newWord.toLowerCase())) > 0)
 						throw new CommandExecuteException("La palabra " + "\"" + newWord.toUpperCase() + "\" ya se encuentra en el tablero.");
 					
 					newFormedWords.add(newWord);

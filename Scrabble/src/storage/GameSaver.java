@@ -27,7 +27,10 @@ public class GameSaver {
 		if (("resources/existingGames/" + file).equals(GameLoader.NEW_GAME))
 			throw new IllegalArgumentException("No se puede sobrescribir el fichero de nueva partida.");
 		
-		OutputStream out = new FileOutputStream("resources/existingGames/" + file);
+		OutputStream out;
+		if(!Game.isTestMode())
+			out = new FileOutputStream("resources/existingGames/" + file);
+		else out = new FileOutputStream(file);
 		
 		@SuppressWarnings("resource")
 		PrintStream p = new PrintStream(out);

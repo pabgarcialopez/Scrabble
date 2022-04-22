@@ -144,7 +144,6 @@ public class Main {
 			InputStream input = (inFile == null ? System.in : new FileInputStream(new File(inFile)));
 			OutputStream output = (outFile == null ? System.out : new FileOutputStream(new File(outFile)));
 			
-			
 			if(inFile == null && outFile != null) {
 				input = System.in;
 				output = System.out;
@@ -196,5 +195,9 @@ public class Main {
 			System.err.print(e.getMessage());
 		}
 
+	}
+	
+	public static String getOutFileName() {
+		return outFile;
 	}
 }

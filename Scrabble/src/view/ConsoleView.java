@@ -35,8 +35,6 @@ public class ConsoleView implements ScrabbleObserver {
 	
 	private PrintStream out;
 	
-	//private boolean humanIsPlaying;
-	
 	public ConsoleView(Controller controller, InputStream in, OutputStream out) {
 		this.controller = controller;
 		
@@ -176,9 +174,9 @@ public class ConsoleView implements ScrabbleObserver {
 		this.out.print(StringUtils.LINE_SEPARATOR);
 	}
 
-	public void showEndMessage(String winners) {
+	public void showEndMessage(String message) {
 		this.out.print(StringUtils.LINE_SEPARATOR);
-		this.out.println(winners);
+		this.out.println(message);
 		this.out.println("¡Gracias por jugar!");
 	}
 
@@ -285,6 +283,7 @@ public class ConsoleView implements ScrabbleObserver {
 	@Override
 	public void onEnd(String message) {
 		showEndMessage(message);
+		
 		System.exit(0);
 	}
 	
@@ -308,106 +307,6 @@ public class ConsoleView implements ScrabbleObserver {
 		}
 		
 	}
-
-	/*
-	private void initGame() throws FileNotFoundException {
-		
-		this.out.println("¡Bienvenido a Scrabble!" + StringUtils.LINE_SEPARATOR);
-
-		this.out.println("Opciones de inicio:");
-		this.out.println("1. Nueva partida.");
-		this.out.println("2. Cargar partida de fichero.");
-		
-		int option = 0;
-		
-		while(option != 1 && option != 2) {
-			
-			try {
-				this.out.print(StringUtils.LINE_SEPARATOR);
-				this.out.print("Selecciona opción: ");
-				option = this.in.nextInt();
-				
-				if(this.in != consoleInput)
-					this.out.print(option);
-				
-				this.out.print(StringUtils.LINE_SEPARATOR);
-
-				
-				if(option != 1 && option != 2)
-					this.out.println("Opción no válida.");
-			}
-			
-			catch(InputMismatchException ime) {
-				this.out.print("[ERROR]" + StringUtils.LINE_SEPARATOR);
-				this.in.nextLine();
-				this.out.println("¡La entrada debe ser un número!");
-			}
-		}
-		
-		this.in.nextLine();
-		
-		this.out.print(StringUtils.LINE_SEPARATOR);
-		
-		// Nueva partida
-		if(option == 1)
-			this.controller.newGame();
-		
-		else {
-			
-			File dir = new File("resources/existingGames");
-			File[] files = dir.listFiles();
-			
-			if(files.length != 0) {
-				this.out.print("Las partidas disponibles son:" + StringUtils.LINE_SEPARATOR);
-				
-				for(File file: files) {
-					String fileName = file.getName();
-					this.out.println("|--> " + fileName);
-				}
-				
-				this.out.print(StringUtils.LINE_SEPARATOR);
-				this.out.print("Introduce el nombre de la partida a cargar: ");
-				
-				String file = this.in.nextLine().trim();
-				
-				if(this.in != consoleInput)
-					this.out.print(file + StringUtils.LINE_SEPARATOR);
-				
-				file = StringUtils.removeAccents(file);
-				
-				if(!file.endsWith(".json"))
-					file += ".json";
-				
-				while(!(new File("resources/existingGames/" + file)).exists()) {
-					this.out.print(StringUtils.LINE_SEPARATOR);
-					this.out.println("No existe una partida con el nombre " + "\"" + file + "\"");
-					
-					this.out.print("Introduce el nombre de la partida a cargar: ");
-					
-					file = this.in.nextLine();
-					
-					if(this.in != consoleInput)
-						this.out.print(file + StringUtils.LINE_SEPARATOR);
-					
-					file = StringUtils.removeAccents(file);
-					
-					if(!file.endsWith(".json"))
-						file += ".json";
-				}
-				
-				this.out.print(StringUtils.LINE_SEPARATOR);
-				
-				this.controller.loadGame("resources/existingGames/" + file);
-			}
-			
-			else {
-				this.out.print(StringUtils.LINE_SEPARATOR);
-				this.out.print("No existen partidas anteriores.");
-				this.out.print(StringUtils.LINE_SEPARATOR);
-			}
-		}
-	}
-	*/
 	
 	private void executeCommand() {
 		
