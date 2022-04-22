@@ -92,13 +92,16 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	@Override
 	public void onReset(Game game) {
 		if (Game.getGameInitiated() && game.getNumPlayers() != 0) {
-			infoLabel.setText("Nueva partida iniciada");
+			infoLabel.setText("Partida iniciada");
 			this.currentTurnName = game.getPlayers().getPlayerName(game.getCurrentTurn());
 			currentTurnLabel.setText("Turno de: " + this.currentTurnName);
 			remainingTilesLabel.setText("Fichas restantes: " + game.getRemainingTiles());
 			pointsLabel.setText("");
 		}
+		
 		else if(Game.getGameInitiated()) {
+			currentTurnLabel.setText("");
+			remainingTilesLabel.setText("Fichas restantes: " + game.getRemainingTiles());
 			infoLabel.setText("Nueva partida iniciada, pero... ¡hay que añadir jugadores!");
 		}
 	}
@@ -159,6 +162,6 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	
 	@Override
 	public void onMovementNeeded() {
-		this.infoLabel.setText("Elige tu siguiente movimienro");
+		this.infoLabel.setText("Elige tu siguiente movimiento");
 	}
 }

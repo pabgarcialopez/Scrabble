@@ -18,8 +18,6 @@ import simulatedObjects.Box;
 import simulatedObjects.Player;
 import simulatedObjects.Tile;
 import storage.GameLoader;
-import strategies.Strategy;
-import utils.Pair;
 import utils.StringUtils;
 import view.ScrabbleObserver;
 import wordCheckers.WordChecker;
@@ -118,8 +116,10 @@ public class Game {
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
 		
 		if(players.getNumPlayers() != 0) {
-			addOrChangePlayers(players);
+			addPlayers(players);
 		}
+		
+		else this.players = players;
 		
 		_wordsInBoard = wordsInBoard;
 		this.gameFinished = gameFinished;
@@ -538,28 +538,38 @@ public class Game {
 		words = GameLoader.loadWordList();
 	}
 	
-	/* Método addPlayers:]
-	 * Este método inicializa el container GamePlayers al recibido por parámetro.
+	/* Método changePlayers:
+	 * Este método actualiza el container GamePlayers al recibido por parámetro.
 	 * Además, completa las fichas que a los jugadores les pueda faltar (método initPlayerTiles) (caso de nueva partida).
 	 * Por último, si es necesario (nueva partida), se establece el orden de juego (método decideFirstTurn).
 	 */
-	public void addOrChangePlayers(GamePlayers players) {
+	public void changePlayers(GamePlayers players) {
 
 		for(int i = 0; i < this.getNumPlayers(); ++i) {
 			this.tiles.addAll(this.players.getTiles(i));
 		}
+		
+		addPlayers(players);
+	}
+	
+	/* Método addPlayers:
+	 * Este método inicializa el container GamePlayers al recibido por parámetro.
+	 * Además, completa las fichas que a los jugadores les pueda faltar (método initPlayerTiles) (caso de nueva partida).
+	 * Por último, si es necesario (nueva partida), se establece el orden de juego (método decideFirstTurn).
+	 */
+	public void addPlayers(GamePlayers players) {
 		
 		this.players = players;
 		initPlayerTiles();
 		decideFirstTurn();	
 	}
 	
-	
-	/* Método changeStrategies:
-	 * Delega en la clase GamePlayers la acción de cambio de estrategia.
-	 */
-	public void changeStrategies(List<Pair<Integer, Strategy>> is) {
-		this.players.changeStrategies(is);
+	public void addOrChangePlayers(GamePlayers players) {
+		
+		if(this.getNumPlayers() != 0)
+			changePlayers(players);
+		
+		else addPlayers(players);
 	}
 	
 	/* Método initPlayerTiles:

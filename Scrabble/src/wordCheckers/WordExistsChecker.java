@@ -16,7 +16,10 @@ public class WordExistsChecker implements Checker {
 	@Override
 	public void check(Game game, String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded)
 			throws CommandExecuteException {
-		if(Collections.binarySearch(game.getWordsList(), word.toLowerCase()) < 0)
-			throw new CommandExecuteException("La palabra " + "\"" + word.toUpperCase() + "\" no existe.");
+		if(Collections.binarySearch(game.getWordsList(), word.toLowerCase()) < 0) {
+			String message = (word.length() == 0 ? "¡No has escrito ninguna palabra!" : "La palabra " + "\"" + word.toUpperCase() + "\" no existe.");
+			throw new CommandExecuteException(message);
+
+		}
 	}
 }

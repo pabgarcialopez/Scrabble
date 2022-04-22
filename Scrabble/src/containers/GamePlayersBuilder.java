@@ -37,7 +37,7 @@ public class GamePlayersBuilder {
 		for(int i = 0; i < jsonArrayPlayers.length(); i++) {
 			
 			Player playerToAdd = null;
-			playerToAdd = playerBuilder.createPlayer(jsonArrayPlayers.getJSONObject(i));
+			playerToAdd = playerBuilder.createPlayer(jsonArrayPlayers.getJSONObject(i), i);
 			
 			if(playerToAdd != null)
 				players.add(playerToAdd);

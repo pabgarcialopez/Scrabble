@@ -35,8 +35,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	
 	private JButton continueButton;
 	
-	private JButton changeStrategyButton;
-	
 	private AddPlayersDialog addPlayersDialog;
 	
 	private JFileChooser fc;
@@ -68,7 +66,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		this.bar.setPreferredSize(new Dimension(1100, 50));
 		
 		JButton newGameButton = new JButton();
-		newGameButton.setActionCommand("newGame");
 		newGameButton.setToolTipText("Iniciar una partida nueva");
 		newGameButton.setIcon(new ImageIcon("resources/icons/control_panel/new_game.png"));
 		newGameButton.addActionListener(new ActionListener() {
@@ -88,7 +85,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		bar.add(Box.createRigidArea(new Dimension(5, 1)));
 		
 		JButton loadButton = new JButton();
-		loadButton.setActionCommand("load");
 		loadButton.setToolTipText("Cargar una partida de fichero");
 		loadButton.setIcon(new ImageIcon("resources/icons/control_panel/open.png"));
 		loadButton.addActionListener(new ActionListener() {
@@ -109,7 +105,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		bar.add(Box.createRigidArea(new Dimension(5, 1)));
 		
 		JButton saveButton = new JButton();
-		saveButton.setActionCommand("save");
 		saveButton.setToolTipText("Guardar la partida actual en un fichero");
 		saveButton.setIcon(new ImageIcon("resources/icons/control_panel/save.png"));
 		saveButton.addActionListener(new ActionListener() {
@@ -133,7 +128,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		bar.addSeparator();
 		
 		JButton resetButton = new JButton();
-		resetButton.setActionCommand("reset");
 		resetButton.setToolTipText("Resetear el juego");
 		resetButton.setIcon(new ImageIcon("resources/icons/control_panel/reset.png"));
 		resetButton.addActionListener(new ActionListener() {
@@ -164,7 +158,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		bar.add(Box.createRigidArea(new Dimension(5, 1)));
 		
 		JButton addPlayersButton = new JButton();
-		addPlayersButton.setActionCommand("player");
 		addPlayersButton.setToolTipText("Añadir o cambiar jugadores a la partida");
 		addPlayersButton.setIcon(new ImageIcon("resources/icons/control_panel/player.png"));
 		addPlayersButton.addActionListener(new ActionListener() {
@@ -172,7 +165,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 			public void actionPerformed(ActionEvent e) {
 				int status = addPlayersDialog.open();
 				if(status == 1) {
-					controller.addPlayers(addPlayersDialog.createPlayers());
+					controller.addOrChangePlayers(addPlayersDialog.createPlayers());
 					controller.update();
 				}
 			}
@@ -181,22 +174,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		bar.add(Box.createRigidArea(new Dimension(5, 1)));
 		this.buttonsToBlockGameNotInitiated.add(addPlayersButton);
 		
-		changeStrategyButton = new JButton();
-		changeStrategyButton.setActionCommand("strategy");
-		changeStrategyButton.setToolTipText("Cambiar las estrategias actuales de los jugadores");
-		changeStrategyButton.setIcon(new ImageIcon("resources/icons/control_panel/strategy.png"));
-		changeStrategyButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//TODO
-			}
-		});
-		bar.add(changeStrategyButton);
-		bar.add(Box.createRigidArea(new Dimension(5, 1)));
-		this.buttonsToBlockGameNotInitiated.add(changeStrategyButton);
-		
 		JButton passButton = new JButton();
-		passButton.setActionCommand("pass");
 		passButton.setToolTipText("Pasar de turno");
 		passButton.setIcon(new ImageIcon("resources/icons/control_panel/pass.png"));
 		passButton.addActionListener(new ActionListener() {
@@ -212,7 +190,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		this.buttonsToBlockGameNotInitiated.add(passButton);
 		
 		JButton swapButton = new JButton();
-		swapButton.setActionCommand("swap");
 		swapButton.setToolTipText("Intercambiar una ficha por otra aleatoriamente");
 		swapButton.addActionListener(new ActionListener() {
 			@Override
@@ -228,7 +205,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		bar.add(Box.createRigidArea(new Dimension(5, 1)));
 		
 		continueButton = new JButton();
-		continueButton.setActionCommand("continue");
 		continueButton.setToolTipText("Continuar el juego");
 		continueButton.setIcon(new ImageIcon("resources/icons/control_panel/continue.png"));
 		continueButton.addActionListener(new ActionListener() {
@@ -249,16 +225,23 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		bar.add(Box.createGlue());
 		
 		JButton helpButton = new JButton();
-		helpButton.setActionCommand("help");
 		helpButton.setToolTipText("Ayuda sobre cómo jugar");
 		helpButton.setIcon(new ImageIcon("resources/icons/control_panel/info.png"));
 		helpButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String help = String.format("• Colocar palabra: hacer click en la casilla "
-						+ "donde quieres que empiece y escribir la palabra y la dirección.%n"
-						+ "• Pasar de turno: pulsar el botón situado en quinta posición desde la izquierda.%n"
-						+ "• Para intercambiar una ficha se debe pulsar el botón situado en sexta posición desde la izquierda.");
+						+ "donde se quiere que empiece y escribir la palabra y su dirección.%n"
+						+ "• Nueva partida: pulsar el botón situado en primera posición desde la izquierda.%n"
+						+ "• Cargar partida: pulsar el botón situado en segunda posición desde la izquierda.%n"
+						+ "• Guardar partida: pulsar el botón situado en tercera posición desde la izquierda.%n"
+						+ "• Resetar partida: pulsar el botón situado en cuarta posición desde la izquierda.%n"
+						+ "• Añadir o cambiar jugadores: pulsar el botón situado en quinta posición desde la izquierda.%n"
+						+ "• Pasar de turno: pulsar el botón situado en sexta posición desde la izquierda.%n"
+						+ "• Intercambiar una ficha: pulsar el botón situado en séptima posición desde la izquierda.%n"
+						+ "• Continuar ejecución: pulsar el botón situado en octava posición desde la izquierda%n"
+						+ "• Salir del juego: pulsar el botón situado en la primera posición desde la derecha.");
+				
 				JOptionPane.showMessageDialog(ControlPanel.this, help, "AYUDA", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
@@ -266,14 +249,13 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		bar.addSeparator();
 		
 		JButton exitButton = new JButton();
-		exitButton.setActionCommand("exit");
-		exitButton.setToolTipText("Exit from the simulator");
+		exitButton.setToolTipText("Salir del juego");
 		exitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String[] options = {"No", "Sí"};
 				int n = JOptionPane.showOptionDialog(ControlPanel.this,
-						"¿Estás seguro que quieres salir?", "Salir",
+						"¿Estás seguro de que quieres salir?", "Salir",
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE, null, options, null);
 				
@@ -343,7 +325,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		enableButtons(this.buttonsToBlockCPUTurn, false);
 		
 		this.continueButton.setEnabled(Game.getGameInitiated() && game.getNumPlayers() != 0);
-		
-		this.changeStrategyButton.setEnabled(Game.getGameInitiated() && game.getNumPlayers() != 0);
+			
 	}
 }

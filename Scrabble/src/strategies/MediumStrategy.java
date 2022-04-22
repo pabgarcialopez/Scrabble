@@ -8,7 +8,7 @@ import simulatedObjects.Tile;
 import wordCheckers.WordChecker;
 
 public class MediumStrategy implements Strategy {
-
+	
 	@Override
 	public void play(Game game, WordChecker wordChecker, List<Tile> tilesForWord) {
 		boolean wordWritten = false;

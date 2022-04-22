@@ -121,7 +121,7 @@ private static final long serialVersionUID = 1L;
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(!checkPlayersChosen()) {
-					String help = String.format("Los valores escogidos no son válidos.%nEl nombre solo es necesario para jugadores humanos y estos nombres no se pueden repetir.");
+					String help = String.format("Posibles causas:%nUn humano debe tener nombre.%nNingún nombre se puede repetir.");
 					JOptionPane.showMessageDialog(AddPlayersDialog.this, help, "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
 				else {
@@ -194,24 +194,28 @@ private static final long serialVersionUID = 1L;
 		if(this.numberOfPlayersCombo.getSelectedItem() == null)
 			return false;
 		
-		List<String> humanPlayerNames = new ArrayList<String>();
+		List<String> playerNames = new ArrayList<String>();
 		
 		for(int i = 0; i < (int) this.numberOfPlayersCombo.getSelectedItem(); ++i) {
+			
 			if(this.playerPanelList.get(i).getTypeSelected() == null)
 				return false;
 			
 			if(this.playerPanelList.get(i).getTypeSelected().equals("human_strategy")) {
-				if(this.playerPanelList.get(i).getNameSelected() == null || ((String)this.playerPanelList.get(i).getNameSelected()).equals(""))
+				if(this.playerPanelList.get(i).getNameSelected() == null || "".equals((String)playerPanelList.get(i).getNameSelected()))
 					return false;
+			}
+			
+			if(playerPanelList.get(i).getNameSelected() != null && !"".equals(playerPanelList.get(i).getNameSelected())) {
+				String name = playerPanelList.get(i).getNameSelected();
 				
-				humanPlayerNames.add(this.playerPanelList.get(i).getNameSelected());
+				for(int j = 0; j < playerNames.size(); j++)
+					if(name.equalsIgnoreCase(playerNames.get(j)))
+						return false;
+				
+				playerNames.add(name);
 			}
 		}
-		
-		for(int i = 0; i < humanPlayerNames.size(); ++i)
-			for(int j = i + 1; j < humanPlayerNames.size(); ++j)
-				if(humanPlayerNames.get(i).equalsIgnoreCase(humanPlayerNames.get(j)))
-					return false;
 		
 		return true;
 	}
@@ -247,7 +251,7 @@ private static final long serialVersionUID = 1L;
 			
 			namePanel.add(new JLabel("Nombre: "));
 			nameField = new JTextField();
-			nameField.setToolTipText("Solo necesario para jugadores humanos. No se pueden repetir nombres.");
+			nameField.setToolTipText(String.format("Solo necesario para jugadores humanos.%nNo se pueden repetir nombres."));
 			nameField.setPreferredSize(new Dimension(60, 30));
 			namePanel.add(nameField);
 		}
@@ -281,7 +285,7 @@ private static final long serialVersionUID = 1L;
 			else if("dificil".equalsIgnoreCase(typeSelected))
 				return "hard_strategy";
 			
-			else if("humano".equalsIgnoreCase(typeSelected))
+			else if("humana".equalsIgnoreCase(typeSelected))
 				return "human_strategy";
 			
 			else

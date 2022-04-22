@@ -29,6 +29,13 @@ public class Controller {
 		this.lastFileUsed = null;
 	}
 	
+	/* Método playTurn:
+	 * Delega en la clase Game la acción de jugar un turno, ya sea por un jugador humano, o por uno automático
+	 */
+	public void playTurn() {
+		this.game.playTurn();
+	}
+	
 	/* Método writeAWord:
 	 * Delega en la clase Game la acción de escribir una palabra en el tablero.
 	 */
@@ -87,7 +94,6 @@ public class Controller {
 	 */
 	public void newGame() throws FileNotFoundException {
 		
-		//this.game.resetPlayers();
 		this.lastFileUsed = null;
 		GameLoader.newGame(game);
 	}
@@ -102,10 +108,8 @@ public class Controller {
 	 */
 	public void loadGame(String file) throws FileNotFoundException {
 		
-		//this.game.resetPlayers();
 		this.lastFileUsed = file;
 		GameLoader.loadGame(game, file);
-		
 	}
 	
 	/* Método saveGame:
@@ -120,7 +124,7 @@ public class Controller {
 	/* Método addPlayers:
 	 * Delega en la clase Game la inicialización de los jugadores del juego.
 	 */
-	public void addPlayers(GamePlayers players) {
+	public void addOrChangePlayers(GamePlayers players) {
 		this.game.addOrChangePlayers(players);
 	}
 
@@ -136,16 +140,5 @@ public class Controller {
 	 */
 	public void removeObserver(ScrabbleObserver o) {
 		this.game.removeObserver(o);
-	}
-
-//	/* Método automaticPlay:
-//	 * Delega en la clase Game la acción de juego de un jugador automático.
-//	 */
-//	public void automaticPlay() {
-//		this.game.automaticPlay();
-//	}
-
-	public void playTurn() {
-		this.game.playTurn();
 	}
 }

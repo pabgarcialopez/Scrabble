@@ -49,12 +49,12 @@ public class PlayerBuilder {
 	 * - Si el jugador tiene fichas asociadas, se crea el correspondiente array de objetos Tile.
 	 */
 
-	public Player createPlayer(JSONObject data) {
+	public Player createPlayer(JSONObject data, int k) {
 		
 		String name;
 		if(data.has("name"))
 			name = data.getString("name");
-		else name = AUTOMATIC_PLAYER_NAME;
+		else name = AUTOMATIC_PLAYER_NAME + " " + (k + 1);
 		
 		int totalPoints = data.getInt("total_points");
 		List <Tile> tiles = new ArrayList<Tile>();
@@ -71,8 +71,10 @@ public class PlayerBuilder {
 			strategy = sb.createStrategy(data.getJSONObject("strategy"));
 			
 			if(strategy != null) {
-				if(name.equalsIgnoreCase(AUTOMATIC_PLAYER_NAME))
-					name += " (" + strategy + ")";
+				String strat = strategy.toString();
+				int index = strat.indexOf("_");
+				
+				name += " (" + strat.substring(0, index) + ")";
 				break;
 			}
 				

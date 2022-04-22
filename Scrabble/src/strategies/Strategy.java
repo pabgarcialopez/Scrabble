@@ -12,6 +12,7 @@ import wordCheckers.WordChecker;
 
 public interface Strategy {
 	
+	
 	static final List<Pair<Integer, Integer>> movingBoxes = 
 			Collections.unmodifiableList(
 					new ArrayList<Pair<Integer, Integer>>() {
