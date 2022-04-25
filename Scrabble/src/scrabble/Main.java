@@ -42,7 +42,9 @@ public class Main {
 	private static boolean gui = true;
 	
 	private static String inFile;
-	private static String outFile;
+	private static String outFileTxt;
+	private static String outFileJSON;
+
 	private static int seed;
 	
 	private static Options buildOptions() {
@@ -50,10 +52,11 @@ public class Main {
 		Options cmdLineOptions = new Options();
 
 		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("Fichero de entrada, de donde la aplicación lee instrucciones.").build());
-		cmdLineOptions.addOption(Option.builder("o").longOpt("output").hasArg().desc("Fichero de salida, donde se puede ver el resultado de ejecución.").build());
+		cmdLineOptions.addOption(Option.builder("ot").longOpt("output_txt").hasArg().desc("Fichero de salida, donde se puede todo el texto generado de ejecución.").build());
 		cmdLineOptions.addOption(Option.builder("a").longOpt("ayuda").desc("Imprime esta ayuda").build());
 		cmdLineOptions.addOption(Option.builder("m").longOpt("modo").hasArg().desc("Modo de visualización de la aplicación").build());
 		cmdLineOptions.addOption(Option.builder("s").longOpt("semilla").hasArg().desc("Semilla para el control de generación de partidas").build());
+		cmdLineOptions.addOption(Option.builder("oj").longOpt("output_json").hasArg().desc("Fichero de salida, donde se guarda el json de la partida final").build());
 
 		return cmdLineOptions;
 	}
@@ -68,7 +71,6 @@ public class Main {
 				gui = false;
 			}
 		}
-		
 	}
 
 	private static void parseHelpOption(CommandLine line, Options cmdLineOptions) {
@@ -83,8 +85,19 @@ public class Main {
 		inFile = line.getOptionValue("i");
 	}
 
-	private static void parseOutFileOption(CommandLine line) {
-		outFile = line.getOptionValue("o");
+	private static void parseTextOutFileOption(CommandLine line) {
+		outFileTxt = line.getOptionValue("ot");
+	}
+	
+	private static void parseJSONOutFileOption(CommandLine line) throws ParseException {
+		if(Game.isTestMode()) {
+			
+			
+			outFileJSON = line.getOptionValue("oj");
+
+			if(outFileJSON == null)
+				throw new ParseException("En el modo test, los argumentos deben tener la opción de salida JSON");
+		}
 	}
 
 	private static void parseSeedOption(CommandLine line) throws ParseException {
@@ -117,7 +130,10 @@ public class Main {
 			parseModeOption(line); // Primero para que en parseInFileOption ya se sepa si tenemos GUI.
 			
 			parseInFileOption(line);
-			if(!gui) parseOutFileOption(line);
+			if(!gui) {
+				parseTextOutFileOption(line);
+				parseJSONOutFileOption(line);
+			}
 			
 			parseSeedOption(line);
 			
@@ -142,14 +158,14 @@ public class Main {
 		try {
 			
 			InputStream input = (inFile == null ? System.in : new FileInputStream(new File(inFile)));
-			OutputStream output = (outFile == null ? System.out : new FileOutputStream(new File(outFile)));
+			OutputStream output = (outFileTxt == null ? System.out : new FileOutputStream(new File(outFileTxt)));
 			
-			if(inFile == null && outFile != null) {
+			if(inFile == null && outFileTxt != null) {
 				input = System.in;
 				output = System.out;
 			}
 			
-			new ConsoleView(controller, input, output);
+			new ConsoleView(controller, input, output, outFileJSON);
 		}
 		
 		catch(FileNotFoundException fnfe) {
@@ -198,6 +214,6 @@ public class Main {
 	}
 	
 	public static String getOutFileName() {
-		return outFile;
+		return outFileTxt;
 	}
 }

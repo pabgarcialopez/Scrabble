@@ -9,6 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import containers.Board;
+import containers.GamePlayers;
 import logic.Game;
 import scrabble.Controller;
 import utils.StringUtils;
@@ -67,7 +69,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points, int extraPoints) {
+	public void onWordWritten(String currentPlayerName, Board board, String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
 		infoLabel.setText(String.format("%s escribe la palabra \"%s\" en la posición (%s, %s) y dirección \"%s\"", this.currentTurnName, word.toUpperCase(), posX, posY, direction.toUpperCase()));
 		
 		String pointsString = String.format("¡Gana %s puntos!", points);
@@ -77,31 +79,31 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onPassed(Game game) {
+	public void onPassed(int numPlayers, Board board, String currentPlayerName) {
 		infoLabel.setText(String.format("%s pasa de turno", this.currentTurnName));
 	}
 
 	@Override
-	public void onSwapped(Game game) {
+	public void onSwapped(String currentPlayerName, Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
 		infoLabel.setText(String.format("%s intercambia una ficha", this.currentTurnName));
 	}
 
 	@Override
-	public void onRegister(Game game) {}
+	public void onRegister(Board board, int numPlayers, boolean gameFinished, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
-	public void onReset(Game game) {
-		if (Game.getGameInitiated() && game.getNumPlayers() != 0) {
+	public void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
+		if (Game.getGameInitiated() && numPlayers != 0) {
 			infoLabel.setText("Partida iniciada");
-			this.currentTurnName = game.getPlayers().getPlayerName(game.getCurrentTurn());
+			this.currentTurnName = gamePlayers.getPlayerName(currentTurn);
 			currentTurnLabel.setText("Turno de: " + this.currentTurnName);
-			remainingTilesLabel.setText("Fichas restantes: " + game.getRemainingTiles());
+			remainingTilesLabel.setText("Fichas restantes: " + remainingTiles);
 			pointsLabel.setText("");
 		}
 		
 		else if(Game.getGameInitiated()) {
 			currentTurnLabel.setText("");
-			remainingTilesLabel.setText("Fichas restantes: " + game.getRemainingTiles());
+			remainingTilesLabel.setText("Fichas restantes: " + remainingTiles);
 			infoLabel.setText("Nueva partida iniciada, pero... ¡hay que añadir jugadores!");
 		}
 	}
@@ -112,12 +114,12 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onUpdate(Game game) {
+	public void onUpdate(boolean gameFinished, int numPlayers, String status, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {
 		
-		if(!game.gameIsFinished()) {
-			this.currentTurnName = game.getPlayers().getPlayerName(game.getCurrentTurn());
+		if(!gameFinished) {
+			this.currentTurnName = gamePlayers.getPlayerName(currentTurn);
 			this.currentTurnLabel.setText("Turno de: " + this.currentTurnName);
-			this.remainingTilesLabel.setText("Fichas restantes: " + game.getRemainingTiles());
+			this.remainingTilesLabel.setText("Fichas restantes: " + remainingTiles);
 			
 			this.infoLabel.setText("Eligiendo movimiento...");
 		}
@@ -132,26 +134,27 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onEnd(String message) {
+	public void onEnd(String message, Game game) {
 		JOptionPane.showMessageDialog(this, message, "Scrabble", JOptionPane.INFORMATION_MESSAGE);
 		System.exit(0);
 	}
 
 	@Override
-	public void onFirstTurnDecided(Game game, String[] lettersObtained) {
+	public void onFirstTurnDecided(String[] lettersObtained, GamePlayers gamePlayers, Board board, int numPlayers, int currentTurn) {
 		
 		StringBuilder buffer = new StringBuilder();
 		
-		for(int i = 0; i < game.getPlayers().getNumPlayers(); i++) {
-			buffer.append(game.getPlayers().getPlayerName(i)).append(" ha cogido una ")
+		for(int i = 0; i < numPlayers; i++) {
+			buffer.append(gamePlayers.getPlayerName(i)).append(" ha cogido una ")
 				  .append(lettersObtained[i]).append(StringUtils.LINE_SEPARATOR);
 		}
 		
 		buffer.append(StringUtils.LINE_SEPARATOR).append("El orden de juego es: ");
 		
-		for(int i = 0; i < game.getPlayers().getNumPlayers(); i++) {
-			buffer.append(game.getPlayers().getPlayerName((i + game.getCurrentTurn()) % game.getPlayers().getNumPlayers()));
-			if(i != game.getPlayers().getNumPlayers() - 1) buffer.append(" -> ");
+		for(int i = 0; i < numPlayers; i++) {
+			buffer.append(gamePlayers.getPlayerName((i + currentTurn) % numPlayers));
+			if(i != numPlayers - 1) 
+				buffer.append(" -> ");
 		}
 			
 		

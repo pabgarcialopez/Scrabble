@@ -1,11 +1,13 @@
 package view;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
 import command.Command;
+import containers.Board;
 import containers.GamePlayers;
 import exceptions.CommandExecuteException;
 import exceptions.CommandParseException;
@@ -13,6 +15,7 @@ import logic.Game;
 import scrabble.Controller;
 import simulatedObjects.Box;
 import simulatedObjects.SpecialEffects;
+import storage.GameSaver;
 import utils.StringUtils;
 
 public class ConsoleView implements ScrabbleObserver {
@@ -34,19 +37,18 @@ public class ConsoleView implements ScrabbleObserver {
 	private Scanner in;
 	
 	private PrintStream out;
+	private String outFile;
 	
-	public ConsoleView(Controller controller, InputStream in, OutputStream out) {
+	public ConsoleView(Controller controller, InputStream in, OutputStream out, String outputFile) {
 		this.controller = controller;
 		
 		isInputFromConsole = (System.in == in);
-		
+
 		this.in = new Scanner(in);
 		this.out = new PrintStream(out);
-		this.controller.addObserver(this);
-	}
+		this.outFile = outputFile;
 
-	public void showStatus(Game game) {
-		this.out.print(game.getStatus());
+		this.controller.addObserver(this);
 	}
 
 	private void showFirstTurn(String[] lettersObtained, GamePlayers players, int turn) {
@@ -73,10 +75,10 @@ public class ConsoleView implements ScrabbleObserver {
 		this.out.println(buffer);
 	}
 
-	public void showBoard(Game game) {
+	public void showBoard(Board board) {
 
 		// Numero de digitos del tamaño del tablero.
-		int max_indentation_length = (int) Math.log10(game.getBoardSize()) + 1;
+		int max_indentation_length = (int) Math.log10(board.getBoardSize()) + 1;
 		String max_left_indentation = createIndentation(max_indentation_length) + "   ";
 		
 		// Numero de "ROW_SEPARATOR_SYMBOL", que deben separar filas.
@@ -86,7 +88,7 @@ public class ConsoleView implements ScrabbleObserver {
 		this.out.print(max_left_indentation);
 		
 		// Imprimimos línea de coordenadas del lado superior
-		for(int i = 0; i < game.getBoardSize(); i++) {
+		for(int i = 0; i < board.getBoardSize(); i++) {
 			
 			// Espacio extra que deben tener numeros de ciertas cifras
 			int separationBetweenNumbers = max_indentation_length - (i == 0 ? 1 : (int) Math.log10(i) + 1);
@@ -105,7 +107,7 @@ public class ConsoleView implements ScrabbleObserver {
 		this.out.print(StringUtils.LINE_SEPARATOR);
 		
 		// Imprimimos el resto del tablero
-		for(int i = 0; i < game.getBoardSize(); i++) {
+		for(int i = 0; i < board.getBoardSize(); i++) {
 			
 			printRowSeparator(row_separator_length - 1, max_left_indentation);
 				
@@ -118,8 +120,8 @@ public class ConsoleView implements ScrabbleObserver {
 			this.out.print(actual_left_indentation + i + " ");
 			
 			// Imprimir lo correspondiente a esa fila
-			for(int j = 0; j < game.getBoardSize(); j++) {
-				Box box = game.getBoxAt(i, j);
+			for(int j = 0; j < board.getBoardSize(); j++) {
+				Box box = board.getBoxAt(i, j);
 				String boxContent = box.toString();
 				
 				if("".equals(boxContent)) {
@@ -181,11 +183,11 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points,
-			int extraPoints) {
+	public void onWordWritten(String currentPlayerName, Board board, String word, int posX, int posY, String direction,
+			int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
 		this.out.println(String.format(
 				"El jugador %s escribe la palabra \"%s\" en la posición (%s, %s) en dirección \"%s\".%n",
-				game.getPlayers().getPlayerName(game.getCurrentTurn()), word.toUpperCase(), posX, posY, direction.toUpperCase()));
+				currentPlayerName, word.toUpperCase(), posX, posY, direction.toUpperCase()));
 		this.out.print(String.format("¡Gana %s puntos!", points));
 		if(extraPoints != 0)
 			this.out.println(String.format(" Además, ¡gana %s puntos extra!%n", extraPoints));
@@ -194,55 +196,56 @@ public class ConsoleView implements ScrabbleObserver {
 			
 		pausa();
 		
-		showBoard(game);
+		showBoard(board);
 	}
 
 	@Override
-	public void onPassed(Game game) {
-		this.out.println(String.format("El jugador %s pasa de turno.%n", game.getPlayers().getPlayerName(game.getCurrentTurn())));
+	public void onPassed(int numPlayers, Board board, String currentPlayerName) {
+		this.out.println(String.format("El jugador %s pasa de turno.%n", currentPlayerName));
 		pausa();
-		showBoard(game);
+		showBoard(board);
 	}
 
 	@Override
-	public void onSwapped(Game game) {
-		this.out.println(String.format("El jugador %s intercambia una ficha.%n", game.getPlayers().getPlayerName(game.getCurrentTurn())));
+	public void onSwapped(String currentPlayerName, Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
+		this.out.println(String.format("El jugador %s intercambia una ficha.%n", currentPlayerName));
 	
 		pausa();
-		showBoard(game);
+		showBoard(board);
 	}
 
 	@Override
-	public void onRegister(Game game) {
+	public void onRegister(Board board, int numPlayers, boolean gameFinished, GamePlayers gamePlayers, int currentTurn) {
 		
 		this.out.print("¡Bienvenido al Scrabble!");
 		this.out.print(StringUtils.LINE_SEPARATOR);
 
 		Command.gameInitiated(Game.getGameInitiated());
-		Command.playersAdded(game.getNumPlayers() != 0);
+		Command.playersAdded(numPlayers != 0);
 		
-		if (Game.getGameInitiated() && game.getNumPlayers() != 0) {
-			showBoard(game);
+		if (Game.getGameInitiated() && numPlayers != 0) {
+			showBoard(board);
 		}
 		else {
 			executeCommand();
 		}
 		
-		controller.update();
+		if(!gameFinished)
+			controller.update();
 	}
 
 	@Override
-	public void onReset(Game game) {
+	public void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
 		
 		this.out.print(StringUtils.LINE_SEPARATOR);
 		this.out.print("Partida iniciada con éxito.");
 		this.out.print(StringUtils.LINE_SEPARATOR);
 
 		Command.gameInitiated(Game.getGameInitiated());
-		Command.playersAdded(game.getNumPlayers() != 0);
+		Command.playersAdded(numPlayers != 0);
 		
-		if (Game.getGameInitiated() && game.getNumPlayers() != 0) {
-			showBoard(game);
+		if (Game.getGameInitiated() && numPlayers != 0) {
+			showBoard(board);
 		}
 		else {
 			
@@ -254,14 +257,14 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onUpdate(Game game) {
+	public void onUpdate(boolean gameFinished, int numPlayers, String status, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {
 		
 		Command.gameInitiated(Game.getGameInitiated());
-		Command.playersAdded(game.getNumPlayers() != 0);
+		Command.playersAdded(numPlayers != 0);
 		
-		if(Game.getGameInitiated() && game.getNumPlayers() != 0) {
-			if(!game.gameIsFinished()) {
-				showStatus(game);
+		if(Game.getGameInitiated() && numPlayers != 0) {
+			if(!gameFinished) {
+				this.out.print(status);
 				controller.playTurn();
 			}
 		}
@@ -281,17 +284,24 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onEnd(String message) {
+	public void onEnd(String message, Game game) {
 		showEndMessage(message);
 		
-		System.exit(0);
+		if(Game.isTestMode()) {
+			try {
+				GameSaver.saveGame(game, outFile);
+			} catch (FileNotFoundException | IllegalArgumentException e) {
+				e.printStackTrace();
+			}
+		}
+		//System.exit(0);
 	}
 	
 	@Override
-	public void onFirstTurnDecided(Game game, String[] lettersObtained) {
-		showFirstTurn(lettersObtained, game.getPlayers(), game.getCurrentTurn());
+	public void onFirstTurnDecided(String[] lettersObtained, GamePlayers gamePlayers, Board board, int numPlayers, int currentTurn) {
+		showFirstTurn(lettersObtained, gamePlayers, currentTurn);
 		pausa();
-		showBoard(game);
+		showBoard(board);
 	}
 	
 	@Override

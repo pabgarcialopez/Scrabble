@@ -9,6 +9,8 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import containers.Board;
+import containers.GamePlayers;
 import logic.Game;
 import scrabble.Controller;
 import simulatedObjects.Box;
@@ -64,21 +66,21 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points, int extraPoints) {
+	public void onWordWritten(String currentPlayerName, Board board, String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
 		setImage();
 		enableButton = false;
 	}
 
 	@Override
-	public void onRegister(Game game) {
-		this.box = game.getBoxAt(this.posX, this.posY);
+	public void onRegister(Board board, int numPlayers, boolean gameFinished, GamePlayers gamePlayers, int currentTurn) {
+		this.box = board.getBoxAt(this.posX, this.posY);
 		if(box != null) setImage();
 		enableButton = false;
 	}
 
 	@Override
-	public void onReset(Game game) {
-		this.box = game.getBoxAt(this.posX, this.posY);
+	public void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
+		this.box = board.getBoxAt(this.posX, this.posY);
 		setImage();
 		enableButton = false;
 	}
@@ -93,12 +95,12 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onPassed(Game game) {
+	public void onPassed(int numPlayers, Board board, String currentPlayerName) {
 		enableButton = false;
 	}
 
 	@Override
-	public void onSwapped(Game game) {
+	public void onSwapped(String currentPlayerName, Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
 		enableButton = false;
 	}
 
@@ -106,15 +108,15 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	public void onError(String error) {}
 
 	@Override
-	public void onUpdate(Game game) {
+	public void onUpdate(boolean gameFinished, int numPlayers, String status, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {
 		enableButton = false;
 	}
 
 	@Override
-	public void onEnd(String message) {}
+	public void onEnd(String message, Game game) {}
 
 	@Override
-	public void onFirstTurnDecided(Game game, String[] lettersObtained) {}
+	public void onFirstTurnDecided(String[] lettersObtained, GamePlayers gamePlayers, Board board, int numPlayers, int currentTurn) {}
 
 	@Override
 	public void onMovementNeeded() {

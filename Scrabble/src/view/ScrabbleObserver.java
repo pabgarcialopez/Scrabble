@@ -1,5 +1,7 @@
 package view;
 
+import containers.Board;
+import containers.GamePlayers;
 import logic.Game;
 
 /* APUNTES GENERALES:
@@ -14,27 +16,27 @@ public interface ScrabbleObserver {
 	/* Método onWordWritten:
 	 * Es llamado cuando una palabra ha sido escrita en el tablero.
 	 */
-	void onWordWritten(Game game, String word, int posX, int posY, String direction, int points, int extraPoints);
+	void onWordWritten(String currentPlayerName, Board board, String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn);
 	
 	/* Método onPassed:
 	 * Es llamado cuando un jugador ha pasado de turno.
 	 */
-	void onPassed(Game game);
+	void onPassed(int numPlayers, Board board, String currentPlayerName);
 	
 	/* Método onSwapped:
 	 * Es llamado cuando un jugador ha intercambiado una ficha.
 	 */
-	void onSwapped(Game game);
+	void onSwapped(String currentPlayerName, Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn);
 	
 	/* Método onRegister:
 	 * Es llamado cuando un observador se añade a la lista de observadores.
 	 */
-	void onRegister(Game game);
+	void onRegister(Board board, int numPlayers, boolean gameFinished, GamePlayers gamePlayers, int currentTurn);
 	
 	/* Método onReset:
 	 * Es llamado cuando un se ejecuta el comando reset.
 	 */
-	void onReset(Game game);
+	void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn);
 	
 	/* Método onError:
 	 * Es llamado cuando un error ha ocurrido.
@@ -44,17 +46,17 @@ public interface ScrabbleObserver {
 	/* Método onUpdate:
 	 * Es llamado cuando se actualiza el juego (método update de Game).
 	 */
-	void onUpdate(Game game);
+	void onUpdate(boolean gameFinished, int numPlayers, String status, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn);
 	
 	/* Método onEnd:
 	 * Es llamado cuando se ha alcanzado el final de la partida.
 	 */
-	void onEnd(String message);
+	void onEnd(String message, Game game);
 	
 	/* Método onFirstTurnDecided:
 	 * Es llamado cuando se ha elegido el orden de turnos de la partida.
 	 */
-	void onFirstTurnDecided(Game game, String[] lettersObtained);
+	void onFirstTurnDecided(String[] lettersObtained, GamePlayers gamePlayers, Board board, int numPlayers, int currentTurn);
 	
 	void onMovementNeeded();
 }

@@ -5,6 +5,8 @@ import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
+import containers.Board;
+import containers.GamePlayers;
 import logic.Game;
 import scrabble.Controller;
 
@@ -30,41 +32,41 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onWordWritten(Game game, String word, int posX, int posY, String direction, int points, int extraPoints) {}
+	public void onWordWritten(String currentPlayerName, Board board, String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
-	public void onRegister(Game game) {}
+	public void onRegister(Board board, int numPlayers, boolean gameFinished, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
-	public void onReset(Game game) {
+	public void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
 		
 		this.removeAll();
 		
-		this.setLayout(new GridLayout(game.getBoardSize(), game.getBoardSize()));
-		for(int i = 0; i < game.getBoardSize(); ++i)
-			for(int j = 0; j < game.getBoardSize(); ++j) {
+		this.setLayout(new GridLayout(board.getBoardSize(), board.getBoardSize()));
+		for(int i = 0; i < board.getBoardSize(); ++i)
+			for(int j = 0; j < board.getBoardSize(); ++j) {
 				this.add(new BoxButton(this.controller, i, j, this.chooseWordDialog));
 			}
 		setPreferredSize(new Dimension(730, 730));
 	}
 
 	@Override
-	public void onPassed(Game game) {}
+	public void onPassed(int numPlayers, Board board, String currentPlayerName) {}
 
 	@Override
-	public void onSwapped(Game game) {}
+	public void onSwapped(String currentPlayerName, Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
 	public void onError(String error) {}
 
 	@Override
-	public void onUpdate(Game game) {}
+	public void onUpdate(boolean gameFinished, int numPlayers, String status, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
-	public void onEnd(String message) {}
+	public void onEnd(String message, Game game) {}
 
 	@Override
-	public void onFirstTurnDecided(Game game, String[] lettersObtained) {}
+	public void onFirstTurnDecided(String[] lettersObtained, GamePlayers gamePlayers, Board board, int numPlayers, int currentTurn) {}
 
 	@Override
 	public void onMovementNeeded() {}

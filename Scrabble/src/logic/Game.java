@@ -14,13 +14,10 @@ import containers.Board;
 import containers.GamePlayers;
 import containers.GameTiles;
 import exceptions.CommandExecuteException;
-import scrabble.Main;
-import scrabbleTests.MainTest;
 import simulatedObjects.Box;
 import simulatedObjects.Player;
 import simulatedObjects.Tile;
 import storage.GameLoader;
-import storage.GameSaver;
 import utils.StringUtils;
 import view.ScrabbleObserver;
 import wordCheckers.WordChecker;
@@ -133,7 +130,7 @@ public class Game {
 		_gameInitiated = true;
 		
 		for(int i = 0; i < this.observers.size(); ++i)
-			this.observers.get(i).onReset(this);
+			this.observers.get(i).onReset(board, this.getNumPlayers(), getNumPlayers() == 0 ? null : this.players.getPlayerName(this.currentTurn), this.getRemainingTiles(), this.players, this.currentTurn);
 	}
 	
 	/* Método playTurn:
@@ -196,7 +193,7 @@ public class Game {
 		numConsecutivePassedTurns = 0;
 		
 		for(ScrabbleObserver o : this.observers)
-			o.onWordWritten(this, word, posX, posY, direction, points, extraPoints);
+			o.onWordWritten(this.players.getPlayerName(this.currentTurn), this.board, word, posX, posY, direction, points, extraPoints, this.getNumPlayers(), this.players, this.currentTurn);
 		
 		players.drawTiles(this, currentTurn);
 	
@@ -238,7 +235,7 @@ public class Game {
 				this.currentTurn = i;
 		
 		for(ScrabbleObserver o : this.observers)
-			o.onFirstTurnDecided(this, lettersObtained);
+			o.onFirstTurnDecided(lettersObtained, this.players, board, this.getNumPlayers(), this.currentTurn);
 	}
 	
 	/* Método passTurn:
@@ -250,7 +247,7 @@ public class Game {
 		++this.numConsecutivePassedTurns;
 		
 		for(ScrabbleObserver o : this.observers)
-			o.onPassed(this);
+			o.onPassed(this.getNumPlayers(), board, this.players.getPlayerName(this.currentTurn));
 		
 		nextTurn();
 	}
@@ -300,7 +297,7 @@ public class Game {
 		++this.numConsecutivePassedTurns;
 		
 		for(ScrabbleObserver o : this.observers)
-			o.onSwapped(this);
+			o.onSwapped(this.players.getPlayerName(this.currentTurn), board, this.getNumPlayers(), this.players, this.currentTurn);
 		
 		nextTurn();
 		
@@ -407,22 +404,27 @@ public class Game {
 		
 		if(gameIsFinished()) {
 			
-			if(Game.isTestMode()) {
-				try {
-					GameSaver.saveGame(this, Main.getOutFileName());
-					MainTest.compareOutputs();
-				} catch (FileNotFoundException | IllegalArgumentException | JSONException e) {
-					e.printStackTrace();
-				}
-			}
+//			if(Game.isTestMode()) {
+//				try {
+//					GameSaver.saveGame(this, Main.getOutFileName());
+//					
+//				} catch (FileNotFoundException | IllegalArgumentException | JSONException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//			
+//			else {
+				for(ScrabbleObserver o : this.observers)
+					o.onEnd(gameFinishedCause + getWinnerName(), this);
+//			}
 			
-			
-			for(ScrabbleObserver o : this.observers)
-				o.onEnd(gameFinishedCause + getWinnerName());
 		}
 		
-		for(ScrabbleObserver o : this.observers)
-			o.onUpdate(this);
+		else {
+			for(ScrabbleObserver o : this.observers)
+				o.onUpdate(this.gameIsFinished(), this.getNumPlayers(), this.getStatus(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn);
+		}
+		
 	}
 	
 	/* Método getNewFormedWords:
@@ -596,7 +598,7 @@ public class Game {
 	public void addObserver(ScrabbleObserver o) {
 		if(o != null && !this.observers.contains(o)) {
 			this.observers.add(o);
-			o.onRegister(this);
+			o.onRegister(board, this.getNumPlayers(), this.gameIsFinished(), this.players, this.currentTurn);
 		}
 	}
 	
@@ -635,7 +637,7 @@ public class Game {
 			finalMessage += getWinnerName();
 		
 		for(ScrabbleObserver o : this.observers)
-			o.onEnd(finalMessage);
+			o.onEnd(finalMessage, this);
 	}
 	
 	/* Método movementNeeded:
