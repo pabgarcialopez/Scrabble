@@ -416,11 +416,9 @@ public class Game {
 				}
 			}
 			
-			else {
-				for(ScrabbleObserver o : this.observers)
-					o.onEnd(gameFinishedCause + getWinnerName());
-			}
-				
+			
+			for(ScrabbleObserver o : this.observers)
+				o.onEnd(gameFinishedCause + getWinnerName());
 		}
 		
 		for(ScrabbleObserver o : this.observers)
