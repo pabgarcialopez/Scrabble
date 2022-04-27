@@ -1,13 +1,8 @@
 package scrabble;
 
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.util.Scanner;
 
-import command.Command;
 import containers.GamePlayers;
-import exceptions.CommandExecuteException;
-import exceptions.CommandParseException;
 import logic.Game;
 import storage.GameLoader;
 import storage.GameSaver;
@@ -39,20 +34,6 @@ public class Controller {
 	 */
 	public void playTurn() {
 		this.game.playTurn();
-	}
-	
-	/* Método executeCommand:
-	 * Delega en la clase Command la acción de ejecutar una cierta acción.
-	 */
-	public boolean executeCommand(String[] parameters, Scanner in, PrintStream out) throws CommandExecuteException, CommandParseException {
-		Command command = Command.getCommand(parameters);
-		
-		if(command != null) {
-			command.execute(this, in, out);
-			return true;
-		}
-		
-		return false;
 	}
 	
 	/* Método writeAWord:

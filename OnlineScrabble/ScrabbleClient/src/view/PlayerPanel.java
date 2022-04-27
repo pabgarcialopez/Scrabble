@@ -105,22 +105,22 @@ public class PlayerPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onWordWritten(String currentPlayerName, Board board, String word, int posX, int posY, String direction,
-			int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
+	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints,
+			int numPlayers, GamePlayers gamePlayers, int currentTurn) {
 		if(currentTurn == this.numJugador) 
 			createTiles(currentTurn, gamePlayers);
 	}
 
 	@Override
-	public void onPassed(int numPlayers, Board board, String currentPlayerName) {}
+	public void onPassed(int numPlayers, String currentPlayerName) {}
 
 	@Override
-	public void onSwapped(String currentPlayerName, Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
+	public void onSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn) {
 		if(currentTurn == this.numJugador) createTiles(currentTurn, gamePlayers);
 	}
 
 	@Override
-	public void onRegister(Board board, int numPlayers, boolean gameFinished, GamePlayers gamePlayers, int currentTurn) {
+	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
 		if(Game.getGameInitiated() && this.numJugador < numPlayers) {
 			this.nameLabel.setText("Jugador: " + gamePlayers.getPlayerName(currentTurn));
 			this.pointsLabel.setText("Puntos totales: " + gamePlayers.getPlayerPoints(this.numJugador));

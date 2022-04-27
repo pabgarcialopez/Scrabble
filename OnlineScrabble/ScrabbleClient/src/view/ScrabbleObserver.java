@@ -15,22 +15,22 @@ public interface ScrabbleObserver {
 	/* Método onWordWritten:
 	 * Es llamado cuando una palabra ha sido escrita en el tablero.
 	 */
-	void onWordWritten(String currentPlayerName, Board board, String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn);
+	void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn);
 	
 	/* Método onPassed:
 	 * Es llamado cuando un jugador ha pasado de turno.
 	 */
-	void onPassed(int numPlayers, Board board, String currentPlayerName);
+	void onPassed(int numPlayers, String currentPlayerName);
 	
 	/* Método onSwapped:
 	 * Es llamado cuando un jugador ha intercambiado una ficha.
 	 */
-	void onSwapped(String currentPlayerName, Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn);
+	void onSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn);
 	
 	/* Método onRegister:
 	 * Es llamado cuando un observador se añade a la lista de observadores.
 	 */
-	void onRegister(Board board, int numPlayers, boolean gameFinished, GamePlayers gamePlayers, int currentTurn);
+	void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn);
 	
 	/* Método onReset:
 	 * Es llamado cuando un se ejecuta el comando reset.

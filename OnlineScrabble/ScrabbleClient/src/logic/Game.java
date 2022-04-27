@@ -194,7 +194,7 @@ public class Game {
 		numConsecutivePassedTurns = 0;
 		
 		for(ScrabbleObserver o : this.observers)
-			o.onWordWritten(this.players.getPlayerName(this.currentTurn), this.board, word, posX, posY, direction, points, extraPoints, this.getNumPlayers(), this.players, this.currentTurn);
+			o.onWordWritten(word, posX, posY, direction, points, extraPoints, this.getNumPlayers(), this.players, this.currentTurn);
 		
 		players.drawTiles(this, currentTurn);
 	
@@ -248,7 +248,7 @@ public class Game {
 		++this.numConsecutivePassedTurns;
 		
 		for(ScrabbleObserver o : this.observers)
-			o.onPassed(this.getNumPlayers(), board, this.players.getPlayerName(this.currentTurn));
+			o.onPassed(this.getNumPlayers(), this.players.getPlayerName(this.currentTurn));
 		
 		nextTurn();
 	}
@@ -298,7 +298,7 @@ public class Game {
 		++this.numConsecutivePassedTurns;
 		
 		for(ScrabbleObserver o : this.observers)
-			o.onSwapped(this.players.getPlayerName(this.currentTurn), board, this.getNumPlayers(), this.players, this.currentTurn);
+			o.onSwapped(this.getNumPlayers(), this.players, this.currentTurn);
 		
 		nextTurn();
 		
@@ -599,7 +599,7 @@ public class Game {
 	public void addObserver(ScrabbleObserver o) {
 		if(o != null && !this.observers.contains(o)) {
 			this.observers.add(o);
-			o.onRegister(board, this.getNumPlayers(), getGameIsFinished(), this.players, this.currentTurn);
+			o.onRegister(board, this.getNumPlayers(), this.players, this.currentTurn);
 		}
 	}
 	

@@ -69,7 +69,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onWordWritten(String currentPlayerName, Board board, String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
+	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
 		infoLabel.setText(String.format("%s escribe la palabra \"%s\" en la posición (%s, %s) y dirección \"%s\"", this.currentTurnName, word.toUpperCase(), posX, posY, direction.toUpperCase()));
 		
 		String pointsString = String.format("¡Gana %s puntos!", points);
@@ -79,17 +79,17 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onPassed(int numPlayers, Board board, String currentPlayerName) {
+	public void onPassed(int numPlayers, String currentPlayerName) {
 		infoLabel.setText(String.format("%s pasa de turno", this.currentTurnName));
 	}
 
 	@Override
-	public void onSwapped(String currentPlayerName, Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
+	public void onSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn) {
 		infoLabel.setText(String.format("%s intercambia una ficha", this.currentTurnName));
 	}
 
 	@Override
-	public void onRegister(Board board, int numPlayers, boolean gameFinished, GamePlayers gamePlayers, int currentTurn) {}
+	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
 	public void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
