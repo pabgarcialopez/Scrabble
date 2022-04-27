@@ -303,7 +303,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	public void onError(String error) {}
 
 	@Override
-	public void onEnd(String message, Game game) {}
+	public void onEnd(String message) {}
 
 	@Override
 	public void onFirstTurnDecided(String[] lettersObtained, GamePlayers gamePlayers, Board board, int numPlayers, int currentTurn) {

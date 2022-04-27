@@ -15,7 +15,6 @@ import logic.Game;
 import scrabble.Controller;
 import simulatedObjects.Box;
 import simulatedObjects.SpecialEffects;
-import storage.GameSaver;
 import utils.StringUtils;
 
 public class ConsoleView implements ScrabbleObserver {
@@ -230,7 +229,7 @@ public class ConsoleView implements ScrabbleObserver {
 			executeCommand();
 		}
 		
-		if(!gameFinished)
+		if(!Game.getGameIsFinished())
 			controller.update();
 	}
 
@@ -284,17 +283,16 @@ public class ConsoleView implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onEnd(String message, Game game) {
+	public void onEnd(String message) {
 		showEndMessage(message);
 		
 		if(Game.isTestMode()) {
 			try {
-				GameSaver.saveGame(game, outFile);
-			} catch (FileNotFoundException | IllegalArgumentException e) {
+				controller.saveGame(outFile);
+			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
 		}
-		//System.exit(0);
 	}
 	
 	@Override
@@ -320,20 +318,29 @@ public class ConsoleView implements ScrabbleObserver {
 	
 	private void executeCommand() {
 		
-		Command command = askCommand();
+		try {
+			controller.executeCommand(askCommand(), in , out);
+			
+		}
 		
-		if(command != null)
-			try {
-				command.execute(this.controller, in, out);
-				
-			} catch (CommandExecuteException e) {
-				this.out.print(e.getMessage() + StringUtils.LINE_SEPARATOR);
-			}
+		catch(CommandParseException | CommandExecuteException e) {
+			this.out.println(e.getMessage());
+		}
+//		
+//		Command command = askCommand();
+//		
+//		if(command != null)
+//			try {
+//				command.execute(this.controller, in, out);
+//				
+//			} catch (CommandExecuteException e) {
+//				this.out.print(e.getMessage() + StringUtils.LINE_SEPARATOR);
+//			}
 	}
 	
-	private Command askCommand() {
+	private String[] askCommand() {
 		
-		Command command = null;
+		//Command command = null;
 		
 		this.out.print(PROMPT);
 		String s = this.in.nextLine();
@@ -345,14 +352,14 @@ public class ConsoleView implements ScrabbleObserver {
 
 		String[] parameters = s.toLowerCase().trim().split(" ");
 		
-		try {
-			command = Command.getCommand(parameters);
-		}
-		catch(CommandParseException cpe) {
-			this.out.println(cpe.getMessage());
-		}
+//		try {
+//			command = Command.getCommand(parameters);
+//		}
+//		catch(CommandParseException cpe) {
+//			this.out.println(cpe.getMessage());
+//		}
 		
-		return command;		
+		return parameters;		
 	}
 
 }

@@ -82,8 +82,6 @@ public class GameLoader {
 			Game.setSeed(json.has("seed") ? json.getInt("seed") : Game.getSeed());
 		else Game.setSeed(Game.getSeed());
 		
-		//game.resetPlayers();
-		
 		int currentTurn = json.getInt("current_turn"); // -1 si es partida nueva
 		int numConsecutivePassedTurns = json.getInt("consecutive_turns_passed");
 		boolean wordsInBoard = json.getBoolean("words_in_board");

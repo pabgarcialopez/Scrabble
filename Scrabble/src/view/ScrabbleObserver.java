@@ -2,7 +2,6 @@ package view;
 
 import containers.Board;
 import containers.GamePlayers;
-import logic.Game;
 
 /* APUNTES GENERALES:
    
@@ -51,7 +50,7 @@ public interface ScrabbleObserver {
 	/* Método onEnd:
 	 * Es llamado cuando se ha alcanzado el final de la partida.
 	 */
-	void onEnd(String message, Game game);
+	void onEnd(String message);
 	
 	/* Método onFirstTurnDecided:
 	 * Es llamado cuando se ha elegido el orden de turnos de la partida.

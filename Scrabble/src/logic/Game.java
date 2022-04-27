@@ -51,6 +51,8 @@ public class Game {
 	
 	private static boolean _gameInitiated;
 	private static boolean _wordsInBoard;
+	private static boolean _gameFinished;
+
 	public static Random _random;
 	
 	public static int _seed;
@@ -62,7 +64,6 @@ public class Game {
 	private int currentTurn;
 	private int numConsecutivePassedTurns;
 	
-	private boolean gameFinished;
 	private String gameFinishedCause;
 	
 	private List<String> usedWords;
@@ -84,8 +85,8 @@ public class Game {
 		this.currentTurn = 0;
 		this.numConsecutivePassedTurns = 0;
 		
-		this.gameFinished = false;
-		this.gameFinishedCause = "";
+		_gameFinished = false;
+		gameFinishedCause = "";
 		
 		this.usedWords = null;
 		
@@ -123,7 +124,7 @@ public class Game {
 		else this.players = players;
 		
 		_wordsInBoard = wordsInBoard;
-		this.gameFinished = gameFinished;
+		_gameFinished = gameFinished;
 		
 		this.usedWords = usedWords;
 		
@@ -388,21 +389,21 @@ public class Game {
 			// Si no quedan fichas en el saco, y el jugador actual no tiene fichas
 			if(this.getRemainingTiles() == 0 && 
 					this.players.getNumPlayerTiles((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers()) == 0) {
-				this.gameFinished = true;
+				_gameFinished = true;
 				
-				this.gameFinishedCause = "La partida ha finalizado: no quedan fichas para robar y el jugador " 
+				gameFinishedCause = "La partida ha finalizado: no quedan fichas para robar y el jugador " 
 				+ this.players.getPlayerName((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers())
 				+ " se ha quedado sin fichas."+ StringUtils.DOUBLE_LINE_SEPARATOR;
 			}
 			
 			if(this.numConsecutivePassedTurns == this.getNumPlayers() * PASSED_TURNS_TO_END_GAME) {
-				this.gameFinished = true;
-				this.gameFinishedCause = "La partida ha finalizado: todos los jugadores han pasado " 
+				_gameFinished = true;
+				gameFinishedCause = "La partida ha finalizado: todos los jugadores han pasado " 
 						+ PASSED_TURNS_TO_END_GAME + " turnos." + StringUtils.LINE_SEPARATOR;
 			}
 		}
 		
-		if(gameIsFinished()) {
+		if(getGameIsFinished()) {
 			
 //			if(Game.isTestMode()) {
 //				try {
@@ -415,14 +416,14 @@ public class Game {
 //			
 //			else {
 				for(ScrabbleObserver o : this.observers)
-					o.onEnd(gameFinishedCause + getWinnerName(), this);
+					o.onEnd(gameFinishedCause + getWinnerName());
 //			}
 			
 		}
 		
 		else {
 			for(ScrabbleObserver o : this.observers)
-				o.onUpdate(this.gameIsFinished(), this.getNumPlayers(), this.getStatus(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn);
+				o.onUpdate(getGameIsFinished(), this.getNumPlayers(), this.getStatus(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn);
 		}
 		
 	}
@@ -598,7 +599,7 @@ public class Game {
 	public void addObserver(ScrabbleObserver o) {
 		if(o != null && !this.observers.contains(o)) {
 			this.observers.add(o);
-			o.onRegister(board, this.getNumPlayers(), this.gameIsFinished(), this.players, this.currentTurn);
+			o.onRegister(board, this.getNumPlayers(), getGameIsFinished(), this.players, this.currentTurn);
 		}
 	}
 	
@@ -618,18 +619,18 @@ public class Game {
 	 */
 	public void userExits() {
 		
-		this.gameFinished = true;
+		_gameFinished = true;
 		
 		boolean anyPlayer = this.players.getNumPlayers() > 0;
 		
 		if(anyPlayer) {
-			this.gameFinishedCause = "El jugador " 
+			gameFinishedCause = "El jugador " 
 					+ this.players.getPlayerName(this.currentTurn) 
 					+ " ha finalizado la partida." 
 					+ StringUtils.DOUBLE_LINE_SEPARATOR;
 		}
 			
-		else this.gameFinishedCause = "Juego finalizado.";
+		else gameFinishedCause = "Juego finalizado.";
 		
 		String finalMessage = gameFinishedCause;
 		
@@ -637,7 +638,7 @@ public class Game {
 			finalMessage += getWinnerName();
 		
 		for(ScrabbleObserver o : this.observers)
-			o.onEnd(finalMessage, this);
+			o.onEnd(finalMessage);
 	}
 	
 	/* Método movementNeeded:
@@ -657,6 +658,10 @@ public class Game {
 	
 	public static boolean getWordsInBoard() {
 		return _wordsInBoard;
+	}
+	
+	public static boolean getGameIsFinished() {
+		return _gameFinished;
 	}
 	
 	public static boolean isPausePermitted() {
@@ -703,10 +708,6 @@ public class Game {
 		return this.currentTurn;
 	}
 	
-	public boolean gameIsFinished() {
-		return this.gameFinished;
-	}
-
 	public List<String> getWordsList() {
 		return Collections.unmodifiableList(words);
 	}
@@ -730,7 +731,7 @@ public class Game {
 		jo.put("current_turn", this.currentTurn);
 		jo.put("consecutive_turns_passed", this.numConsecutivePassedTurns);
 		jo.put("words_in_board", _wordsInBoard);
-		jo.put("game_finished", this.gameFinished);
+		jo.put("game_finished", _gameFinished);
 
 		JSONArray words = new JSONArray();
 		for (int i = 0; i < this.usedWords.size(); ++i)
@@ -748,4 +749,6 @@ public class Game {
 
 		return jo;
 	}
+
+	
 }

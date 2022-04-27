@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 
 import containers.Board;
 import containers.GamePlayers;
-import logic.Game;
 import scrabble.Controller;
 
 public class BoardPanel extends JPanel implements ScrabbleObserver {
@@ -63,7 +62,7 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	public void onUpdate(boolean gameFinished, int numPlayers, String status, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
-	public void onEnd(String message, Game game) {}
+	public void onEnd(String message) {}
 
 	@Override
 	public void onFirstTurnDecided(String[] lettersObtained, GamePlayers gamePlayers, Board board, int numPlayers, int currentTurn) {}
