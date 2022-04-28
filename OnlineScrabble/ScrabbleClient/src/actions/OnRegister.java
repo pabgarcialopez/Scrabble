@@ -1,4 +1,4 @@
-package interpreter;
+package actions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +21,6 @@ import view.ScrabbleObserver;
 
 public class OnRegister extends OnAction {
 
-	private final String type = "register";
-	
 	private Board board;
 	private int numPlayers;
 	private GamePlayers gamePlayers;
@@ -32,6 +30,8 @@ public class OnRegister extends OnAction {
 	private BoardBuilder boardBuilder;
 	
 	OnRegister() {
+		
+		super("register");
 
 		TileBuilder tileBuilder = new TileBuilder();
 		

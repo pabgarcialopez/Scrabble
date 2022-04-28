@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -31,10 +32,10 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onWordWritten(String currentPlayerName, Board board, String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
+	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
-	public void onRegister(Board board, int numPlayers, boolean gameFinished, GamePlayers gamePlayers, int currentTurn) {}
+	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
 	public void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
@@ -50,22 +51,22 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onPassed(int numPlayers, Board board, String currentPlayerName) {}
+	public void onPassed(int numPlayers, String currentPlayerName) {}
 
 	@Override
-	public void onSwapped(String currentPlayerName, Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
+	public void onSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
 	public void onError(String error) {}
 
 	@Override
-	public void onUpdate(boolean gameFinished, int numPlayers, String status, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {}
+	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
 	public void onEnd(String message) {}
 
 	@Override
-	public void onFirstTurnDecided(String[] lettersObtained, GamePlayers gamePlayers, Board board, int numPlayers, int currentTurn) {}
+	public void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn) {}
 
 	@Override
 	public void onMovementNeeded() {}

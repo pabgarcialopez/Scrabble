@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -73,7 +74,8 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	@Override
 	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
 		this.box = board.getBoxAt(this.posX, this.posY);
-		if(box != null) setImage();
+		if(box != null) 
+			setImage();
 		enableButton = false;
 	}
 
@@ -107,7 +109,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	public void onError(String error) {}
 
 	@Override
-	public void onUpdate(boolean gameFinished, int numPlayers, String status, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {
+	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {
 		enableButton = false;
 	}
 
@@ -115,7 +117,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	public void onEnd(String message) {}
 
 	@Override
-	public void onFirstTurnDecided(String[] lettersObtained, GamePlayers gamePlayers, Board board, int numPlayers, int currentTurn) {}
+	public void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn) {}
 
 	@Override
 	public void onMovementNeeded() {

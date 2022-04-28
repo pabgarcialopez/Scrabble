@@ -1,4 +1,4 @@
-package interpreter;
+package actions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,24 +16,18 @@ import strategies.MediumStrategyBuilder;
 import strategies.StrategyBuilder;
 import view.ScrabbleObserver;
 
-public class OnWordWritten extends OnAction {
+public class OnSwapped extends OnAction{
 
-	private final String type = "word_written";
-	
-	private String word;
-	private int posX;
-	private int posY;
-	private String direction;
-	private int points;
-	private int extraPoints;
 	private int numPlayers;
 	private GamePlayers gamePlayers;
 	private int currentTurn;
 	
 	private GamePlayersBuilder gamePlayersBuilder;
 	
-	OnWordWritten() {
+	OnSwapped() {
 		
+		super("swapped");
+
 		List<StrategyBuilder> strategyBuilders = new ArrayList<StrategyBuilder>();
 		
 		strategyBuilders.add(new EasyStrategyBuilder());
@@ -51,15 +45,9 @@ public class OnWordWritten extends OnAction {
 			
 			JSONObject data = jo.getJSONObject("data");
 			
-			this.word = data.getString("word");
-			this.posX = data.getInt("pos_X");
-			this.posY = data.getInt("pos_Y");
-			this.direction = data.getString("direction");
-			this.points = data.getInt("points");
-			this.extraPoints = data.getInt("extra_points");
 			this.numPlayers = data.getInt("num_players");
 			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
-			this.currentTurn = data.getInt("current_turn");
+			this.currentTurn = data.getInt("current_turn");			
 			
 			return this;
 		}
@@ -71,6 +59,7 @@ public class OnWordWritten extends OnAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 
 		for(ScrabbleObserver o : observers)
-			o.onWordWritten(word, posX, posY, direction, points, extraPoints, numPlayers, gamePlayers, currentTurn);
+			o.onSwapped(numPlayers, gamePlayers, currentTurn);
+		
 	}
 }

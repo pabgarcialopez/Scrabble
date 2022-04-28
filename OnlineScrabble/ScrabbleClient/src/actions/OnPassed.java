@@ -1,4 +1,4 @@
-package interpreter;
+package actions;
 
 import java.util.List;
 
@@ -8,11 +8,13 @@ import view.ScrabbleObserver;
 
 public class OnPassed  extends OnAction {
 
-	private final String type = "passed";
-	
 	private int numPlayers;
 	
 	private String currentPlayerName;
+	
+	OnPassed() {
+		super("passed");
+	}
 	
 	@Override
 	OnAction interpret(JSONObject jo) {

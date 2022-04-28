@@ -1,5 +1,7 @@
 package view;
 
+import java.util.List;
+
 import containers.Board;
 import containers.GamePlayers;
 
@@ -45,7 +47,7 @@ public interface ScrabbleObserver {
 	/* Método onUpdate:
 	 * Es llamado cuando se actualiza el juego (método update de Game).
 	 */
-	void onUpdate(boolean gameFinished, int numPlayers, String status, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn);
+	void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn);
 	
 	/* Método onEnd:
 	 * Es llamado cuando se ha alcanzado el final de la partida.
@@ -55,7 +57,7 @@ public interface ScrabbleObserver {
 	/* Método onFirstTurnDecided:
 	 * Es llamado cuando se ha elegido el orden de turnos de la partida.
 	 */
-	void onFirstTurnDecided(String[] lettersObtained, GamePlayers gamePlayers, Board board, int numPlayers, int currentTurn);
+	void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn);
 	
 	void onMovementNeeded();
 }

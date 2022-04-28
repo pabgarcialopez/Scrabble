@@ -1,4 +1,4 @@
-package interpreter;
+package actions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,11 @@ import view.ScrabbleObserver;
 
 public abstract class OnAction {
 	
-	OnAction() {}
+	protected final String type;
+	
+	OnAction(String type) {
+		this.type = type;
+	}
 	
 	private static List<OnAction> AVAILABLE_ACTIONS = new ArrayList<OnAction>() {
 		

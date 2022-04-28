@@ -225,18 +225,18 @@ public class Game {
 		
 		this.currentTurn = 0;
 		
-		String[] lettersObtained = new String[this.getNumPlayers()];
+		List<String> lettersObtained = new ArrayList<String>();
 		
 		for(int i = 0; i < this.getNumPlayers(); ++i) 
-			lettersObtained[i] = this.randomTile().getLetter();
+			lettersObtained.add(this.randomTile().getLetter());
 	
 		// La partida es empezada por quien obtenga la letra mas cercana a la A.
 		for(int i = 1; i < this.getNumPlayers(); ++i)
-			if (lettersObtained[i].compareTo(lettersObtained[this.currentTurn]) < 0) 
+			if (lettersObtained.get(i).compareTo(lettersObtained.get(this.currentTurn)) < 0) 
 				this.currentTurn = i;
 		
 		for(ScrabbleObserver o : this.observers)
-			o.onFirstTurnDecided(lettersObtained, this.players, board, this.getNumPlayers(), this.currentTurn);
+			o.onFirstTurnDecided(lettersObtained, this.players, this.getNumPlayers(), this.currentTurn);
 	}
 	
 	/* Método passTurn:
@@ -423,7 +423,7 @@ public class Game {
 		
 		else {
 			for(ScrabbleObserver o : this.observers)
-				o.onUpdate(getGameIsFinished(), this.getNumPlayers(), this.getStatus(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn);
+				o.onUpdate(getGameIsFinished(), this.getNumPlayers(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn);
 		}
 		
 	}

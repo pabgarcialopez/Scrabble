@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -114,7 +115,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onUpdate(boolean gameFinished, int numPlayers, String status, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {
+	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {
 		
 		if(!gameFinished) {
 			this.currentTurnName = gamePlayers.getPlayerName(currentTurn);
@@ -140,13 +141,13 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onFirstTurnDecided(String[] lettersObtained, GamePlayers gamePlayers, Board board, int numPlayers, int currentTurn) {
+	public void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn) {
 		
 		StringBuilder buffer = new StringBuilder();
 		
 		for(int i = 0; i < numPlayers; i++) {
 			buffer.append(gamePlayers.getPlayerName(i)).append(" ha cogido una ")
-				  .append(lettersObtained[i]).append(StringUtils.LINE_SEPARATOR);
+				  .append(lettersObtained.get(i)).append(StringUtils.LINE_SEPARATOR);
 		}
 		
 		buffer.append(StringUtils.LINE_SEPARATOR).append("El orden de juego es: ");
