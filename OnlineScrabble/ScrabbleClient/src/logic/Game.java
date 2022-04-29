@@ -191,7 +191,7 @@ public class Game {
 		_wordsInBoard = true;
 		numConsecutivePassedTurns = 0;
 		
-		this.server.sendViewAction(GameSerializer.serializeWordWritten(word, posX, posY, direction, points, extraPoints, getNumPlayers(), players, extraPoints, board));
+		this.server.sendViewAction(GameSerializer.serializeWordWritten(word, posX, posY, direction, points, extraPoints, getNumPlayers(), players, this.currentTurn, board));
 		
 		players.drawTiles(this, currentTurn);
 	
