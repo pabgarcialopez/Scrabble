@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.swing.SwingUtilities;
 
+import control.Controller;
 import logic.Game;
 import storage.GameLoader;
 import view.GUIView;

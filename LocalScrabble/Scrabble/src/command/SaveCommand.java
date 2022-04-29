@@ -31,7 +31,7 @@ public class SaveCommand extends Command {
 	 */
 	
 	@Override
-	public boolean execute(Controller controller, Scanner in, PrintStream out) throws CommandExecuteException {
+	public void execute(Controller controller, Scanner in, PrintStream out) throws CommandExecuteException {
 		
 		try {
 			controller.saveGame(this.file);
@@ -48,8 +48,6 @@ public class SaveCommand extends Command {
 		catch(IllegalArgumentException iae) {
 			throw new CommandExecuteException(iae.getMessage(), iae);
 		}
-		
-		return true;
 	}
 	
 	/* Sobrescritura del método parse:

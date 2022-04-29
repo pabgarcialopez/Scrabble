@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 
 import containers.Board;
 import containers.GamePlayers;
+import control.Controller;
 import logic.Game;
-import scrabble.Controller;
 import utils.StringUtils;
 
 public class InfoPanel extends JPanel implements ScrabbleObserver {

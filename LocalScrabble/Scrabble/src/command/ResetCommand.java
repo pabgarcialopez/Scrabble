@@ -29,7 +29,7 @@ public class ResetCommand extends Command {
 	 */
 	
 	@Override
-	public boolean execute(Controller controller, Scanner in, PrintStream out) throws CommandExecuteException {
+	public void execute(Controller controller, Scanner in, PrintStream out) throws CommandExecuteException {
 		
 		try {
 			controller.reset();
@@ -38,8 +38,6 @@ public class ResetCommand extends Command {
 		catch(FileNotFoundException fnfe) {
 			throw new CommandExecuteException("El fichero de reseteo no se ha podido encontrar.", fnfe);
 		}
-		
-		return false;
 	}
 	
 	

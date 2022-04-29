@@ -162,5 +162,5 @@ public abstract class Command {
 	 * indicando si el jugador actual debe seguir jugando su turno o pasar al
 	 * siguiente.
 	 */
-	public abstract boolean execute(Controller controller, Scanner in, PrintStream out) throws CommandExecuteException;
+	public abstract void execute(Controller controller, Scanner in, PrintStream out) throws CommandExecuteException;
 }

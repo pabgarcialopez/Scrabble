@@ -25,8 +25,7 @@ public class ExitCommand extends Command {
 	 */
 
 	@Override
-	public boolean execute(Controller controller, Scanner in, PrintStream out) {
+	public void execute(Controller controller, Scanner in, PrintStream out) {
 		controller.userExits();
-		return false;
 	}
 }

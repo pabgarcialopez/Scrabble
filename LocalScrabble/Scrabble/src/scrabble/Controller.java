@@ -58,8 +58,8 @@ public class Controller {
 	/* Método writeAWord:
 	 * Delega en la clase Game la acción de escribir una palabra en el tablero.
 	 */
-	public boolean writeAWord(String word, int posX, int posY, String direction) {
-		return this.game.writeAWord(word, posX, posY, direction);
+	public void writeAWord(String word, int posX, int posY, String direction) {
+		game.writeAWord(word, posX, posY, direction);
 	}
 	
 	/* Método passTurn:
@@ -73,8 +73,8 @@ public class Controller {
 	 * Delega en la clase Game la acción de intercambiar una ficha.
 	 * Devuelve un booleano indicando si se ha podido realizar dicho intercambio.
 	 */
-	public boolean swapTile() {
-		return this.game.swapTile();
+	public void swapTile() {
+		this.game.swapTile();
 	}
 	
 	/* Método userExits:

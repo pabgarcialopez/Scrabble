@@ -159,7 +159,7 @@ public class Game {
 	 * Por último, se notifica a los observadores que se ha escrito una palabra; se delega en GamePlayers
 	 * el robo de fichas por parte del jugador, y se avanza el turno.
 	 */
-	public boolean writeAWord(String word, int posX, int posY, String direction) {
+	public void writeAWord(String word, int posX, int posY, String direction) {
 		
 		try {
 			word = StringUtils.removeAccents(word);
@@ -170,7 +170,7 @@ public class Game {
 			for(ScrabbleObserver o : this.observers)
 				o.onError(cee.getMessage());
 			
-			return false;
+			return;
 		}
 		
 		List<String> wordsToAdd = getNewFormedWords(word, posX, posY, direction);
@@ -199,8 +199,6 @@ public class Game {
 		players.drawTiles(this, currentTurn);
 	
 		nextTurn();
-		
-		return true;
 	}
 	
 	/* Método decideFirstTurn:
@@ -271,15 +269,13 @@ public class Game {
 	 * Se incrementan los turnos saltados, se notifica a los observadores y se
 	 * avanza al siguiente turno (método nextTurn).
 	 */
-	public boolean swapTile() {
+	public void swapTile() {
 		
 		if(tiles.getSize() <= 0) {
-			//if(humanIsPlaying()) {
-				for(ScrabbleObserver o : this.observers)
-					o.onError("No hay fichas para robar.");
-			//}
+			for(ScrabbleObserver o : this.observers)
+				o.onError("No hay fichas para robar.");
 			
-			return false;
+			return;
 		}
 		
 		int randomNumberForTile = (int) (getRandomDouble() * players.getNumPlayerTiles(currentTurn));
@@ -301,8 +297,6 @@ public class Game {
 			o.onSwapped(this.players.getPlayerName(this.currentTurn), board, this.getNumPlayers(), this.players, this.currentTurn);
 		
 		nextTurn();
-		
-		return true;
 	}
 	
 	/* Método removeTile:
@@ -404,21 +398,8 @@ public class Game {
 		}
 		
 		if(getGameIsFinished()) {
-			
-//			if(Game.isTestMode()) {
-//				try {
-//					GameSaver.saveGame(this, Main.getOutFileName());
-//					
-//				} catch (FileNotFoundException | IllegalArgumentException | JSONException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//			
-//			else {
-				for(ScrabbleObserver o : this.observers)
-					o.onEnd(gameFinishedCause + getWinnerName());
-//			}
-			
+			for(ScrabbleObserver o : this.observers)
+				o.onEnd(gameFinishedCause + getWinnerName());
 		}
 		
 		else {

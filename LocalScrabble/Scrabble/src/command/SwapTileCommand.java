@@ -28,7 +28,7 @@ public class SwapTileCommand extends Command {
 	 */
 	
 	@Override
-	public boolean execute(Controller controller, Scanner in, PrintStream out) {
-		return !controller.swapTile();
+	public void execute(Controller controller, Scanner in, PrintStream out) {
+		controller.swapTile();
 	}
 }

@@ -26,7 +26,7 @@ public class HelpCommand extends Command {
 	 */
 	
 	@Override
-	public boolean execute(Controller controller, Scanner in, PrintStream out) {
+	public void execute(Controller controller, Scanner in, PrintStream out) {
 		
 		StringBuilder buffer = new StringBuilder();
 		buffer.append(StringUtils.LINE_SEPARATOR)
@@ -40,8 +40,6 @@ public class HelpCommand extends Command {
 		}
 		
 		buffer.append(StringUtils.LINE_SEPARATOR);
-		out.print(buffer.toString());	
-	
-		return true;
+		out.print(buffer.toString());
 	}
 }

@@ -33,7 +33,7 @@ public class LoadCommand extends Command {
 	 */
 	
 	@Override
-	public boolean execute(Controller controller, Scanner in, PrintStream out) throws CommandExecuteException {
+	public void execute(Controller controller, Scanner in, PrintStream out) throws CommandExecuteException {
 		
 		try {
 			controller.loadGame(this.file);
@@ -46,8 +46,6 @@ public class LoadCommand extends Command {
 		catch(JSONException je) {
 			throw new CommandExecuteException("El formato JSON del fichero introducido no es válido." + StringUtils.LINE_SEPARATOR + je.getMessage(), je);
 		}
-		
-		return false;
 	}
 	
 	/* Sobrescritura del método parse:

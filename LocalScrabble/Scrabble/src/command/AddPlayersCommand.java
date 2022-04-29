@@ -32,10 +32,8 @@ public class AddPlayersCommand extends Command {
 	 */
 
 	@Override
-	public boolean execute(Controller controller, Scanner in, PrintStream out) {
-		
+	public void execute(Controller controller, Scanner in, PrintStream out) {
 		controller.addOrChangePlayers(createPlayers(in, out));
-		return false;
 	}
 	
 	private GamePlayers createPlayers(Scanner in, PrintStream out) {

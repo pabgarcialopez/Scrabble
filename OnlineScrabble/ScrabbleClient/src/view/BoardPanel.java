@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 
 import containers.Board;
 import containers.GamePlayers;
-import scrabble.Controller;
+import control.Controller;
 
 public class BoardPanel extends JPanel implements ScrabbleObserver {
 	

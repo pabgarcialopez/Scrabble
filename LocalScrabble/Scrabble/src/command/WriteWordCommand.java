@@ -29,9 +29,9 @@ public class WriteWordCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(Controller controller, Scanner in, PrintStream out) {
+	public void execute(Controller controller, Scanner in, PrintStream out) {
 		
-		return !controller.writeAWord(word, posX, posY, direction);
+		controller.writeAWord(word, posX, posY, direction);
 	}
 	
 	@Override

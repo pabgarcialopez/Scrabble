@@ -27,7 +27,7 @@ public class NewGameCommand extends Command{
 	 */
 	
 	@Override
-	public boolean execute(Controller controller, Scanner in, PrintStream out) throws CommandExecuteException {
+	public void execute(Controller controller, Scanner in, PrintStream out) throws CommandExecuteException {
 		
 		try {
 			controller.newGame();
@@ -35,7 +35,5 @@ public class NewGameCommand extends Command{
 		catch(FileNotFoundException fnfe) {
 			throw new CommandExecuteException("El fichero de nueva partida no se ha podido encontrar.", fnfe);
 		}
-		
-		return false;
 	}
 }

@@ -20,8 +20,8 @@ import javax.swing.SwingUtilities;
 
 import containers.Board;
 import containers.GamePlayers;
+import control.Controller;
 import logic.Game;
-import scrabble.Controller;
 
 public class ControlPanel extends JPanel implements ScrabbleObserver {
 

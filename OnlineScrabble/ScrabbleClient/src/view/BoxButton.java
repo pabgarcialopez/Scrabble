@@ -12,7 +12,7 @@ import javax.swing.JButton;
 
 import containers.Board;
 import containers.GamePlayers;
-import scrabble.Controller;
+import control.Controller;
 import simulatedObjects.Box;
 
 public class BoxButton extends JButton implements ScrabbleObserver {
