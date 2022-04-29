@@ -80,7 +80,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
+	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
 		this.box = board.getBoxAt(this.posX, this.posY);
 		setImage();
 		enableButton = false;
@@ -109,7 +109,7 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	public void onError(String error) {}
 
 	@Override
-	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {
+	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn) {
 		enableButton = false;
 	}
 

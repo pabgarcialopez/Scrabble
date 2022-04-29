@@ -38,7 +38,7 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
-	public void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
+	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
 		
 		this.removeAll();
 		
@@ -60,7 +60,7 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	public void onError(String error) {}
 
 	@Override
-	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {}
+	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
 	public void onEnd(String message) {}

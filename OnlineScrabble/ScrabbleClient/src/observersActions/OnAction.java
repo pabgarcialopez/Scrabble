@@ -25,6 +25,14 @@ public abstract class OnAction {
 		{
 			add(new OnWordWritten());
 			add(new OnPassed());
+			add(new OnSwapped());
+			add(new OnEnd());
+			add(new OnError());
+			add(new OnFirstTurnDecided());
+			add(new OnMovementNeeded());
+			add(new OnRegister());
+			add(new OnReset());
+			add(new OnUpdate());
 		}
 	};
 	

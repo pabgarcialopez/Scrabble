@@ -749,6 +749,4 @@ public class Game {
 
 		return jo;
 	}
-
-	
 }

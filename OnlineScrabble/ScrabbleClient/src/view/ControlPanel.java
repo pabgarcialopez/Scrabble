@@ -290,12 +290,12 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	} 
 
 	@Override
-	public void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
+	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
 		resetEnabledButtons(numPlayers);
 	}
 
 	@Override
-	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {
+	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn) {
 		resetEnabledButtons(numPlayers);
 	}
 

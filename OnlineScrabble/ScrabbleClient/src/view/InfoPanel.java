@@ -93,7 +93,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
-	public void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
+	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
 		if (Game.getGameInitiated() && numPlayers != 0) {
 			infoLabel.setText("Partida iniciada");
 			this.currentTurnName = gamePlayers.getPlayerName(currentTurn);
@@ -115,7 +115,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {
+	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn) {
 		
 		if(!gameFinished) {
 			this.currentTurnName = gamePlayers.getPlayerName(currentTurn);

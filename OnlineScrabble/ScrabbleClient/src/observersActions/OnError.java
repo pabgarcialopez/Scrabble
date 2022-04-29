@@ -21,7 +21,7 @@ public class OnError extends OnAction {
 			
 			JSONObject data = jo.getJSONObject("data");
 			
-			this.message = jo.getString(data.getString("message"));
+			this.message = data.getString("message");
 			
 			return this;
 		}

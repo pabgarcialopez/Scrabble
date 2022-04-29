@@ -37,7 +37,7 @@ public interface ScrabbleObserver {
 	/* Método onReset:
 	 * Es llamado cuando un se ejecuta el comando reset.
 	 */
-	void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn);
+	void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn);
 	
 	/* Método onError:
 	 * Es llamado cuando un error ha ocurrido.
@@ -47,7 +47,7 @@ public interface ScrabbleObserver {
 	/* Método onUpdate:
 	 * Es llamado cuando se actualiza el juego (método update de Game).
 	 */
-	void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn);
+	void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn);
 	
 	/* Método onEnd:
 	 * Es llamado cuando se ha alcanzado el final de la partida.

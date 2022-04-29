@@ -23,7 +23,7 @@ public class OnReset extends OnAction {
 	
 	private Board board;
 	private int numPlayers;
-	private String currentTurnName;
+	private String currentPlayerName;
 	private int remainingTiles;
 	private GamePlayers gamePlayers;
 	private int currentTurn;
@@ -58,7 +58,7 @@ public class OnReset extends OnAction {
 			
 			this.board = this.boardBuilder.createBoard(data.getJSONObject("game_board"));
 			this.numPlayers = data.getInt("num_players");
-			this.currentTurnName = data.getString("current_turn_name");
+			this.currentPlayerName = data.getString("current_player_name");
 			this.remainingTiles = data.getInt("remaining_tiles");
 			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
 			this.currentTurn = data.getInt("current_turn");
@@ -73,7 +73,7 @@ public class OnReset extends OnAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 		
 		for(ScrabbleObserver o : observers)
-			o.onReset(board, numPlayers, currentTurnName, remainingTiles, gamePlayers, currentTurn);
+			o.onReset(board, numPlayers, currentPlayerName, remainingTiles, gamePlayers, currentTurn);
 	}
 
 }
