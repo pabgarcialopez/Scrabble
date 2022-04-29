@@ -1,15 +1,12 @@
-package actions;
+package observersActions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
 
-import containers.Board;
-import containers.BoardBuilder;
 import containers.GamePlayers;
 import containers.GamePlayersBuilder;
-import simulatedObjects.BoxBuilder;
 import simulatedObjects.PlayerBuilder;
 import simulatedObjects.TileBuilder;
 import strategies.EasyStrategyBuilder;
@@ -19,22 +16,21 @@ import strategies.MediumStrategyBuilder;
 import strategies.StrategyBuilder;
 import view.ScrabbleObserver;
 
-public class OnRegister extends OnAction {
+public class OnUpdate extends OnAction {
 
-	private Board board;
+	private boolean gameFinished;
 	private int numPlayers;
+	private int remainingTiles;
+	private String currentTurnName;
 	private GamePlayers gamePlayers;
 	private int currentTurn;
 	
 	private GamePlayersBuilder gamePlayersBuilder;
-	private BoardBuilder boardBuilder;
 	
-	OnRegister() {
+	OnUpdate() {
 		
-		super("register");
+		super("update");
 
-		TileBuilder tileBuilder = new TileBuilder();
-		
 		List<StrategyBuilder> strategyBuilders = new ArrayList<StrategyBuilder>();
 		
 		strategyBuilders.add(new EasyStrategyBuilder());
@@ -42,20 +38,20 @@ public class OnRegister extends OnAction {
 		strategyBuilders.add(new HardStrategyBuilder());
 		strategyBuilders.add(new HumanStrategyBuilder());
 		
-		this.gamePlayersBuilder = new GamePlayersBuilder(new PlayerBuilder(tileBuilder, strategyBuilders));
-		
-		this.boardBuilder = new BoardBuilder(new BoxBuilder(tileBuilder));
+		this.gamePlayersBuilder = new GamePlayersBuilder(new PlayerBuilder(new TileBuilder(), strategyBuilders));
 	}
-	
+
 	@Override
 	OnAction interpret(JSONObject jo) {
-
+		
 		if(this.type.equals(jo.getString("type"))) {
 			
 			JSONObject data = jo.getJSONObject("data");
 			
-			this.board = this.boardBuilder.createBoard(data.getJSONObject("game_board"));
+			this.gameFinished = data.getBoolean("game_finished");
 			this.numPlayers = data.getInt("num_players");
+			this.remainingTiles = data.getInt("remaining_tiles");
+			this.currentTurnName = data.getString("current_turn_name");
 			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
 			this.currentTurn = data.getInt("current_turn");
 			
@@ -67,9 +63,9 @@ public class OnRegister extends OnAction {
 
 	@Override
 	public void executeAction(List<ScrabbleObserver> observers) {
-		for(ScrabbleObserver o : observers)
-			o.onRegister(board, numPlayers, gamePlayers, currentTurn);
-	}
-	
 
+		for(ScrabbleObserver o : observers)
+			o.onUpdate(gameFinished, numPlayers, remainingTiles, currentTurnName, gamePlayers, currentTurn);
+		
+	}
 }

@@ -1,15 +1,13 @@
-package actions;
+package observersActions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
 
-import containers.Board;
-import containers.BoardBuilder;
 import containers.GamePlayers;
 import containers.GamePlayersBuilder;
-import simulatedObjects.BoxBuilder;
+import logic.WordsBuilder;
 import simulatedObjects.PlayerBuilder;
 import simulatedObjects.TileBuilder;
 import strategies.EasyStrategyBuilder;
@@ -19,24 +17,20 @@ import strategies.MediumStrategyBuilder;
 import strategies.StrategyBuilder;
 import view.ScrabbleObserver;
 
-public class OnReset extends OnAction {
+public class OnFirstTurnDecided extends OnAction {
 	
-	private Board board;
-	private int numPlayers;
-	private String currentTurnName;
-	private int remainingTiles;
+	private List<String> lettersObtained;
 	private GamePlayers gamePlayers;
+	private int numPlayers;
 	private int currentTurn;
 	
-	private BoardBuilder boardBuilder;
 	private GamePlayersBuilder gamePlayersBuilder;
+	private WordsBuilder wordsBuilder;
 	
-	OnReset() {
+	OnFirstTurnDecided() {
 		
-		super("reset");
+		super("first_turn_decided");
 
-		TileBuilder tileBuilder = new TileBuilder();
-		
 		List<StrategyBuilder> strategyBuilders = new ArrayList<StrategyBuilder>();
 		
 		strategyBuilders.add(new EasyStrategyBuilder());
@@ -44,23 +38,21 @@ public class OnReset extends OnAction {
 		strategyBuilders.add(new HardStrategyBuilder());
 		strategyBuilders.add(new HumanStrategyBuilder());
 		
-		this.gamePlayersBuilder = new GamePlayersBuilder(new PlayerBuilder(tileBuilder, strategyBuilders));
+		this.gamePlayersBuilder = new GamePlayersBuilder(new PlayerBuilder(new TileBuilder(), strategyBuilders));
 		
-		this.boardBuilder = new BoardBuilder(new BoxBuilder(tileBuilder));
+		this.wordsBuilder = new WordsBuilder();
 	}
 	
 	@Override
 	OnAction interpret(JSONObject jo) {
-
+		
 		if(this.type.equals(jo.getString("type"))) {
 			
 			JSONObject data = jo.getJSONObject("data");
 			
-			this.board = this.boardBuilder.createBoard(data.getJSONObject("game_board"));
-			this.numPlayers = data.getInt("num_players");
-			this.currentTurnName = data.getString("current_turn_name");
-			this.remainingTiles = data.getInt("remaining_tiles");
+			this.lettersObtained = this.wordsBuilder.createWords(data.getJSONObject("letters_obtained"));
 			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
+			this.numPlayers = data.getInt("num_players");
 			this.currentTurn = data.getInt("current_turn");
 			
 			return this;
@@ -71,9 +63,10 @@ public class OnReset extends OnAction {
 
 	@Override
 	public void executeAction(List<ScrabbleObserver> observers) {
-		
+
 		for(ScrabbleObserver o : observers)
-			o.onReset(board, numPlayers, currentTurnName, remainingTiles, gamePlayers, currentTurn);
+			o.onFirstTurnDecided(lettersObtained, gamePlayers, numPlayers, currentTurn);
 	}
+	
 
 }

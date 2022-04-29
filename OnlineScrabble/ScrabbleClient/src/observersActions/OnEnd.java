@@ -1,4 +1,4 @@
-package actions;
+package observersActions;
 
 import java.util.List;
 
@@ -6,12 +6,12 @@ import org.json.JSONObject;
 
 import view.ScrabbleObserver;
 
-public class OnError extends OnAction {
+public class OnEnd extends OnAction {
 
 	private String message;
 	
-	OnError() {
-		super("error");
+	OnEnd() {
+		super("end");
 	}
 
 	@Override
@@ -33,8 +33,6 @@ public class OnError extends OnAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 
 		for(ScrabbleObserver o : observers)
-			o.onError(this.message);
+			o.onEnd(this.message);
 	}
-	
-	
 }

@@ -160,10 +160,6 @@ public class GamePlayers {
 	public Tile getPlayerTile(int player, String letter) {
 		return this.players.get(player).getTile(letter);
 	}
-	
-//	public boolean humanIsPlaying(int currentTurn) {
-//		return players.get(currentTurn).isHuman();
-//	}
 
 	public int getPlayerPoints(int player) {
 		return this.players.get(player).getPoints();

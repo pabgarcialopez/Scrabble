@@ -1,4 +1,4 @@
-package actions;
+package observersActions;
 
 import java.util.List;
 
@@ -6,22 +6,25 @@ import org.json.JSONObject;
 
 import view.ScrabbleObserver;
 
-public class OnEnd extends OnAction {
+public class OnPassed  extends OnAction {
 
-	private String message;
+	private int numPlayers;
 	
-	OnEnd() {
-		super("end");
+	private String currentPlayerName;
+	
+	OnPassed() {
+		super("passed");
 	}
-
+	
 	@Override
 	OnAction interpret(JSONObject jo) {
-
+		
 		if(this.type.equals(jo.getString("type"))) {
 			
 			JSONObject data = jo.getJSONObject("data");
 			
-			this.message = jo.getString(data.getString("message"));
+			this.numPlayers = data.getInt("num_players");
+			this.currentPlayerName = data.getString("current_player_name");
 			
 			return this;
 		}
@@ -33,6 +36,7 @@ public class OnEnd extends OnAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 
 		for(ScrabbleObserver o : observers)
-			o.onEnd(this.message);
+			o.onPassed(numPlayers, currentPlayerName);
 	}
+
 }

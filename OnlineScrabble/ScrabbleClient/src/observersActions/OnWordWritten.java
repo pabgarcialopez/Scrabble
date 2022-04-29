@@ -1,4 +1,4 @@
-package actions;
+package observersActions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,21 +16,24 @@ import strategies.MediumStrategyBuilder;
 import strategies.StrategyBuilder;
 import view.ScrabbleObserver;
 
-public class OnUpdate extends OnAction {
+public class OnWordWritten extends OnAction {
 
-	private boolean gameFinished;
+	private String word;
+	private int posX;
+	private int posY;
+	private String direction;
+	private int points;
+	private int extraPoints;
 	private int numPlayers;
-	private int remainingTiles;
-	private String currentTurnName;
 	private GamePlayers gamePlayers;
 	private int currentTurn;
 	
 	private GamePlayersBuilder gamePlayersBuilder;
 	
-	OnUpdate() {
+	OnWordWritten() {
 		
-		super("update");
-
+		super("word_written");
+		
 		List<StrategyBuilder> strategyBuilders = new ArrayList<StrategyBuilder>();
 		
 		strategyBuilders.add(new EasyStrategyBuilder());
@@ -48,10 +51,13 @@ public class OnUpdate extends OnAction {
 			
 			JSONObject data = jo.getJSONObject("data");
 			
-			this.gameFinished = data.getBoolean("game_finished");
+			this.word = data.getString("word");
+			this.posX = data.getInt("pos_X");
+			this.posY = data.getInt("pos_Y");
+			this.direction = data.getString("direction");
+			this.points = data.getInt("points");
+			this.extraPoints = data.getInt("extra_points");
 			this.numPlayers = data.getInt("num_players");
-			this.remainingTiles = data.getInt("remaining_tiles");
-			this.currentTurnName = data.getString("current_turn_name");
 			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
 			this.currentTurn = data.getInt("current_turn");
 			
@@ -65,7 +71,6 @@ public class OnUpdate extends OnAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 
 		for(ScrabbleObserver o : observers)
-			o.onUpdate(gameFinished, numPlayers, remainingTiles, currentTurnName, gamePlayers, currentTurn);
-		
+			o.onWordWritten(word, posX, posY, direction, points, extraPoints, numPlayers, gamePlayers, currentTurn);
 	}
 }
