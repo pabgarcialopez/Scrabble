@@ -10,7 +10,7 @@ import containers.GamePlayers;
 
 public class GameSerializer {
 	
-	public static final JSONObject serializeWordWritten (String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
+	public static final JSONObject serializeWordWritten (String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board) {
 		
 		JSONObject jo = new JSONObject();
 		
@@ -26,6 +26,7 @@ public class GameSerializer {
 		data.put("num_players", numPlayers);
 		data.put("game_players", gamePlayers.report());
 		data.put("current_turn", currentTurn);
+		data.put("game_board", board.report());
 		
 		jo.put("data", data);
 		
@@ -136,9 +137,14 @@ public class GameSerializer {
 		
 		JSONObject data = new JSONObject();
 		
-		data.put("game_board", board.report());
+		if(board != null)
+			data.put("game_board", board.report());
+
 		data.put("num_players", numPlayers);
-		data.put("game_players", gamePlayers.report());
+		
+		if(gamePlayers != null)
+			data.put("game_players", gamePlayers.report());
+		
 		data.put("current_turn", currentTurn);
 		
 		jo.put("data", data);
@@ -156,9 +162,11 @@ public class GameSerializer {
 		
 		data.put("game_board", board.report());
 		data.put("num_players", numPlayers);
-		data.put("current_player_name", currentPlayerName);
+		if(currentPlayerName != null)
+			data.put("current_player_name", currentPlayerName);
 		data.put("remaining_tiles", remainingTiles);
-		data.put("game_players", gamePlayers.report());
+		if(gamePlayers != null)
+			data.put("game_players", gamePlayers.report());
 		data.put("current_turn", currentTurn);
 		
 		jo.put("data", data);

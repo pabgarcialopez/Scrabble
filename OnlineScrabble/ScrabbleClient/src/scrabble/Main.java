@@ -2,12 +2,10 @@ package scrabble;
 
 import java.io.IOException;
 
-import javax.swing.SwingUtilities;
-
-import control.Controller;
+import client.Client;
 import logic.Game;
+import server.Server;
 import storage.GameLoader;
-import view.GUIView;
 
 /* APUNTES GENERALES:
    
@@ -16,31 +14,20 @@ import view.GUIView;
  */
 public class Main {
 	
-	private static void startGUIMode(Controller controller) throws IOException{
-		
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				new GUIView(controller);
-			}
-			
-		});
-	}
-
-	private static void start(String[] args) throws IOException {
+	private static void start() throws IOException {
 
 		GameLoader.initBuilders();
 		Game.initWordList();
-
-		Controller controller = new Controller();
 		
-		startGUIMode(controller);
+		Server server = new Server();
+		Client client = new Client(server);
+		server.setClient(client);
+		client.initGUI();				
 	}
 
 	public static void main(String[] args) {
 		try {
-			start(args);
+			start();
 		} catch (Exception e) {
 			System.err.print(e.getMessage());
 		}

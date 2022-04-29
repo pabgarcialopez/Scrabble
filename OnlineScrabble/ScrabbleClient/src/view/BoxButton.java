@@ -21,7 +21,6 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	
 	private int posX;
 	private int posY;
-	private Box box;
 	private ChooseWordDialog chooseWordDialog;
 	
 	private Controller controller;
@@ -32,7 +31,6 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 		
 		this.posX = x;
 		this.posY = y;
-		this.box = null;
 		this.chooseWordDialog = chooseWordDialog;
 		this.controller = controller;
 		
@@ -48,12 +46,11 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 		setIcon(new ImageIcon("resources/icons/letters/box_default_icon.png"));
 		setPreferredSize(new Dimension(49, 49));
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-		this.box = new Box(null, null, false);
 		
 		addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(box != null && enableButton) {
+				if(enableButton) {
 					int status = chooseWordDialog.open(posX, posY);
 					if(status == 1) {
 						String word = chooseWordDialog.getSelectedWord();
@@ -66,27 +63,26 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
-		setImage();
+	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board) {
+		setImage(board.getBoxAt(this.posX, this.posY));
 		enableButton = false;
 	}
 
 	@Override
 	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
-		this.box = board.getBoxAt(this.posX, this.posY);
-		if(box != null) 
-			setImage();
+		Box box = board.getBoxAt(this.posX, this.posY);
+		setImage(box);
 		enableButton = false;
 	}
 
 	@Override
 	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
-		this.box = board.getBoxAt(this.posX, this.posY);
-		setImage();
+		Box box = board.getBoxAt(this.posX, this.posY);
+		setImage(box);
 		enableButton = false;
 	}
 	
-	private void setImage() {
+	private void setImage(Box box) {
 		
 		if(box.getTile() != null) {
 			this.setIcon(new ImageIcon("resources/icons/letters/" + box.getTile().getLetter().toUpperCase() + ".png"));

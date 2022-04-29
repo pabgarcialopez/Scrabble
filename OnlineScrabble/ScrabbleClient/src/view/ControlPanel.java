@@ -74,12 +74,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					controller.newGame();
-				}
-				catch (FileNotFoundException fnfe) {
-					JOptionPane.showMessageDialog(ControlPanel.this, "El fichero de nueva partida no es válido", "ERROR", JOptionPane.ERROR_MESSAGE);
-				}
+				controller.newGame();
 			}
 		});
 		
@@ -270,7 +265,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
+	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board) {
 		resetEnabledButtons(numPlayers);
 	}
 

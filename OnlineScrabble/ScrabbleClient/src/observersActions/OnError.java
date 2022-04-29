@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import view.ScrabbleObserver;
 
-public class OnError extends OnAction {
+public class OnError extends OnObserverAction {
 
 	private String message;
 	
@@ -15,7 +15,7 @@ public class OnError extends OnAction {
 	}
 
 	@Override
-	OnAction interpret(JSONObject jo) {
+	OnObserverAction interpret(JSONObject jo) {
 
 		if(this.type.equals(jo.getString("type"))) {
 			

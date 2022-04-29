@@ -19,7 +19,7 @@ import strategies.MediumStrategyBuilder;
 import strategies.StrategyBuilder;
 import view.ScrabbleObserver;
 
-public class OnReset extends OnAction {
+public class OnReset extends OnObserverAction {
 	
 	private Board board;
 	private int numPlayers;
@@ -50,7 +50,7 @@ public class OnReset extends OnAction {
 	}
 	
 	@Override
-	OnAction interpret(JSONObject jo) {
+	OnObserverAction interpret(JSONObject jo) {
 
 		if(this.type.equals(jo.getString("type"))) {
 			
@@ -58,9 +58,9 @@ public class OnReset extends OnAction {
 			
 			this.board = this.boardBuilder.createBoard(data.getJSONObject("game_board"));
 			this.numPlayers = data.getInt("num_players");
-			this.currentPlayerName = data.getString("current_player_name");
+			this.currentPlayerName = data.has("current_player_name") ? data.getString("current_player_name") : null;
 			this.remainingTiles = data.getInt("remaining_tiles");
-			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
+			this.gamePlayers = data.has("game_players") ? this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players")) : null;
 			this.currentTurn = data.getInt("current_turn");
 			
 			return this;
@@ -72,8 +72,7 @@ public class OnReset extends OnAction {
 	@Override
 	public void executeAction(List<ScrabbleObserver> observers) {
 		
-		for(ScrabbleObserver o : observers)
-			o.onReset(board, numPlayers, currentPlayerName, remainingTiles, gamePlayers, currentTurn);
+		for(int i = 0; i < observers.size(); ++i)
+			observers.get(i).onReset(board, numPlayers, currentPlayerName, remainingTiles, gamePlayers, currentTurn);
 	}
-
 }

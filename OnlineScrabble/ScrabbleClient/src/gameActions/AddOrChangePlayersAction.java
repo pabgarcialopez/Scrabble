@@ -1,5 +1,6 @@
-package observersActions;
+package gameActions;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import org.json.JSONObject;
 
 import containers.GamePlayers;
 import containers.GamePlayersBuilder;
+import logic.Game;
 import simulatedObjects.PlayerBuilder;
 import simulatedObjects.TileBuilder;
 import strategies.EasyStrategyBuilder;
@@ -14,20 +16,17 @@ import strategies.HardStrategyBuilder;
 import strategies.HumanStrategyBuilder;
 import strategies.MediumStrategyBuilder;
 import strategies.StrategyBuilder;
-import view.ScrabbleObserver;
 
-public class OnSwapped extends OnObserverAction{
+public class AddOrChangePlayersAction extends GameAction {
 
-	private int numPlayers;
 	private GamePlayers gamePlayers;
-	private int currentTurn;
 	
 	private GamePlayersBuilder gamePlayersBuilder;
 	
-	OnSwapped() {
+	AddOrChangePlayersAction() {
 		
-		super("swapped");
-
+		super("add_or_change_players");
+		
 		List<StrategyBuilder> strategyBuilders = new ArrayList<StrategyBuilder>();
 		
 		strategyBuilders.add(new EasyStrategyBuilder());
@@ -39,15 +38,13 @@ public class OnSwapped extends OnObserverAction{
 	}
 
 	@Override
-	OnObserverAction interpret(JSONObject jo) {
+	GameAction interpret(JSONObject jo) {
 		
 		if(this.type.equals(jo.getString("type"))) {
 			
 			JSONObject data = jo.getJSONObject("data");
 			
-			this.numPlayers = data.getInt("num_players");
 			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
-			this.currentTurn = data.getInt("current_turn");			
 			
 			return this;
 		}
@@ -56,10 +53,8 @@ public class OnSwapped extends OnObserverAction{
 	}
 
 	@Override
-	public void executeAction(List<ScrabbleObserver> observers) {
-
-		for(ScrabbleObserver o : observers)
-			o.onSwapped(numPlayers, gamePlayers, currentTurn);
-		
+	public void executeAction(Game game) throws FileNotFoundException {
+		game.addOrChangePlayers(gamePlayers);
 	}
+
 }

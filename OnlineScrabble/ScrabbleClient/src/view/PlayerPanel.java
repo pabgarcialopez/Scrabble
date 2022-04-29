@@ -107,7 +107,7 @@ public class PlayerPanel extends JPanel implements ScrabbleObserver {
 	
 	@Override
 	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints,
-			int numPlayers, GamePlayers gamePlayers, int currentTurn) {
+			int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board) {
 		if(currentTurn == this.numJugador) 
 			createTiles(currentTurn, gamePlayers);
 	}

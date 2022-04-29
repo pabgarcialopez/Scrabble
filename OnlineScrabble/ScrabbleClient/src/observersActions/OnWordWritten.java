@@ -5,8 +5,11 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import containers.Board;
+import containers.BoardBuilder;
 import containers.GamePlayers;
 import containers.GamePlayersBuilder;
+import simulatedObjects.BoxBuilder;
 import simulatedObjects.PlayerBuilder;
 import simulatedObjects.TileBuilder;
 import strategies.EasyStrategyBuilder;
@@ -16,7 +19,7 @@ import strategies.MediumStrategyBuilder;
 import strategies.StrategyBuilder;
 import view.ScrabbleObserver;
 
-public class OnWordWritten extends OnAction {
+public class OnWordWritten extends OnObserverAction {
 
 	private String word;
 	private int posX;
@@ -27,12 +30,16 @@ public class OnWordWritten extends OnAction {
 	private int numPlayers;
 	private GamePlayers gamePlayers;
 	private int currentTurn;
+	private Board board;
 	
 	private GamePlayersBuilder gamePlayersBuilder;
+	private BoardBuilder boardBuilder;
 	
 	OnWordWritten() {
 		
 		super("word_written");
+		
+		TileBuilder tileBuilder = new TileBuilder();
 		
 		List<StrategyBuilder> strategyBuilders = new ArrayList<StrategyBuilder>();
 		
@@ -41,11 +48,13 @@ public class OnWordWritten extends OnAction {
 		strategyBuilders.add(new HardStrategyBuilder());
 		strategyBuilders.add(new HumanStrategyBuilder());
 		
-		this.gamePlayersBuilder = new GamePlayersBuilder(new PlayerBuilder(new TileBuilder(), strategyBuilders));
+		this.gamePlayersBuilder = new GamePlayersBuilder(new PlayerBuilder(tileBuilder, strategyBuilders));
+		
+		this.boardBuilder = new BoardBuilder(new BoxBuilder(tileBuilder));
 	}
 
 	@Override
-	OnAction interpret(JSONObject jo) {
+	OnObserverAction interpret(JSONObject jo) {
 		
 		if(this.type.equals(jo.getString("type"))) {
 			
@@ -60,6 +69,7 @@ public class OnWordWritten extends OnAction {
 			this.numPlayers = data.getInt("num_players");
 			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
 			this.currentTurn = data.getInt("current_turn");
+			this.board = this.boardBuilder.createBoard(data.getJSONObject("game_board"));
 			
 			return this;
 		}
@@ -71,6 +81,6 @@ public class OnWordWritten extends OnAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 
 		for(ScrabbleObserver o : observers)
-			o.onWordWritten(word, posX, posY, direction, points, extraPoints, numPlayers, gamePlayers, currentTurn);
+			o.onWordWritten(word, posX, posY, direction, points, extraPoints, numPlayers, gamePlayers, currentTurn, board);
 	}
 }

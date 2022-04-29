@@ -19,19 +19,12 @@ import strategies.MediumStrategyBuilder;
 import strategies.StrategyBuilder;
 import view.ScrabbleObserver;
 
-public class OnRegister extends OnAction {
-
-	private Board board;
-	private int numPlayers;
-	private GamePlayers gamePlayers;
-	private int currentTurn;
+public class OnRegister {
 	
 	private GamePlayersBuilder gamePlayersBuilder;
 	private BoardBuilder boardBuilder;
 	
-	OnRegister() {
-		
-		super("register");
+	public OnRegister() {
 
 		TileBuilder tileBuilder = new TileBuilder();
 		
@@ -46,30 +39,18 @@ public class OnRegister extends OnAction {
 		
 		this.boardBuilder = new BoardBuilder(new BoxBuilder(tileBuilder));
 	}
-	
-	@Override
-	OnAction interpret(JSONObject jo) {
 
-		if(this.type.equals(jo.getString("type"))) {
-			
-			JSONObject data = jo.getJSONObject("data");
-			
-			this.board = this.boardBuilder.createBoard(data.getJSONObject("game_board"));
-			this.numPlayers = data.getInt("num_players");
-			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
-			this.currentTurn = data.getInt("current_turn");
-			
-			return this;
-		}
+
+	public void register(JSONObject jo, ScrabbleObserver o) {
 		
-		return null;
+		JSONObject data = jo.getJSONObject("data");
+		
+		Board board = data.has("game_board") ? this.boardBuilder.createBoard(data.getJSONObject("game_board")) : null;
+		int numPlayers = data.getInt("num_players");
+		GamePlayers gamePlayers = data.has("game_players") ? this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players")) : null;
+		int currentTurn = data.getInt("current_turn");
+		
+		
+		o.onRegister(board, numPlayers, gamePlayers, currentTurn);
 	}
-
-	@Override
-	public void executeAction(List<ScrabbleObserver> observers) {
-		for(ScrabbleObserver o : observers)
-			o.onRegister(board, numPlayers, gamePlayers, currentTurn);
-	}
-	
-
 }

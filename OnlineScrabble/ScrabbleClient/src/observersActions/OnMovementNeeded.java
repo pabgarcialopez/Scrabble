@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import view.ScrabbleObserver;
 
-public class OnMovementNeeded extends OnAction {
+public class OnMovementNeeded extends OnObserverAction {
 	
 
 	OnMovementNeeded() {
@@ -14,7 +14,7 @@ public class OnMovementNeeded extends OnAction {
 	}
 
 	@Override
-	OnAction interpret(JSONObject jo) {
+	OnObserverAction interpret(JSONObject jo) {
 		
 		if(this.type.equals(jo.getString("type")))			
 			return this;

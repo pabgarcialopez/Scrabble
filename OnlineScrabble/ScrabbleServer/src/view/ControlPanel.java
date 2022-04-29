@@ -328,6 +328,5 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		enableButtons(this.buttonsToBlockCPUTurn, false);
 		
 		this.continueButton.setEnabled(Game.getGameInitiated() && numPlayers != 0);
-			
 	}
 }

@@ -17,7 +17,7 @@ public interface ScrabbleObserver {
 	/* Método onWordWritten:
 	 * Es llamado cuando una palabra ha sido escrita en el tablero.
 	 */
-	void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn);
+	void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board);
 	
 	/* Método onPassed:
 	 * Es llamado cuando un jugador ha pasado de turno.

@@ -7,15 +7,15 @@ import org.json.JSONObject;
 
 import view.ScrabbleObserver;
 
-public abstract class OnAction {
+public abstract class OnObserverAction {
 	
 	protected final String type;
 	
-	OnAction(String type) {
+	OnObserverAction(String type) {
 		this.type = type;
 	}
 	
-	private static List<OnAction> AVAILABLE_ACTIONS = new ArrayList<OnAction>() {
+	private static List<OnObserverAction> AVAILABLE_ACTIONS = new ArrayList<OnObserverAction>() {
 		
 		/**
 		 * 
@@ -30,15 +30,14 @@ public abstract class OnAction {
 			add(new OnError());
 			add(new OnFirstTurnDecided());
 			add(new OnMovementNeeded());
-			add(new OnRegister());
 			add(new OnReset());
 			add(new OnUpdate());
 		}
 	};
 	
-	public static OnAction getAction(JSONObject jo) {
+	public static OnObserverAction getAction(JSONObject jo) {
 		
-		OnAction action = null;
+		OnObserverAction action = null;
 
 		int i = 0;
 
@@ -54,7 +53,7 @@ public abstract class OnAction {
 		return action;
 	}
 	
-	abstract OnAction interpret(JSONObject jo);
+	abstract OnObserverAction interpret(JSONObject jo);
 	
 	public abstract void executeAction(List<ScrabbleObserver> observers);
 }

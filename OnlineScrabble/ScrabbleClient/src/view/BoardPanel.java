@@ -32,7 +32,7 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
+	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board) {}
 
 	@Override
 	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}

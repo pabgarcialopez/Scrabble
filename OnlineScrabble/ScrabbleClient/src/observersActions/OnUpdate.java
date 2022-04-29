@@ -16,7 +16,7 @@ import strategies.MediumStrategyBuilder;
 import strategies.StrategyBuilder;
 import view.ScrabbleObserver;
 
-public class OnUpdate extends OnAction {
+public class OnUpdate extends OnObserverAction {
 
 	private boolean gameFinished;
 	private int numPlayers;
@@ -42,7 +42,7 @@ public class OnUpdate extends OnAction {
 	}
 
 	@Override
-	OnAction interpret(JSONObject jo) {
+	OnObserverAction interpret(JSONObject jo) {
 		
 		if(this.type.equals(jo.getString("type"))) {
 			
