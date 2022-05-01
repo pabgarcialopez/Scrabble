@@ -1,15 +1,12 @@
-package actions;
+package observersActions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
 
-import containers.Board;
-import containers.BoardBuilder;
 import containers.GamePlayers;
 import containers.GamePlayersBuilder;
-import simulatedObjects.BoxBuilder;
 import simulatedObjects.PlayerBuilder;
 import simulatedObjects.TileBuilder;
 import strategies.EasyStrategyBuilder;
@@ -19,22 +16,18 @@ import strategies.MediumStrategyBuilder;
 import strategies.StrategyBuilder;
 import view.ScrabbleObserver;
 
-public class OnRegister extends OnAction {
+public class OnSwapped extends OnObserverAction{
 
-	private Board board;
 	private int numPlayers;
 	private GamePlayers gamePlayers;
 	private int currentTurn;
 	
 	private GamePlayersBuilder gamePlayersBuilder;
-	private BoardBuilder boardBuilder;
 	
-	OnRegister() {
+	OnSwapped() {
 		
-		super("register");
+		super("swapped");
 
-		TileBuilder tileBuilder = new TileBuilder();
-		
 		List<StrategyBuilder> strategyBuilders = new ArrayList<StrategyBuilder>();
 		
 		strategyBuilders.add(new EasyStrategyBuilder());
@@ -42,22 +35,19 @@ public class OnRegister extends OnAction {
 		strategyBuilders.add(new HardStrategyBuilder());
 		strategyBuilders.add(new HumanStrategyBuilder());
 		
-		this.gamePlayersBuilder = new GamePlayersBuilder(new PlayerBuilder(tileBuilder, strategyBuilders));
-		
-		this.boardBuilder = new BoardBuilder(new BoxBuilder(tileBuilder));
+		this.gamePlayersBuilder = new GamePlayersBuilder(new PlayerBuilder(new TileBuilder(), strategyBuilders));
 	}
-	
-	@Override
-	OnAction interpret(JSONObject jo) {
 
+	@Override
+	OnObserverAction interpret(JSONObject jo) {
+		
 		if(this.type.equals(jo.getString("type"))) {
 			
 			JSONObject data = jo.getJSONObject("data");
 			
-			this.board = this.boardBuilder.createBoard(data.getJSONObject("game_board"));
 			this.numPlayers = data.getInt("num_players");
 			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
-			this.currentTurn = data.getInt("current_turn");
+			this.currentTurn = data.getInt("current_turn");			
 			
 			return this;
 		}
@@ -67,9 +57,9 @@ public class OnRegister extends OnAction {
 
 	@Override
 	public void executeAction(List<ScrabbleObserver> observers) {
-		for(ScrabbleObserver o : observers)
-			o.onRegister(board, numPlayers, gamePlayers, currentTurn);
-	}
-	
 
+		for(ScrabbleObserver o : observers)
+			o.onSwapped(numPlayers, gamePlayers, currentTurn);
+		
+	}
 }

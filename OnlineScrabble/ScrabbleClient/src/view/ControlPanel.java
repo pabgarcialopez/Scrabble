@@ -28,6 +28,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	private static final long serialVersionUID = 1L;
 	
 	private Controller controller;
+	private int clientNumPlayer;
 	
 	private JToolBar bar;
 	
@@ -42,9 +43,10 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	private JFileChooser fc;
 	
 	
-	ControlPanel(Controller controller, Component parent) {
+	ControlPanel(Controller controller, Component parent, int clientNumPlayer) {
 		
 		this.controller = controller;
+		this.clientNumPlayer = clientNumPlayer;
 		
 		this.buttonsToBlockCPUTurn = new ArrayList<JButton>();
 		
@@ -306,9 +308,9 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onMovementNeeded() {
-		enableButtons(this.buttonsToBlockCPUTurn, true);
-		this.continueButton.setEnabled(false);
+	public void onMovementNeeded(int currentTurn) {
+		enableButtons(this.buttonsToBlockCPUTurn, currentTurn == clientNumPlayer);
+		this.continueButton.setEnabled(!(currentTurn == clientNumPlayer));
 	}
 	
 	private void enableButtons(List<JButton> buttons, boolean enable) {

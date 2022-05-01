@@ -1,4 +1,4 @@
-package actions;
+package observersActions;
 
 import java.util.List;
 
@@ -6,22 +6,22 @@ import org.json.JSONObject;
 
 import view.ScrabbleObserver;
 
-public class OnError extends OnAction {
-
-	private String message;
+public class OnMovementNeeded extends OnObserverAction {
 	
-	OnError() {
-		super("error");
+	private int currentTurn;
+
+	OnMovementNeeded() {
+		super("movement_needed");
 	}
 
 	@Override
-	OnAction interpret(JSONObject jo) {
-
+	OnObserverAction interpret(JSONObject jo) {
+		
 		if(this.type.equals(jo.getString("type"))) {
 			
 			JSONObject data = jo.getJSONObject("data");
 			
-			this.message = jo.getString(data.getString("message"));
+			this.currentTurn = data.getInt("current_turn");
 			
 			return this;
 		}
@@ -33,8 +33,7 @@ public class OnError extends OnAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 
 		for(ScrabbleObserver o : observers)
-			o.onError(this.message);
+			o.onMovementNeeded(currentTurn);
 	}
-	
-	
+
 }

@@ -1,10 +1,11 @@
-package actions;
+package observersActions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
 
+import client.Client;
 import containers.Board;
 import containers.BoardBuilder;
 import containers.GamePlayers;
@@ -19,21 +20,12 @@ import strategies.MediumStrategyBuilder;
 import strategies.StrategyBuilder;
 import view.ScrabbleObserver;
 
-public class OnReset extends OnAction {
+public class OnRegister {
 	
-	private Board board;
-	private int numPlayers;
-	private String currentTurnName;
-	private int remainingTiles;
-	private GamePlayers gamePlayers;
-	private int currentTurn;
-	
-	private BoardBuilder boardBuilder;
 	private GamePlayersBuilder gamePlayersBuilder;
+	private BoardBuilder boardBuilder;
 	
-	OnReset() {
-		
-		super("reset");
+	public OnRegister() {
 
 		TileBuilder tileBuilder = new TileBuilder();
 		
@@ -48,32 +40,21 @@ public class OnReset extends OnAction {
 		
 		this.boardBuilder = new BoardBuilder(new BoxBuilder(tileBuilder));
 	}
-	
-	@Override
-	OnAction interpret(JSONObject jo) {
 
-		if(this.type.equals(jo.getString("type"))) {
-			
-			JSONObject data = jo.getJSONObject("data");
-			
-			this.board = this.boardBuilder.createBoard(data.getJSONObject("game_board"));
-			this.numPlayers = data.getInt("num_players");
-			this.currentTurnName = data.getString("current_turn_name");
-			this.remainingTiles = data.getInt("remaining_tiles");
-			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
-			this.currentTurn = data.getInt("current_turn");
-			
-			return this;
-		}
+
+	public void register(JSONObject jo, Client client, List<ScrabbleObserver> observers, boolean alreadyRegistered) {
 		
-		return null;
-	}
-
-	@Override
-	public void executeAction(List<ScrabbleObserver> observers) {
+		JSONObject data = jo.getJSONObject("data");
+		
+		Board board = data.has("game_board") ? this.boardBuilder.createBoard(data.getJSONObject("game_board")) : null;
+		int numPlayers = data.getInt("num_players");
+		GamePlayers gamePlayers = data.has("game_players") ? this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players")) : null;
+		int currentTurn = data.getInt("current_turn");
+		
+		if(!alreadyRegistered)
+			client.initGUI(numPlayers);
 		
 		for(ScrabbleObserver o : observers)
-			o.onReset(board, numPlayers, currentTurnName, remainingTiles, gamePlayers, currentTurn);
+			o.onRegister(board, numPlayers, gamePlayers, currentTurn);
 	}
-
 }

@@ -6,14 +6,16 @@ import org.json.JSONObject;
 
 import view.ScrabbleObserver;
 
-public class OnMovementNeeded extends OnObserverAction {
+public class OnPassed  extends OnObserverAction {
+
+	private int numPlayers;
 	
-	private int currentTurn;
-
-	OnMovementNeeded() {
-		super("movement_needed");
+	private String currentPlayerName;
+	
+	OnPassed() {
+		super("passed");
 	}
-
+	
 	@Override
 	OnObserverAction interpret(JSONObject jo) {
 		
@@ -21,7 +23,8 @@ public class OnMovementNeeded extends OnObserverAction {
 			
 			JSONObject data = jo.getJSONObject("data");
 			
-			this.currentTurn = data.getInt("current_turn");
+			this.numPlayers = data.getInt("num_players");
+			this.currentPlayerName = data.getString("current_player_name");
 			
 			return this;
 		}
@@ -33,7 +36,7 @@ public class OnMovementNeeded extends OnObserverAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 
 		for(ScrabbleObserver o : observers)
-			o.onMovementNeeded(currentTurn);
+			o.onPassed(numPlayers, currentPlayerName);
 	}
 
 }

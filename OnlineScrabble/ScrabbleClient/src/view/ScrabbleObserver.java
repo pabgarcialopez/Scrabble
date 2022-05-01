@@ -59,5 +59,5 @@ public interface ScrabbleObserver {
 	 */
 	void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn);
 	
-	void onMovementNeeded();
+	void onMovementNeeded(int currentTurn);
 }

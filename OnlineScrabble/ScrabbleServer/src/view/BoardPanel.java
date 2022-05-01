@@ -8,19 +8,21 @@ import javax.swing.JPanel;
 
 import containers.Board;
 import containers.GamePlayers;
-import scrabble.Controller;
+import control.Controller;
 
 public class BoardPanel extends JPanel implements ScrabbleObserver {
 	
 	private static final long serialVersionUID = 1L;
 	
 	private Controller controller;
+	private int clientNumPlayer;
 	
 	private ChooseWordDialog chooseWordDialog;
 
-	BoardPanel(Controller controller) {
+	BoardPanel(Controller controller, int clientNumPlayer) {
 		
 		this.controller = controller;
+		this.clientNumPlayer = clientNumPlayer;
 		
 		this.chooseWordDialog = new ChooseWordDialog(this);
 		
@@ -32,20 +34,20 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
+	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board) {}
 
 	@Override
 	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
-	public void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
+	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
 		
 		this.removeAll();
 		
 		this.setLayout(new GridLayout(board.getBoardSize(), board.getBoardSize()));
 		for(int i = 0; i < board.getBoardSize(); ++i)
 			for(int j = 0; j < board.getBoardSize(); ++j) {
-				this.add(new BoxButton(this.controller, i, j, this.chooseWordDialog));
+				this.add(new BoxButton(this.controller, i, j, this.chooseWordDialog, clientNumPlayer));
 			}
 		setPreferredSize(new Dimension(730, 730));
 	}
@@ -60,7 +62,7 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	public void onError(String error) {}
 
 	@Override
-	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {}
+	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
 	public void onEnd(String message) {}
@@ -69,5 +71,5 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	public void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn) {}
 
 	@Override
-	public void onMovementNeeded() {}
+	public void onMovementNeeded(int currentTurn) {}
 }

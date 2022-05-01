@@ -6,18 +6,20 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import scrabble.Controller;
+import control.Controller;
 
 public class GUIView extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
 	private Controller controller;
+	private int clientNumPlayer;
 
-	public GUIView(Controller controller) {
+	public GUIView(Controller controller, int clientNumPlayer) {
 		
 		super("SCRABBLE");
 		this.controller = controller;
+		this.clientNumPlayer = clientNumPlayer;
 		initGUI();
 	}
 	
@@ -27,7 +29,7 @@ public class GUIView extends JFrame {
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		
-		mainPanel.add(new ControlPanel(this.controller, this), BorderLayout.NORTH);
+		mainPanel.add(new ControlPanel(this.controller, this, clientNumPlayer), BorderLayout.NORTH);
 		
 		JPanel centerPanel = new JPanel(new BorderLayout());
 		mainPanel.add(centerPanel);
@@ -37,8 +39,8 @@ public class GUIView extends JFrame {
 		centerPanel.add(boardPanel, BorderLayout.CENTER);
 		boardPanel.setPreferredSize(new Dimension(730, 760));
 		
-		boardPanel.add(new BoardPanel(this.controller), BorderLayout.CENTER);
-		boardPanel.add(new InfoPanel(this.controller, this), BorderLayout.NORTH);
+		boardPanel.add(new BoardPanel(this.controller, clientNumPlayer), BorderLayout.CENTER);
+		boardPanel.add(new InfoPanel(this.controller, this, clientNumPlayer), BorderLayout.NORTH);
 		
 		JPanel player0 = createPlayerPanel(new Dimension(1130, 100), 0);
 		JPanel player1 = createPlayerPanel(new Dimension(200, 960), 1);
@@ -59,7 +61,7 @@ public class GUIView extends JFrame {
 		
 		JPanel player = new JPanel();
 		
-		player.add(new PlayerPanel(this.controller, player_number));
+		player.add(new PlayerPanel(this.controller, player_number, clientNumPlayer));
 		player.setPreferredSize(d);
 		player.setAlignmentY(CENTER_ALIGNMENT);
 		player.setAlignmentX(CENTER_ALIGNMENT);

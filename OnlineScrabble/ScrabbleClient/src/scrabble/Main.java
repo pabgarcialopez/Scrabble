@@ -3,9 +3,6 @@ package scrabble;
 import java.io.IOException;
 
 import client.Client;
-import logic.Game;
-import server.Server;
-import storage.GameLoader;
 
 /* APUNTES GENERALES:
    
@@ -14,23 +11,17 @@ import storage.GameLoader;
  */
 public class Main {
 	
-	private static void start() throws IOException {
+	private static void start(String[] args) throws IOException {
 
-		GameLoader.initBuilders();
-		Game.initWordList();
-		
-		Server server = new Server();
-		Client client = new Client(server);
-		server.setClient(client);
-		client.initGUI();				
+		Client client = new Client(args[0], args[1], Integer.parseInt(args[2]));
+		client.start();
 	}
 
 	public static void main(String[] args) {
 		try {
-			start();
+			start(args);
 		} catch (Exception e) {
 			System.err.print(e.getMessage());
 		}
-
 	}
 }

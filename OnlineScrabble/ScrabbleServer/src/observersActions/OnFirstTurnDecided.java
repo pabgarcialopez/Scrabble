@@ -1,4 +1,4 @@
-package actions;
+package observersActions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import strategies.MediumStrategyBuilder;
 import strategies.StrategyBuilder;
 import view.ScrabbleObserver;
 
-public class OnFirstTurnDecided extends OnAction {
+public class OnFirstTurnDecided extends OnObserverAction {
 	
 	private List<String> lettersObtained;
 	private GamePlayers gamePlayers;
@@ -44,7 +44,7 @@ public class OnFirstTurnDecided extends OnAction {
 	}
 	
 	@Override
-	OnAction interpret(JSONObject jo) {
+	OnObserverAction interpret(JSONObject jo) {
 		
 		if(this.type.equals(jo.getString("type"))) {
 			

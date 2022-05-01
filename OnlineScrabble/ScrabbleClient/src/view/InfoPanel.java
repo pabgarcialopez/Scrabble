@@ -21,6 +21,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	private static final long serialVersionUID = 1L;
 	
 	private String currentTurnName;
+	private int clientNumPlayer;
 	
 	private JLabel currentTurnLabel;
 	private JLabel remainingTilesLabel;
@@ -29,8 +30,9 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	
 	private Component parent;
 
-	InfoPanel(Controller controller, Component parent) {
+	InfoPanel(Controller controller, Component parent, int clientNumPlayer) {
 		
+		this.clientNumPlayer = clientNumPlayer;
 		this.parent = parent;
 		initGUI();
 		controller.addObserver(this);
@@ -165,7 +167,8 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onMovementNeeded() {
-		this.infoLabel.setText("Elige tu siguiente movimiento");
+	public void onMovementNeeded(int currentTurn) {
+		if(currentTurn == clientNumPlayer)
+			this.infoLabel.setText("Elige tu siguiente movimiento");
 	}
 }

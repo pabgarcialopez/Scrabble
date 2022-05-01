@@ -20,14 +20,15 @@ import javax.swing.SwingUtilities;
 
 import containers.Board;
 import containers.GamePlayers;
+import control.Controller;
 import logic.Game;
-import scrabble.Controller;
 
 public class ControlPanel extends JPanel implements ScrabbleObserver {
 
 	private static final long serialVersionUID = 1L;
 	
 	private Controller controller;
+	private int clientNumPlayer;
 	
 	private JToolBar bar;
 	
@@ -42,9 +43,10 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	private JFileChooser fc;
 	
 	
-	ControlPanel(Controller controller, Component parent) {
+	ControlPanel(Controller controller, Component parent, int clientNumPlayer) {
 		
 		this.controller = controller;
+		this.clientNumPlayer = clientNumPlayer;
 		
 		this.buttonsToBlockCPUTurn = new ArrayList<JButton>();
 		
@@ -74,12 +76,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					controller.newGame();
-				}
-				catch (FileNotFoundException fnfe) {
-					JOptionPane.showMessageDialog(ControlPanel.this, "El fichero de nueva partida no es válido", "ERROR", JOptionPane.ERROR_MESSAGE);
-				}
+				controller.newGame();
 			}
 		});
 		
@@ -270,7 +267,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
+	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board) {
 		resetEnabledButtons(numPlayers);
 	}
 
@@ -290,12 +287,12 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	} 
 
 	@Override
-	public void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
+	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
 		resetEnabledButtons(numPlayers);
 	}
 
 	@Override
-	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {
+	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn) {
 		resetEnabledButtons(numPlayers);
 	}
 
@@ -311,9 +308,9 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onMovementNeeded() {
-		enableButtons(this.buttonsToBlockCPUTurn, true);
-		this.continueButton.setEnabled(false);
+	public void onMovementNeeded(int currentTurn) {
+		enableButtons(this.buttonsToBlockCPUTurn, currentTurn == clientNumPlayer);
+		this.continueButton.setEnabled(!(currentTurn == clientNumPlayer));
 	}
 	
 	private void enableButtons(List<JButton> buttons, boolean enable) {
@@ -328,5 +325,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		enableButtons(this.buttonsToBlockCPUTurn, false);
 		
 		this.continueButton.setEnabled(Game.getGameInitiated() && numPlayers != 0);
+			
 	}
 }

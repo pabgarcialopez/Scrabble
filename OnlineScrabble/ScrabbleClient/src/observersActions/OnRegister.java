@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import client.Client;
 import containers.Board;
 import containers.BoardBuilder;
 import containers.GamePlayers;
@@ -41,7 +42,7 @@ public class OnRegister {
 	}
 
 
-	public void register(JSONObject jo, ScrabbleObserver o) {
+	public void register(JSONObject jo, Client client, List<ScrabbleObserver> observers) {
 		
 		JSONObject data = jo.getJSONObject("data");
 		
@@ -50,7 +51,9 @@ public class OnRegister {
 		GamePlayers gamePlayers = data.has("game_players") ? this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players")) : null;
 		int currentTurn = data.getInt("current_turn");
 		
+		client.initGUI(numPlayers);
 		
-		o.onRegister(board, numPlayers, gamePlayers, currentTurn);
+		for(ScrabbleObserver o : observers)
+			o.onRegister(board, numPlayers, gamePlayers, currentTurn);
 	}
 }

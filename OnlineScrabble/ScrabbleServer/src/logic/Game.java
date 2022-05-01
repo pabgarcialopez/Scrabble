@@ -14,12 +14,12 @@ import containers.Board;
 import containers.GamePlayers;
 import containers.GameTiles;
 import exceptions.CommandExecuteException;
+import server.Server;
 import simulatedObjects.Box;
 import simulatedObjects.Player;
 import simulatedObjects.Tile;
 import storage.GameLoader;
 import utils.StringUtils;
-import view.ScrabbleObserver;
 import wordCheckers.WordChecker;
 
 /* APUNTES GENERALES
@@ -71,9 +71,9 @@ public class Game {
 	
 	private WordChecker wordChecker;
 	
-	private List<ScrabbleObserver> observers;
+	private Server server;
 
-	public Game() {
+	public Game(Server server) {
 		
 		_gameInitiated = false;
 		_wordsInBoard = false;
@@ -91,7 +91,8 @@ public class Game {
 		this.usedWords = null;
 		
 		this.wordChecker = new WordChecker(this);
-		this.observers = new ArrayList<ScrabbleObserver>();
+		
+		this.server = server;
 	}
 	
 	/* Método reset:
@@ -130,8 +131,7 @@ public class Game {
 		
 		_gameInitiated = true;
 		
-		for(int i = 0; i < this.observers.size(); ++i)
-			this.observers.get(i).onReset(board, this.getNumPlayers(), getNumPlayers() == 0 ? null : this.players.getPlayerName(this.currentTurn), this.getRemainingTiles(), this.players, this.currentTurn);
+		this.server.sendViewAction(GameSerializer.serializeReset(board, this.getNumPlayers(), getNumPlayers() == 0 || this.currentTurn < 0 ? null : this.players.getPlayerName(this.currentTurn), this.getRemainingTiles(), this.players, this.currentTurn));
 	}
 	
 	/* Método playTurn:
@@ -159,7 +159,7 @@ public class Game {
 	 * Por último, se notifica a los observadores que se ha escrito una palabra; se delega en GamePlayers
 	 * el robo de fichas por parte del jugador, y se avanza el turno.
 	 */
-	public boolean writeAWord(String word, int posX, int posY, String direction) {
+	public void writeAWord(String word, int posX, int posY, String direction) {
 		
 		try {
 			word = StringUtils.removeAccents(word);
@@ -167,10 +167,8 @@ public class Game {
 			this.wordChecker.checkArguments(word, posX, posY, direction);
 		}
 		catch(CommandExecuteException cee) {
-			for(ScrabbleObserver o : this.observers)
-				o.onError(cee.getMessage());
-			
-			return false;
+			this.server.sendViewAction(GameSerializer.serializeError(cee.getMessage()));
+			return;
 		}
 		
 		List<String> wordsToAdd = getNewFormedWords(word, posX, posY, direction);
@@ -193,14 +191,11 @@ public class Game {
 		_wordsInBoard = true;
 		numConsecutivePassedTurns = 0;
 		
-		for(ScrabbleObserver o : this.observers)
-			o.onWordWritten(word, posX, posY, direction, points, extraPoints, this.getNumPlayers(), this.players, this.currentTurn);
+		this.server.sendViewAction(GameSerializer.serializeWordWritten(word, posX, posY, direction, points, extraPoints, getNumPlayers(), players, this.currentTurn, board));
 		
 		players.drawTiles(this, currentTurn);
 	
 		nextTurn();
-		
-		return true;
 	}
 	
 	/* Método decideFirstTurn:
@@ -235,8 +230,7 @@ public class Game {
 			if (lettersObtained.get(i).compareTo(lettersObtained.get(this.currentTurn)) < 0) 
 				this.currentTurn = i;
 		
-		for(ScrabbleObserver o : this.observers)
-			o.onFirstTurnDecided(lettersObtained, this.players, this.getNumPlayers(), this.currentTurn);
+		this.server.sendViewAction(GameSerializer.serializeFirstTurnDecided(lettersObtained, players, getNumPlayers(), currentTurn));
 	}
 	
 	/* Método passTurn:
@@ -247,8 +241,7 @@ public class Game {
 	public void passTurn() {
 		++this.numConsecutivePassedTurns;
 		
-		for(ScrabbleObserver o : this.observers)
-			o.onPassed(this.getNumPlayers(), this.players.getPlayerName(this.currentTurn));
+		this.server.sendViewAction(GameSerializer.serializePassed(getNumPlayers(), players.getPlayerName(currentTurn)));
 		
 		nextTurn();
 	}
@@ -271,15 +264,13 @@ public class Game {
 	 * Se incrementan los turnos saltados, se notifica a los observadores y se
 	 * avanza al siguiente turno (método nextTurn).
 	 */
-	public boolean swapTile() {
+	public void swapTile() {
 		
 		if(tiles.getSize() <= 0) {
-			//if(humanIsPlaying()) {
-				for(ScrabbleObserver o : this.observers)
-					o.onError("No hay fichas para robar.");
-			//}
 			
-			return false;
+			this.server.sendViewAction(GameSerializer.serializeError("No hay fichas para robar"));
+		
+			return;
 		}
 		
 		int randomNumberForTile = (int) (getRandomDouble() * players.getNumPlayerTiles(currentTurn));
@@ -297,12 +288,9 @@ public class Game {
 		
 		++this.numConsecutivePassedTurns;
 		
-		for(ScrabbleObserver o : this.observers)
-			o.onSwapped(this.getNumPlayers(), this.players, this.currentTurn);
+		this.server.sendViewAction(GameSerializer.serializeSwapped(getNumPlayers(), players, currentTurn));
 		
 		nextTurn();
-		
-		return true;
 	}
 	
 	/* Método removeTile:
@@ -403,28 +391,11 @@ public class Game {
 			}
 		}
 		
-		if(getGameIsFinished()) {
-			
-//			if(Game.isTestMode()) {
-//				try {
-//					GameSaver.saveGame(this, Main.getOutFileName());
-//					
-//				} catch (FileNotFoundException | IllegalArgumentException | JSONException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//			
-//			else {
-				for(ScrabbleObserver o : this.observers)
-					o.onEnd(gameFinishedCause + getWinnerName());
-//			}
-			
-		}
+		if(getGameIsFinished())			
+			this.server.sendViewAction(GameSerializer.serializeEnd(gameFinishedCause + getWinnerName()));
 		
-		else {
-			for(ScrabbleObserver o : this.observers)
-				o.onUpdate(getGameIsFinished(), this.getNumPlayers(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn);
-		}
+		else
+			this.server.sendViewAction(GameSerializer.serializeUpdate(getGameIsFinished(), this.getNumPlayers(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn));
 		
 	}
 	
@@ -592,24 +563,6 @@ public class Game {
 		}
 	}
 
-	/* Método addObserver:
-	 * Añade a un observador no nulo y todavía no añadido recibido por parámetro 
-	 * a la lista de tipo ScrabbleObserver. También se notifica a dicho observer de esta acción.
-	 */
-	public void addObserver(ScrabbleObserver o) {
-		if(o != null && !this.observers.contains(o)) {
-			this.observers.add(o);
-			o.onRegister(board, this.getNumPlayers(), this.players, this.currentTurn);
-		}
-	}
-	
-	/* Método removeObserver:
-	 * Elimina a un observador no nulo de la lista de tipo ScrabbleObserver.
-	 */
-	public void removeObserver(ScrabbleObserver o) {
-		if(o != null)
-			this.observers.remove(o);
-	}
 	
 	/* Método userExits:
 	 * Actualiza el estado del juego a finalizado, y establece la causa de ello.
@@ -637,8 +590,7 @@ public class Game {
 		if(anyPlayer)
 			finalMessage += getWinnerName();
 		
-		for(ScrabbleObserver o : this.observers)
-			o.onEnd(finalMessage);
+		this.server.sendViewAction(GameSerializer.serializeEnd(finalMessage));
 	}
 	
 	/* Método movementNeeded:
@@ -646,8 +598,7 @@ public class Game {
 	 * para continuar la partida.
 	 */
 	public void movementNeeded() {
-		for(ScrabbleObserver o : this.observers)
-			o.onMovementNeeded();
+		this.server.sendViewAction(GameSerializer.serializeOnMovementNeeded());
 	}
 	
 	// Getters
@@ -750,5 +701,12 @@ public class Game {
 		return jo;
 	}
 
-	
+	public void addNewPlayer(String name) {
+		this.players.addnewPlayer(name);
+		players.drawTiles(this, getNumPlayers() - 1);
+	}
+
+	public void register() {
+		this.server.sendViewAction(GameSerializer.serializeRegister(board, this.getNumPlayers(), this.players, currentTurn));
+	}
 }

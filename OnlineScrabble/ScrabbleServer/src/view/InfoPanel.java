@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 
 import containers.Board;
 import containers.GamePlayers;
+import control.Controller;
 import logic.Game;
-import scrabble.Controller;
 import utils.StringUtils;
 
 public class InfoPanel extends JPanel implements ScrabbleObserver {
@@ -21,6 +21,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	private static final long serialVersionUID = 1L;
 	
 	private String currentTurnName;
+	private int clientNumPlayer;
 	
 	private JLabel currentTurnLabel;
 	private JLabel remainingTilesLabel;
@@ -29,8 +30,9 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	
 	private Component parent;
 
-	InfoPanel(Controller controller, Component parent) {
+	InfoPanel(Controller controller, Component parent, int clientNumPlayer) {
 		
+		this.clientNumPlayer = clientNumPlayer;
 		this.parent = parent;
 		initGUI();
 		controller.addObserver(this);
@@ -70,7 +72,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
+	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board) {
 		infoLabel.setText(String.format("%s escribe la palabra \"%s\" en la posición (%s, %s) y dirección \"%s\"", this.currentTurnName, word.toUpperCase(), posX, posY, direction.toUpperCase()));
 		
 		String pointsString = String.format("¡Gana %s puntos!", points);
@@ -93,7 +95,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
 
 	@Override
-	public void onReset(Board board, int numPlayers, String currentTurnName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
+	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
 		if (Game.getGameInitiated() && numPlayers != 0) {
 			infoLabel.setText("Partida iniciada");
 			this.currentTurnName = gamePlayers.getPlayerName(currentTurn);
@@ -115,7 +117,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentTurnName, GamePlayers gamePlayers, int currentTurn) {
+	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn) {
 		
 		if(!gameFinished) {
 			this.currentTurnName = gamePlayers.getPlayerName(currentTurn);
@@ -165,7 +167,8 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onMovementNeeded() {
-		this.infoLabel.setText("Elige tu siguiente movimiento");
+	public void onMovementNeeded(int currentTurn) {
+		if(currentTurn == clientNumPlayer)
+			this.infoLabel.setText("Elige tu siguiente movimiento");
 	}
 }

@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import logic.Game;
 import simulatedObjects.Player;
 import simulatedObjects.Tile;
+import strategies.HumanStrategy;
 import strategies.Strategy;
 import utils.Pair;
 import wordCheckers.WordChecker;
@@ -197,7 +198,7 @@ public class GamePlayers {
 		}
 	}
 
-	
-
-	
+	public void addnewPlayer(String name) {
+		this.players.add(new Player(name, 0, new ArrayList<Tile>(), new HumanStrategy()));
+	}	
 }

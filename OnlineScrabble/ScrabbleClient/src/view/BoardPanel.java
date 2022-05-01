@@ -15,12 +15,14 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	private static final long serialVersionUID = 1L;
 	
 	private Controller controller;
+	private int clientNumPlayer;
 	
 	private ChooseWordDialog chooseWordDialog;
 
-	BoardPanel(Controller controller) {
+	BoardPanel(Controller controller, int clientNumPlayer) {
 		
 		this.controller = controller;
+		this.clientNumPlayer = clientNumPlayer;
 		
 		this.chooseWordDialog = new ChooseWordDialog(this);
 		
@@ -45,7 +47,7 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 		this.setLayout(new GridLayout(board.getBoardSize(), board.getBoardSize()));
 		for(int i = 0; i < board.getBoardSize(); ++i)
 			for(int j = 0; j < board.getBoardSize(); ++j) {
-				this.add(new BoxButton(this.controller, i, j, this.chooseWordDialog));
+				this.add(new BoxButton(this.controller, i, j, this.chooseWordDialog, clientNumPlayer));
 			}
 		setPreferredSize(new Dimension(730, 730));
 	}
@@ -69,5 +71,5 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	public void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn) {}
 
 	@Override
-	public void onMovementNeeded() {}
+	public void onMovementNeeded(int currentTurn) {}
 }

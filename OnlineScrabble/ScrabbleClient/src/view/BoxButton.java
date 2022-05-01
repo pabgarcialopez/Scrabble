@@ -24,15 +24,17 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	private ChooseWordDialog chooseWordDialog;
 	
 	private Controller controller;
+	private int clientNumPlayer;
 	
 	private boolean enableButton;
 
-	BoxButton(Controller controller, int x, int y, ChooseWordDialog chooseWordDialog) {
+	BoxButton(Controller controller, int x, int y, ChooseWordDialog chooseWordDialog, int clientNumPlayer) {
 		
 		this.posX = x;
 		this.posY = y;
 		this.chooseWordDialog = chooseWordDialog;
 		this.controller = controller;
+		this.clientNumPlayer = clientNumPlayer;
 		
 		initGUI();
 		this.controller.addObserver(this);
@@ -116,7 +118,8 @@ public class BoxButton extends JButton implements ScrabbleObserver {
 	public void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn) {}
 
 	@Override
-	public void onMovementNeeded() {
-		enableButton = true;
+	public void onMovementNeeded(int currentTurn) {
+		if(currentTurn == clientNumPlayer)
+			enableButton = true;
 	}
 }
