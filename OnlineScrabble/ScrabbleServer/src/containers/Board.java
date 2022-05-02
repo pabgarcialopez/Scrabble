@@ -43,13 +43,6 @@ public class Board {
 		
 		return null;
 	}
-
-	/* Método add:
-	 * Añade al tablero una fila de casillas
-	 */
-	public void add(List<Box> row) {
-		board.add(row);
-	}
 	
 	/* Método assignTile:
 	 * Asigna en una posición dada del tablero una ficha recibida por parámetro.
@@ -62,11 +55,6 @@ public class Board {
 
 	public int getBoardSize() {
 		return this.board.size();
-	}
-	
-	public int getNumBoxes() {
-		int numBoxes = this.getBoardSize();
-		return numBoxes*numBoxes;
 	}
 
 	public Tile getTile(int posX, int posY) {

@@ -6,16 +6,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import containers.Board;
 import containers.GamePlayers;
 import containers.GameTiles;
 import exceptions.CommandExecuteException;
 import server.Server;
-import simulatedObjects.Box;
 import simulatedObjects.Player;
 import simulatedObjects.Tile;
 import storage.GameLoader;
@@ -44,19 +41,12 @@ public class Game {
 	private static final int EXTRA_POINTS = 50;
 	private static final int PASSED_TURNS_TO_END_GAME = 2;
 	
-	// Para poder jugar partidas por fichero sin tener 
-	// que incluir saltos de línea en el fichero de entrada.
-	private static final boolean _pausePermitted = false;
-	private static final boolean _testMode = true;
-	
 	private static boolean _gameInitiated;
 	private static boolean _wordsInBoard;
 	private static boolean _gameFinished;
 
 	public static Random _random;
 	
-	public static int _seed;
-
 	private Board board;
 	private GamePlayers players;
 	private GameTiles tiles;
@@ -117,7 +107,7 @@ public class Game {
 		this.board = board;
 		this.tiles = tiles;
 		
-		_random = new Random(Game.getSeed());
+		_random = new Random(System.currentTimeMillis());
 
 		this.currentTurn = currentTurn;
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
@@ -491,20 +481,6 @@ public class Game {
 		
 		return winnersMessage;
 	}
-
-	/* Método getStatus:
-	 * Devuelve un String con el estado actual del juego y del jugador (delegación en GamePlayers).
-	 */
-	public String getStatus() {
-		String status = "Semilla: " + _seed + StringUtils.LINE_SEPARATOR;
-		status += "Fichas restantes: " + this.getRemainingTiles() + StringUtils.LINE_SEPARATOR;
-		status += players.getPlayerStatus(currentTurn) + StringUtils.LINE_SEPARATOR;
-
-		//if (!humanIsPlaying())
-			//status += "Cargando... Por favor, espera." + StringUtils.LINE_SEPARATOR;
-
-		return status;
-	}
 	
 	/* Método addUsedWord
 	 * Añade la palabra recibida por parámetro a la lista de palabras usadas.
@@ -522,40 +498,7 @@ public class Game {
 	public static void initWordList() throws JSONException, FileNotFoundException {
 		words = GameLoader.loadWordList();
 	}
-	
-	/* Método changePlayers:
-	 * Este método actualiza el container GamePlayers al recibido por parámetro.
-	 * Además, completa las fichas que a los jugadores les pueda faltar (método initPlayerTiles) (caso de nueva partida).
-	 * Por último, si es necesario (nueva partida), se establece el orden de juego (método decideFirstTurn).
-	 */
-	public void changePlayers(GamePlayers players) {
 
-		for(int i = 0; i < this.getNumPlayers(); ++i) {
-			this.tiles.addAll(this.players.getTiles(i));
-		}
-		
-		addPlayers(players);
-	}
-	
-	/* Método addPlayers:
-	 * Este método inicializa el container GamePlayers al recibido por parámetro.
-	 * Además, completa las fichas que a los jugadores les pueda faltar (método initPlayerTiles) (caso de nueva partida).
-	 * Por último, si es necesario (nueva partida), se establece el orden de juego (método decideFirstTurn).
-	 */
-	public void addPlayers(GamePlayers players) {
-		
-		this.players = players;
-		initPlayerTiles();
-		decideFirstTurn();	
-	}
-	
-	public void addOrChangePlayers(GamePlayers players) {
-		
-		if(this.getNumPlayers() != 0)
-			changePlayers(players);
-		
-		else addPlayers(players);
-	}
 	
 	/* Método initPlayerTiles:
 	 * Completa las fichas que a los jugadores les pueda faltar.
@@ -585,7 +528,7 @@ public class Game {
 					+ " ha finalizado la partida." 
 					+ StringUtils.DOUBLE_LINE_SEPARATOR;
 		}
-			
+		
 		else gameFinishedCause = "Juego finalizado.";
 		
 		String finalMessage = gameFinishedCause;
@@ -606,10 +549,6 @@ public class Game {
 	
 	// Getters
 	
-	public static boolean getGameInitiated() {
-		return _gameInitiated;
-	}
-	
 	public static boolean getWordsInBoard() {
 		return _wordsInBoard;
 	}
@@ -618,28 +557,12 @@ public class Game {
 		return _gameFinished;
 	}
 	
-	public static boolean isPausePermitted() {
-		return _pausePermitted;
-	}
-	
-	public static boolean isTestMode() {
-		return _testMode;
-	}
-	
-	public static int getSeed() {
-		return _seed;
-	}
-	
 	public static Random getRandom() {
 		return _random;
 	}
 	
 	public int getBoardSize() {
 		return board.getBoardSize();
-	}
-	
-	public Box getBoxAt(int i, int j) {
-		return board.getBoxAt(i, j);
 	}
 	
 	public Board getBoard() {
@@ -672,36 +595,6 @@ public class Game {
 
 	private Double getRandomDouble() {
 		return _random.nextDouble();
-	}
-	
-	public static void setSeed(int seed) {
-		_seed = seed;
-	}
-
-	public JSONObject report() {
-
-		JSONObject jo = new JSONObject();
-
-		jo.put("current_turn", this.currentTurn);
-		jo.put("consecutive_turns_passed", this.numConsecutivePassedTurns);
-		jo.put("words_in_board", _wordsInBoard);
-		jo.put("game_finished", _gameFinished);
-
-		JSONArray words = new JSONArray();
-		for (int i = 0; i < this.usedWords.size(); ++i)
-			words.put(this.usedWords.get(i));
-
-		JSONObject usedWords = new JSONObject();
-		usedWords.put("words", words);
-
-		jo.put("used_words", usedWords);
-		jo.put("game_players", this.players.report());
-		jo.put("game_tiles", this.tiles.report());
-		jo.put("game_board", this.board.report());
-		
-		jo.put("seed", _seed);
-
-		return jo;
 	}
 
 	public void addNewHumanPlayer(String name) {

@@ -24,12 +24,8 @@ public abstract class GameAction {
 		private static final long serialVersionUID = 1L;
 
 		{
-			add(new AddOrChangePlayersAction());
-			add(new LoadGameAction());
-			add(new NewGameAction());
 			add(new PassTurnAction());
 			add(new PlayTurnAction());
-			add(new SaveGameAction());
 			add(new SwapTileAction());
 			add(new UpdateAction());
 			add(new UserExitsAction());
