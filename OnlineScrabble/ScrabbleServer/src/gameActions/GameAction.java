@@ -34,6 +34,7 @@ public abstract class GameAction {
 			add(new UpdateAction());
 			add(new UserExitsAction());
 			add(new WriteAWordAction());
+			add(new RegisterAction());
 		}
 	};
 	

@@ -42,7 +42,7 @@ public class OnRegister {
 	}
 
 
-	public void register(JSONObject jo, Client client, List<ScrabbleObserver> observers) {
+	public void register(JSONObject jo, Client client, List<ScrabbleObserver> observers, boolean alreadyRegistered) {
 		
 		JSONObject data = jo.getJSONObject("data");
 		
@@ -50,10 +50,12 @@ public class OnRegister {
 		int numPlayers = data.getInt("num_players");
 		GamePlayers gamePlayers = data.has("game_players") ? this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players")) : null;
 		int currentTurn = data.getInt("current_turn");
+		boolean gameInitiated = data.getBoolean("game_initiated");
 		
-		client.initGUI(numPlayers);
+		if(!alreadyRegistered)
+			client.initGUI(numPlayers);
 		
-		for(ScrabbleObserver o : observers)
-			o.onRegister(board, numPlayers, gamePlayers, currentTurn);
+		for(int i = 0; i < observers.size(); ++i)
+			observers.get(i).onRegister(board, numPlayers, gamePlayers, currentTurn, gameInitiated);
 	}
 }

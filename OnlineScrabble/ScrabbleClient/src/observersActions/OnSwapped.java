@@ -21,6 +21,7 @@ public class OnSwapped extends OnObserverAction{
 	private int numPlayers;
 	private GamePlayers gamePlayers;
 	private int currentTurn;
+	private boolean gameInitiated;
 	
 	private GamePlayersBuilder gamePlayersBuilder;
 	
@@ -47,7 +48,8 @@ public class OnSwapped extends OnObserverAction{
 			
 			this.numPlayers = data.getInt("num_players");
 			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
-			this.currentTurn = data.getInt("current_turn");			
+			this.currentTurn = data.getInt("current_turn");
+			this.gameInitiated = data.getBoolean("game_initiated");
 			
 			return this;
 		}
@@ -59,7 +61,7 @@ public class OnSwapped extends OnObserverAction{
 	public void executeAction(List<ScrabbleObserver> observers) {
 
 		for(ScrabbleObserver o : observers)
-			o.onSwapped(numPlayers, gamePlayers, currentTurn);
+			o.onSwapped(numPlayers, gamePlayers, currentTurn, gameInitiated);
 		
 	}
 }

@@ -165,7 +165,7 @@ public class Player {
 		
 		JSONObject jo = new JSONObject();
 		
-		jo.put("name", name.substring(0, name.indexOf(" (")));
+		jo.put("name", name);
 		
 		jo.put("total_points", this.totalPoints);
 		

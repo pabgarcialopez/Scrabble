@@ -78,7 +78,7 @@ public class GameLoader {
 		
 		JSONObject json = new JSONObject(new JSONTokener(input));
 		
-		if(!Game.getGameInitiated())
+		if(true)
 			Game.setSeed(json.has("seed") ? json.getInt("seed") : Game.getSeed());
 		else Game.setSeed(Game.getSeed());
 		

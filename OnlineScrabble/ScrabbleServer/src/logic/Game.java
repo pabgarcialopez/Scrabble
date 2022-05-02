@@ -118,12 +118,6 @@ public class Game {
 		this.currentTurn = currentTurn;
 		this.numConsecutivePassedTurns = numConsecutivePassedTurns;
 		
-		if(players.getNumPlayers() != 0) {
-			addPlayers(players);
-		}
-		
-		else this.players = players;
-		
 		_wordsInBoard = wordsInBoard;
 		_gameFinished = gameFinished;
 		
@@ -131,7 +125,7 @@ public class Game {
 		
 		_gameInitiated = true;
 		
-		this.server.sendViewAction(GameSerializer.serializeReset(board, this.getNumPlayers(), getNumPlayers() == 0 || this.currentTurn < 0 ? null : this.players.getPlayerName(this.currentTurn), this.getRemainingTiles(), this.players, this.currentTurn));
+		this.server.sendViewAction(GameSerializer.serializeReset(board, this.getNumPlayers(), getNumPlayers() == 0 || this.currentTurn < 0 ? null : this.players.getPlayerName(this.currentTurn), this.getRemainingTiles(), this.players, this.currentTurn, _gameInitiated));
 	}
 	
 	/* Método playTurn:
@@ -191,7 +185,7 @@ public class Game {
 		_wordsInBoard = true;
 		numConsecutivePassedTurns = 0;
 		
-		this.server.sendViewAction(GameSerializer.serializeWordWritten(word, posX, posY, direction, points, extraPoints, getNumPlayers(), players, this.currentTurn, board));
+		this.server.sendViewAction(GameSerializer.serializeWordWritten(word, posX, posY, direction, points, extraPoints, getNumPlayers(), players, this.currentTurn, board, _gameInitiated));
 		
 		players.drawTiles(this, currentTurn);
 	
@@ -230,7 +224,7 @@ public class Game {
 			if (lettersObtained.get(i).compareTo(lettersObtained.get(this.currentTurn)) < 0) 
 				this.currentTurn = i;
 		
-		this.server.sendViewAction(GameSerializer.serializeFirstTurnDecided(lettersObtained, players, getNumPlayers(), currentTurn));
+		this.server.sendViewAction(GameSerializer.serializeFirstTurnDecided(lettersObtained, players, getNumPlayers(), currentTurn, _gameInitiated));
 	}
 	
 	/* Método passTurn:
@@ -241,7 +235,7 @@ public class Game {
 	public void passTurn() {
 		++this.numConsecutivePassedTurns;
 		
-		this.server.sendViewAction(GameSerializer.serializePassed(getNumPlayers(), players.getPlayerName(currentTurn)));
+		this.server.sendViewAction(GameSerializer.serializePassed(getNumPlayers(), players.getPlayerName(currentTurn), null, _gameInitiated));
 		
 		nextTurn();
 	}
@@ -288,7 +282,7 @@ public class Game {
 		
 		++this.numConsecutivePassedTurns;
 		
-		this.server.sendViewAction(GameSerializer.serializeSwapped(getNumPlayers(), players, currentTurn));
+		this.server.sendViewAction(GameSerializer.serializeSwapped(getNumPlayers(), players, currentTurn, _gameInitiated));
 		
 		nextTurn();
 	}
@@ -395,8 +389,7 @@ public class Game {
 			this.server.sendViewAction(GameSerializer.serializeEnd(gameFinishedCause + getWinnerName()));
 		
 		else
-			this.server.sendViewAction(GameSerializer.serializeUpdate(getGameIsFinished(), this.getNumPlayers(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn));
-		
+			this.server.sendViewAction(GameSerializer.serializeUpdate(getGameIsFinished(), this.getNumPlayers(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn, _gameInitiated));
 	}
 	
 	/* Método getNewFormedWords:
@@ -707,6 +700,6 @@ public class Game {
 	}
 
 	public void register() {
-		this.server.sendViewAction(GameSerializer.serializeRegister(board, this.getNumPlayers(), this.players, currentTurn));
+		this.server.sendViewAction(GameSerializer.serializeRegister(board, this.getNumPlayers(), this.players, currentTurn, _gameInitiated));
 	}
 }

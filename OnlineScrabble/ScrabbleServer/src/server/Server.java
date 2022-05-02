@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.json.JSONObject;
 
 import gameActions.GameAction;
@@ -31,6 +33,7 @@ public class Server extends Thread {
 		this.puerto = puerto;
 		this.clients = new ArrayList<ClientThread>();
 		this.numPlayers = numPlayers;
+		
 		try {
 			GameLoader.newGame(this.game);
 		} catch (FileNotFoundException e) {
@@ -68,10 +71,18 @@ public class Server extends Thread {
 				socket = serverSocket.accept();
 
 				ClientThread client = new ClientThread(socket, this);
+				this.clients.add(client);
 				client.start();
 			}
 			
-			this.game.decideFirstTurn();
+			SwingUtilities.invokeLater(new Runnable() {
+
+				@Override
+				public void run() {
+					game.decideFirstTurn();
+				}
+			});
+			
 			
 		} catch (IOException e) {
 			e.printStackTrace();

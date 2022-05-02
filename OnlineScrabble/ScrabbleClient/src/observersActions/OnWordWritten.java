@@ -31,6 +31,7 @@ public class OnWordWritten extends OnObserverAction {
 	private GamePlayers gamePlayers;
 	private int currentTurn;
 	private Board board;
+	private boolean gameInitiated;
 	
 	private GamePlayersBuilder gamePlayersBuilder;
 	private BoardBuilder boardBuilder;
@@ -70,6 +71,7 @@ public class OnWordWritten extends OnObserverAction {
 			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
 			this.currentTurn = data.getInt("current_turn");
 			this.board = this.boardBuilder.createBoard(data.getJSONObject("game_board"));
+			this.gameInitiated = data.getBoolean("game_initiated");
 			
 			return this;
 		}
@@ -81,6 +83,6 @@ public class OnWordWritten extends OnObserverAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 
 		for(ScrabbleObserver o : observers)
-			o.onWordWritten(word, posX, posY, direction, points, extraPoints, numPlayers, gamePlayers, currentTurn, board);
+			o.onWordWritten(word, posX, posY, direction, points, extraPoints, numPlayers, gamePlayers, currentTurn, board, gameInitiated);
 	}
 }

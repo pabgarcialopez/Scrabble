@@ -25,6 +25,7 @@ public class ClientThread extends Thread {
 		this.socket = socket;
 		try {
 			dataOutputStream = new DataOutputStream(socket.getOutputStream());
+			this.dataOutputStream.flush();
 			dataInputStream = new DataInputStream(socket.getInputStream());
 		} catch (IOException ex) {
 			System.err.println("Error en la inicialización del ObjectOutputStream y el ObjectInputStream");
@@ -71,13 +72,14 @@ public class ClientThread extends Thread {
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.exit(0);;
+			System.exit(0);
 		}
 	}
 	
 	public void sendViewAction(JSONObject jo) {
 		try {
 			this.dataOutputStream.writeUTF(jo.toString());
+			this.dataOutputStream.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);

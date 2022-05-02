@@ -602,11 +602,7 @@ public class Game {
 	}
 	
 	// Getters
-	
-	public static boolean getGameInitiated() {
-		return _gameInitiated;
-	}
-	
+
 	public static boolean getWordsInBoard() {
 		return _wordsInBoard;
 	}

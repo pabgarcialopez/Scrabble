@@ -267,33 +267,33 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board) {
-		resetEnabledButtons(numPlayers);
+	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	}
 
 	@Override
-	public void onPassed(int numPlayers, String currentPlayerName) {
-		resetEnabledButtons(numPlayers);
+	public void onPassed(int numPlayers, String currentPlayerName, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	}
 
 	@Override
-	public void onSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn) {
-		resetEnabledButtons(numPlayers);
+	public void onSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	}
 
 	@Override
-	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
-		resetEnabledButtons(numPlayers);
+	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	} 
 
 	@Override
-	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
-		resetEnabledButtons(numPlayers);
+	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	}
 
 	@Override
-	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn) {
-		resetEnabledButtons(numPlayers);
+	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	}
 
 	@Override
@@ -303,8 +303,8 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	public void onEnd(String message) {}
 
 	@Override
-	public void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn) {
-		resetEnabledButtons(numPlayers);
+	public void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	}
 	
 	@Override
@@ -318,13 +318,13 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 			b.setEnabled(enable);
 	}
 	
-	private void resetEnabledButtons(int numPlayers) {
+	private void resetEnabledButtons(int numPlayers, boolean gameInitiated) {
 		
-		enableButtons(this.buttonsToBlockGameNotInitiated, Game.getGameInitiated());
+		enableButtons(this.buttonsToBlockGameNotInitiated, gameInitiated);
 		
 		enableButtons(this.buttonsToBlockCPUTurn, false);
 		
-		this.continueButton.setEnabled(Game.getGameInitiated() && numPlayers != 0);
+		this.continueButton.setEnabled(gameInitiated && numPlayers != 0);
 			
 	}
 }

@@ -119,7 +119,12 @@ public class ControllerSerializer {
 		JSONObject jo = new JSONObject();
 		
 		jo.put("type", "register");
-		jo.put("data", name);
+		
+		JSONObject data = new JSONObject();
+		
+		data.put("name", name);
+		
+		jo.put("data", data);
 		
 		return jo;
 	}

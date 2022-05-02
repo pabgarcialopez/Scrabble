@@ -34,6 +34,7 @@ public class Client extends Thread {
 	private DataInputStream dataInputStream;
 
 	private OnRegister onRegister;
+	private boolean alreadyRegistered;
 
 	private boolean listening;
 
@@ -44,6 +45,7 @@ public class Client extends Thread {
 		this.name = name;
 		this.listening = true;
 		this.onRegister = new OnRegister();
+		this.alreadyRegistered = false;
 	}
 
 	public void addObserver(ScrabbleObserver o) {
@@ -59,6 +61,7 @@ public class Client extends Thread {
 	public void sendGameAction(JSONObject jo) {
 		try {
 			this.dataOutputStream.writeUTF(jo.toString());
+			this.dataOutputStream.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -68,7 +71,7 @@ public class Client extends Thread {
 	public void doViewAction(JSONObject jo) {
 		
 		if(jo.getString("type").contentEquals("register"))
-			this.onRegister.register(jo, this, observers);
+			this.onRegister.register(jo, this, observers, this.alreadyRegistered);
 		else {
 			OnObserverAction observerAction = OnObserverAction.getAction(jo);
 			observerAction.executeAction(observers);
@@ -76,6 +79,8 @@ public class Client extends Thread {
 	}
 
 	public void initGUI(int clientNumPlayer) {
+		
+		this.alreadyRegistered = true;
 
 		SwingUtilities.invokeLater(new Runnable() {
 
@@ -92,6 +97,7 @@ public class Client extends Thread {
 		try {
 			this.socket = new Socket(this.IP, this.puerto);
 			this.dataOutputStream = new DataOutputStream(this.socket.getOutputStream());
+			this.dataOutputStream.flush();
 			this.dataInputStream = new DataInputStream(this.socket.getInputStream());
 			this.sendRegistrationRequest();
 			this.listen();
@@ -104,6 +110,7 @@ public class Client extends Thread {
 	private void sendRegistrationRequest() {
 		try {
 			this.dataOutputStream.writeUTF(ControllerSerializer.serializeRegister(name).toString());
+			this.dataOutputStream.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);

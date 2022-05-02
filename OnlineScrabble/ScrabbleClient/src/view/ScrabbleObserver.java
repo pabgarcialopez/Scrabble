@@ -17,27 +17,27 @@ public interface ScrabbleObserver {
 	/* Método onWordWritten:
 	 * Es llamado cuando una palabra ha sido escrita en el tablero.
 	 */
-	void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board);
+	void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board, boolean gameInitiated);
 	
 	/* Método onPassed:
 	 * Es llamado cuando un jugador ha pasado de turno.
 	 */
-	void onPassed(int numPlayers, String currentPlayerName);
+	void onPassed(int numPlayers, String currentPlayerName, boolean gameInitiated);
 	
 	/* Método onSwapped:
 	 * Es llamado cuando un jugador ha intercambiado una ficha.
 	 */
-	void onSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn);
+	void onSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated);
 	
 	/* Método onRegister:
 	 * Es llamado cuando un observador se añade a la lista de observadores.
 	 */
-	void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn);
+	void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated);
 	
 	/* Método onReset:
 	 * Es llamado cuando un se ejecuta el comando reset.
 	 */
-	void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn);
+	void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated);
 	
 	/* Método onError:
 	 * Es llamado cuando un error ha ocurrido.
@@ -47,7 +47,7 @@ public interface ScrabbleObserver {
 	/* Método onUpdate:
 	 * Es llamado cuando se actualiza el juego (método update de Game).
 	 */
-	void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn);
+	void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated);
 	
 	/* Método onEnd:
 	 * Es llamado cuando se ha alcanzado el final de la partida.
@@ -57,7 +57,7 @@ public interface ScrabbleObserver {
 	/* Método onFirstTurnDecided:
 	 * Es llamado cuando se ha elegido el orden de turnos de la partida.
 	 */
-	void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn);
+	void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn, boolean gameInitiated);
 	
 	void onMovementNeeded(int currentTurn);
 }

@@ -24,6 +24,7 @@ public class OnUpdate extends OnObserverAction {
 	private String currentPlayerName;
 	private GamePlayers gamePlayers;
 	private int currentTurn;
+	private boolean gameInitiated;
 	
 	private GamePlayersBuilder gamePlayersBuilder;
 	
@@ -54,6 +55,7 @@ public class OnUpdate extends OnObserverAction {
 			this.currentPlayerName = data.getString("current_player_name");
 			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
 			this.currentTurn = data.getInt("current_turn");
+			this.gameInitiated = data.getBoolean("game_initiated");
 			
 			return this;
 		}
@@ -65,7 +67,7 @@ public class OnUpdate extends OnObserverAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 
 		for(ScrabbleObserver o : observers)
-			o.onUpdate(gameFinished, numPlayers, remainingTiles, currentPlayerName, gamePlayers, currentTurn);
+			o.onUpdate(gameFinished, numPlayers, remainingTiles, currentPlayerName, gamePlayers, currentTurn, gameInitiated);
 		
 	}
 }

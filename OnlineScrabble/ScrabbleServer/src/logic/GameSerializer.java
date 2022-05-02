@@ -10,7 +10,7 @@ import containers.GamePlayers;
 
 public class GameSerializer {
 	
-	public static final JSONObject serializeWordWritten (String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board) {
+	public static final JSONObject serializeWordWritten (String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board, boolean gameInitiated) {
 		
 		JSONObject jo = new JSONObject();
 		
@@ -27,13 +27,14 @@ public class GameSerializer {
 		data.put("game_players", gamePlayers.report());
 		data.put("current_turn", currentTurn);
 		data.put("game_board", board.report());
+		data.put("game_initiated", gameInitiated);
 		
 		jo.put("data", data);
 		
 		return jo;
 	}
 	
-	public static final JSONObject serializePassed(int numPlayers, String currentPlayerName) {
+	public static final JSONObject serializePassed(int numPlayers, String currentPlayerName, Object newParam, boolean gameInitiated) {
 		
 		JSONObject jo = new JSONObject();
 		
@@ -42,13 +43,14 @@ public class GameSerializer {
 		JSONObject data = new JSONObject();
 		data.put("num_players", numPlayers);
 		data.put("current_player_name", currentPlayerName);
-		
+		data.put("game_initiated", gameInitiated);
+
 		jo.put("data", data);
 		
 		return jo;
 	}
 	
-	public static final JSONObject serializeSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn) {
+	public static final JSONObject serializeSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
 		
 		JSONObject jo = new JSONObject();
 		
@@ -59,6 +61,7 @@ public class GameSerializer {
 		data.put("num_players", numPlayers);
 		data.put("game_players", gamePlayers.report());
 		data.put("current_turn", currentTurn);
+		data.put("game_initiated", gameInitiated);
 		
 		jo.put("data", data);
 		
@@ -95,7 +98,7 @@ public class GameSerializer {
 		return jo;
 	}
 	
-	public static final JSONObject serializeFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn) {
+	public static final JSONObject serializeFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn, boolean gameInitiated) {
 		
 		JSONObject jo = new JSONObject();
 		
@@ -114,6 +117,7 @@ public class GameSerializer {
 		data.put("game_players", gamePlayers.report());
 		data.put("num_players", numPlayers);
 		data.put("current_turn", currentTurn);
+		data.put("game_initiated", gameInitiated);
 		
 		jo.put("data", data);
 		
@@ -129,7 +133,7 @@ public class GameSerializer {
 		return jo;
 	}
 	
-	public static final JSONObject serializeRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
+	public static final JSONObject serializeRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
 		
 		JSONObject jo = new JSONObject();
 		
@@ -146,13 +150,14 @@ public class GameSerializer {
 			data.put("game_players", gamePlayers.report());
 		
 		data.put("current_turn", currentTurn);
+		data.put("game_initiated", gameInitiated);
 		
 		jo.put("data", data);
 		
 		return jo;
 	}
 	
-	public static final JSONObject serializeReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
+	public static final JSONObject serializeReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
 		
 		JSONObject jo = new JSONObject();
 		
@@ -168,13 +173,14 @@ public class GameSerializer {
 		if(gamePlayers != null)
 			data.put("game_players", gamePlayers.report());
 		data.put("current_turn", currentTurn);
+		data.put("game_initiated", gameInitiated);
 		
 		jo.put("data", data);
 		
 		return jo;
 	}
 	
-	public static final JSONObject serializeUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn) {
+	public static final JSONObject serializeUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
 		
 		JSONObject jo = new JSONObject();
 		
@@ -188,6 +194,7 @@ public class GameSerializer {
 		data.put("current_player_name", currentPlayerName);
 		data.put("game_players", gamePlayers.report());
 		data.put("current_turn", currentTurn);
+		data.put("game_initiated", gameInitiated);
 		
 		jo.put("data", data);
 		
