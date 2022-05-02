@@ -16,6 +16,15 @@ import containers.Board;
 import containers.GamePlayers;
 import control.Controller;
 
+/* APUNTES GENERALES:
+
+   La clase PlayerPanel representa la vista de la información de un jugador en la interfaz gráfica.
+   Esta clase contiene las fichas del jugador (tapadas si no es su turno), el nombre del mismo, y sus puntos.
+   Dependiendo de qué jugador se trate, la orientación de sus fichas será en vertical u horizontal.
+
+   Además, a diferencia de la clase PlayerPanel del modo local Scrabble, en esta clase también se incluye
+   el atributo clientNumPlayer, para saber si
+*/
 public class PlayerPanel extends JPanel implements ScrabbleObserver {
 
 	private static final long serialVersionUID = 1L;

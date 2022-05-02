@@ -10,6 +10,13 @@ import javax.swing.JPanel;
 import containers.Board;
 import containers.GamePlayers;
 import control.Controller;
+/* APUNTES GENERALES:
+
+   La clase BoardPanel es la clase que representa el tablero de juego.
+   A diferencia de la clase BoardPanel del proyecto Scrabble en modo local,
+   se tiene un array de los botones que conforman el tablero, para que, cuando no se trate
+   del turno de un jugador, no pueda interaccionar con el tablero. 
+*/
 
 public class BoardPanel extends JPanel implements ScrabbleObserver {
 	

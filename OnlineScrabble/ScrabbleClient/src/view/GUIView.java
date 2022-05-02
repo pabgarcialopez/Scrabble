@@ -8,6 +8,12 @@ import javax.swing.JPanel;
 
 import control.Controller;
 
+/* APUNTES GENERALES:
+
+   La clase GUIView se trata de la ventana principal que contiene el resto de elementos de la interfaz.
+   En su método initGUI() se puede observar como se añaden estos.
+*/
+
 public class GUIView extends JFrame {
 
 	private static final long serialVersionUID = 1L;

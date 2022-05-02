@@ -17,12 +17,25 @@ import simulatedObjects.Box;
 import simulatedObjects.SpecialEffects;
 import utils.StringUtils;
 
+/* APUNTES GENERALES:
+
+   La clase ConsoleView es la empleada para mostrar el transcurso de la partida,
+   incluyendo el tablero (con las posibles palabras que pueda contener), el estado
+   del jugador cuyo turno es el actual (nombre, puntos totales y fichas), así como
+   la semilla con la que se está jugando la partida. Además también muestra la solicitud
+   de información: elecciones de usuario (como número de jugadores, sus nombres, etc) y comandos.
+	
+   Cabe destacar que el método showBoard() ha sido generalizado, de manera que para cualquier
+   tamaño, se producirá un tablero regular y ordenado.
+*/
+
 public class ConsoleView implements ScrabbleObserver {
 	
 	// Para no estar creando un new Scanner(System.in) cada vez que compruebo.
 	public static boolean isInputFromConsole;
 	
 	private static final String PROMPT = "Comando ([h]elp) > ";
+	
 	private static final String CENTRE_SYMBOL = "*";
 	private static final String DOUBLE_LETTER_SYMBOL = "•";
 	private static final String DOUBLE_WORD_SYMBOL = "░";

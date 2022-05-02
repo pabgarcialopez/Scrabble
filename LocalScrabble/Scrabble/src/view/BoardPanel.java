@@ -9,6 +9,12 @@ import containers.Board;
 import containers.GamePlayers;
 import scrabble.Controller;
 
+/* APUNTES GENERALES:
+
+   La clase BoardPanel es la clase que representa el tablero de juego.
+   Como puede observarse, su único método sobrescrito de la interfaz ScrabbleObserver
+   es onReset, en el que inicializa todos los botones que lo conforman.
+*/
 public class BoardPanel extends JPanel implements ScrabbleObserver {
 	
 	private static final long serialVersionUID = 1L;

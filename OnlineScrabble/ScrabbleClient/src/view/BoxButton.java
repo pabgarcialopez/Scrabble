@@ -15,6 +15,16 @@ import containers.GamePlayers;
 import control.Controller;
 import simulatedObjects.Box;
 
+/* APUNTES GENERALES:
+
+   La clase BoxButton es la que representa cada casilla del tablero. Se trata de un botón
+   porque de esta manera, es suficiente con que el usuario presione sobre la casilla en la
+   que se quiere colocar una palabra. 
+
+   Dependiendo del tipo de casilla, atendiendo a su letra y a su tipo especial (si es que tiene), 
+   el botón tendrá una imagen u otra (véanse los iconos del directorio resources/icons).
+*/
+
 public class BoxButton extends JButton implements ScrabbleObserver {
 	
 	private static final long serialVersionUID = 1L;

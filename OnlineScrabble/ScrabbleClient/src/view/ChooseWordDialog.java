@@ -17,6 +17,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/* APUNTES GENERALES:
+
+   Esta clase se emplea justo después de haber presionado una casilla del tablero.
+   Su objetivo es que el usuario introduza la palabra que desea colocar, así como
+   la dirección en la que quiere que vaya.
+*/
+
 public class ChooseWordDialog extends JDialog {
 	
 	private static final long serialVersionUID = 1L;

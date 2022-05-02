@@ -21,6 +21,17 @@ import containers.Board;
 import containers.GamePlayers;
 import control.Controller;
 
+/* APUNTES GENERALES:
+
+   Esta clase es la contenedora de todos los botones presentes en el juego (excepto los del tablero).
+
+   La parte visual que representa se sitúa en el norte de la pantalla.
+   Los botones que aloja son: paso de turno, cambio de ficha, paso de turno, ayuda y salir de la partida.
+
+   Nótese que a diferencia de la versión local, la versión en línea tiene un atributo clientNumPlayer,
+   para saber cuando se han de permitir el uso de botones.
+*/
+
 public class ControlPanel extends JPanel implements ScrabbleObserver {
 
 	private static final long serialVersionUID = 1L;
@@ -116,22 +127,20 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		bar.add(Box.createGlue());
 		
 		JButton helpButton = new JButton();
-		helpButton.setToolTipText("Ayuda sobre cómo jugar");
+		helpButton.setToolTipText("Información");
 		helpButton.setIcon(new ImageIcon("resources/icons/control_panel/info.png"));
 		helpButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String help = String.format("• Colocar palabra: hacer click en la casilla "
+				String help = String.format("Posibles acciones:%n%n"
+						+ "• Colocar palabra: hacer click en la casilla "
 						+ "donde se quiere que empiece y escribir la palabra y su dirección.%n"
 						+ "• Nueva partida: pulsar el botón situado en primera posición desde la izquierda.%n"
-						+ "• Cargar partida: pulsar el botón situado en segunda posición desde la izquierda.%n"
-						+ "• Guardar partida: pulsar el botón situado en tercera posición desde la izquierda.%n"
-						+ "• Resetar partida: pulsar el botón situado en cuarta posición desde la izquierda.%n"
-						+ "• Añadir o cambiar jugadores: pulsar el botón situado en quinta posición desde la izquierda.%n"
-						+ "• Pasar de turno: pulsar el botón situado en sexta posición desde la izquierda.%n"
-						+ "• Intercambiar una ficha: pulsar el botón situado en séptima posición desde la izquierda.%n"
-						+ "• Continuar ejecución: pulsar el botón situado en octava posición desde la izquierda%n"
-						+ "• Salir del juego: pulsar el botón situado en la primera posición desde la derecha.");
+						+ "• Pasar de turno: pulsar el botón situado en segunda posición desde la izquierda.%n"
+						+ "• Intercambiar una ficha: pulsar el botón situado en tercera posición desde la izquierda.%n"
+						+ "• Continuar ejecución: pulsar el botón situado en cuarta posición desde la izquierda%n"
+						+ "• Salir del juego: pulsar el botón situado en la primera posición desde la derecha.%n%n"
+						+ "Proyecto Scrabble ©");
 				
 				JOptionPane.showMessageDialog(ControlPanel.this, help, "AYUDA", JOptionPane.INFORMATION_MESSAGE);
 			}
