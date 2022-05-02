@@ -49,7 +49,7 @@ public class Server extends Thread {
 		try {
 			gameAction.executeAction(game);
 		} catch (FileNotFoundException e) {
-			this.sendViewAction(GameSerializer.serializeError(e.getMessage()));
+			this.sendViewAction(GameSerializer.serializeError(e.getMessage(), game.getCurrentTurn()));
 		}
 	}
 

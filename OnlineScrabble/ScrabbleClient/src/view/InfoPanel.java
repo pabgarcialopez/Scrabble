@@ -115,8 +115,9 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onError(String error) {
-		JOptionPane.showMessageDialog(parent, error, "ERROR", JOptionPane.ERROR_MESSAGE);
+	public void onError(String error, int currentTurn) {
+		if(currentTurn == this.clientNumPlayer)
+			JOptionPane.showMessageDialog(parent, error, "ERROR", JOptionPane.ERROR_MESSAGE);
 	}
 
 	@Override

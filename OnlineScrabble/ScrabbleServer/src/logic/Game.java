@@ -163,7 +163,7 @@ public class Game {
 			this.wordChecker.checkArguments(word, posX, posY, direction);
 		}
 		catch(CommandExecuteException cee) {
-			this.server.sendViewAction(GameSerializer.serializeError(cee.getMessage()));
+			this.server.sendViewAction(GameSerializer.serializeError(cee.getMessage(), currentTurn));
 			return;
 		}
 		
@@ -264,7 +264,7 @@ public class Game {
 		
 		if(tiles.getSize() <= 0) {
 			
-			this.server.sendViewAction(GameSerializer.serializeError("No hay fichas para robar"));
+			this.server.sendViewAction(GameSerializer.serializeError("No hay fichas para robar", currentTurn));
 		
 			return;
 		}

@@ -100,11 +100,11 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		continueButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				continueButton.setEnabled(false);
 				controller.update();
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						continueButton.setEnabled(false);
 						controller.playTurn();
 					}
 				});
@@ -189,7 +189,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onError(String error) {}
+	public void onError(String error, int currentTurn) {}
 
 	@Override
 	public void onEnd(String message) {}
@@ -202,7 +202,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	@Override
 	public void onMovementNeeded(int currentTurn) {
 		enableButtons(this.buttonsToBlockCPUTurn, currentTurn == clientNumPlayer);
-		this.continueButton.setEnabled(!(currentTurn == clientNumPlayer));
+		this.continueButton.setEnabled(false);
 	}
 	
 	private void enableButtons(List<JButton> buttons, boolean enable) {

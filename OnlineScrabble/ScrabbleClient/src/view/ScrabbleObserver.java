@@ -42,7 +42,7 @@ public interface ScrabbleObserver {
 	/* Método onError:
 	 * Es llamado cuando un error ha ocurrido.
 	 */
-	void onError(String error);
+	void onError(String error, int currentTurn);
 	
 	/* Método onUpdate:
 	 * Es llamado cuando se actualiza el juego (método update de Game).

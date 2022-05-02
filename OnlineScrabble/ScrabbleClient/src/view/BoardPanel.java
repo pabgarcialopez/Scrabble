@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -18,11 +19,13 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	private int clientNumPlayer;
 	
 	private ChooseWordDialog chooseWordDialog;
+	private List<BoxButton> addedBoxButtons;
 
 	BoardPanel(Controller controller, int clientNumPlayer) {
 		
 		this.controller = controller;
 		this.clientNumPlayer = clientNumPlayer;
+		this.addedBoxButtons = new ArrayList<BoxButton>();
 		
 		this.chooseWordDialog = new ChooseWordDialog(this);
 		
@@ -40,11 +43,16 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
 
 		this.removeAll();
+		for(BoxButton bb : this.addedBoxButtons)
+			this.controller.removeObserver(bb);
 		
 		this.setLayout(new GridLayout(board.getBoardSize(), board.getBoardSize()));
 		for(int i = 0; i < board.getBoardSize(); ++i)
 			for(int j = 0; j < board.getBoardSize(); ++j) {
-				this.add(new BoxButton(this.controller, i, j, this.chooseWordDialog, clientNumPlayer));
+				BoxButton bb = new BoxButton(this.controller, i, j, this.chooseWordDialog, clientNumPlayer);
+				this.add(bb);
+				this.addedBoxButtons.add(bb);
+				
 			}
 		setPreferredSize(new Dimension(730, 730));
 	}
@@ -53,11 +61,15 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
 		
 		this.removeAll();
+		for(BoxButton bb : this.addedBoxButtons)
+			this.controller.removeObserver(bb);
 		
 		this.setLayout(new GridLayout(board.getBoardSize(), board.getBoardSize()));
 		for(int i = 0; i < board.getBoardSize(); ++i)
 			for(int j = 0; j < board.getBoardSize(); ++j) {
-				this.add(new BoxButton(this.controller, i, j, this.chooseWordDialog, clientNumPlayer));
+				BoxButton bb = new BoxButton(this.controller, i, j, this.chooseWordDialog, clientNumPlayer);
+				this.add(bb);
+				this.addedBoxButtons.add(bb);
 			}
 		setPreferredSize(new Dimension(730, 730));
 	}
@@ -69,7 +81,7 @@ public class BoardPanel extends JPanel implements ScrabbleObserver {
 	public void onSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {}
 
 	@Override
-	public void onError(String error) {}
+	public void onError(String error, int currentTurn) {}
 
 	@Override
 	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {}

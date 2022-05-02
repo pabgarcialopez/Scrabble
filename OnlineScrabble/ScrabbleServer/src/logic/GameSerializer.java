@@ -83,7 +83,7 @@ public class GameSerializer {
 		return jo;
 	}
 	
-	public static final JSONObject serializeError(String message) {
+	public static final JSONObject serializeError(String message, int currentTurn) {
 
 		JSONObject jo = new JSONObject();
 		
@@ -92,6 +92,7 @@ public class GameSerializer {
 		JSONObject data = new JSONObject();
 		
 		data.put("message", message);
+		data.put("current_turn", currentTurn);
 		
 		jo.put("data", data);
 		
