@@ -44,15 +44,12 @@ public class Controller {
 	/* Método executeCommand:
 	 * Delega en la clase Command la acción de ejecutar una cierta acción.
 	 */
-	public boolean executeCommand(String[] parameters, Scanner in, PrintStream out) throws CommandExecuteException, CommandParseException {
+	public void executeCommand(String[] parameters, Scanner in, PrintStream out) throws CommandExecuteException, CommandParseException {
 		Command command = Command.getCommand(parameters);
 		
 		if(command != null) {
 			command.execute(this, in, out);
-			return true;
 		}
-		
-		return false;
 	}
 	
 	/* Método writeAWord:

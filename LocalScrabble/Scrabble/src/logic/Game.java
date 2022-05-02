@@ -47,7 +47,9 @@ public class Game {
 	// Para poder jugar partidas por fichero sin tener 
 	// que incluir saltos de línea en el fichero de entrada.
 	private static final boolean _pausePermitted = false;
-	private static final boolean _testMode = true;
+	
+	// Para pribar tests JUnit
+	private static final boolean _testMode = false;
 	
 	private static boolean _gameInitiated;
 	private static boolean _wordsInBoard;
@@ -80,7 +82,7 @@ public class Game {
 		
 		this.board = null;
 		this.players = new GamePlayers((List<Player>) new ArrayList<Player>());
-		this.tiles = null;
+		this.tiles = new GameTiles(new ArrayList<Tile>());
 		
 		this.currentTurn = 0;
 		this.numConsecutivePassedTurns = 0;
@@ -206,8 +208,7 @@ public class Game {
 	 * Establece, si es necesario, el orden de juego de una partida.
 	 * 
 	 * Primero comprueba si el turno ya se ha inicializado (se encuentra en el
-	 * intervalo [0, players.getNumPlayers()]; en caso de no haberse inicializado
-	 * tendría el valor -1).
+	 * intervalo [0, players.getNumPlayers()].
 	 * 
 	 * Se construye un array de letras aleatorias obtenidas por los jugadores,
 	 * y se comparan en orden lexicográfico para decidir quién empieza la partida
@@ -403,8 +404,8 @@ public class Game {
 		}
 		
 		else {
-			for(ScrabbleObserver o : this.observers)
-				o.onUpdate(getGameIsFinished(), this.getNumPlayers(), this.getStatus(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn);
+				for(ScrabbleObserver o : this.observers)
+					o.onUpdate(getGameIsFinished(), this.getNumPlayers(), this.getStatus(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn);
 		}
 		
 	}
@@ -503,13 +504,11 @@ public class Game {
 	 * Devuelve un String con el estado actual del juego y del jugador (delegación en GamePlayers).
 	 */
 	public String getStatus() {
+		
 		String status = "Semilla: " + _seed + StringUtils.LINE_SEPARATOR;
-		status += "Fichas restantes: " + this.getRemainingTiles() + StringUtils.LINE_SEPARATOR;
-		status += players.getPlayerStatus(currentTurn) + StringUtils.LINE_SEPARATOR;
-
-		//if (!humanIsPlaying())
-			//status += "Cargando... Por favor, espera." + StringUtils.LINE_SEPARATOR;
-
+			status += "Fichas restantes: " + this.getRemainingTiles() + StringUtils.LINE_SEPARATOR;
+			status += players.getPlayerStatus(currentTurn) + StringUtils.LINE_SEPARATOR;
+		
 		return status;
 	}
 	

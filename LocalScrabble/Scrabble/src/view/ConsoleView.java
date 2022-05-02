@@ -333,27 +333,14 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		try {
 			controller.executeCommand(askCommand(), in , out);
-			
 		}
 		
 		catch(CommandParseException | CommandExecuteException e) {
 			this.out.println(e.getMessage());
 		}
-//		
-//		Command command = askCommand();
-//		
-//		if(command != null)
-//			try {
-//				command.execute(this.controller, in, out);
-//				
-//			} catch (CommandExecuteException e) {
-//				this.out.print(e.getMessage() + StringUtils.LINE_SEPARATOR);
-//			}
 	}
 	
 	private String[] askCommand() {
-		
-		//Command command = null;
 		
 		this.out.print(PROMPT);
 		String s = this.in.nextLine();
@@ -364,13 +351,6 @@ public class ConsoleView implements ScrabbleObserver {
 			this.out.print(s + StringUtils.LINE_SEPARATOR);
 
 		String[] parameters = s.toLowerCase().trim().split(" ");
-		
-//		try {
-//			command = Command.getCommand(parameters);
-//		}
-//		catch(CommandParseException cpe) {
-//			this.out.println(cpe.getMessage());
-//		}
 		
 		return parameters;		
 	}
