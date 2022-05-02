@@ -22,10 +22,6 @@ public class GamePlayers {
 	}
 	
 	// Getters
-	
-	public int getNumPlayers() {
-		return players.size();
-	}
 
 	public String getPlayerName(int i) {
 		return players.get(i).getName();
@@ -39,15 +35,7 @@ public class GamePlayers {
 		return this.players.get(player).getTile(tile);
 	}
 	
-	public Tile getPlayerTile(int player, String letter) {
-		return this.players.get(player).getTile(letter);
-	}
-	
 	public int getPlayerPoints(int player) {
 		return this.players.get(player).getPoints();
-	}
-	
-	public Player getPlayer(int currentTurn) {
-		return players.get(currentTurn);
 	}
 }

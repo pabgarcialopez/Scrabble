@@ -151,7 +151,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 						JOptionPane.QUESTION_MESSAGE, null, options, null);
 				
 				if(n == 1) 
-					System.exit(0);
+					controller.userExits();
 			}
 		});
 		exitButton.setIcon(new ImageIcon("resources/icons/control_panel/exit.png"));
@@ -216,7 +216,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		
 		enableButtons(this.buttonsToBlockCPUTurn, false);
 		
-		this.continueButton.setEnabled(gameInitiated && numPlayers != 0);
-			
+		this.continueButton.setEnabled(gameInitiated && numPlayers != 0);	
 	}
 }

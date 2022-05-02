@@ -111,10 +111,7 @@ public class GameSerializer {
 		for (int i = 0; i < lettersObtained.size(); ++i)
 			lettersJA.put(lettersObtained.get(i));
 		
-		JSONObject words = new JSONObject();
-		words.put("words", lettersJA);
-		
-		data.put("letters_obtained", words);
+		data.put("letters_obtained", lettersJA);
 		data.put("game_players", gamePlayers.report());
 		data.put("num_players", numPlayers);
 		data.put("current_turn", currentTurn);

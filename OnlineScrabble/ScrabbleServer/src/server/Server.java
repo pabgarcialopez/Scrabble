@@ -22,17 +22,19 @@ public class Server extends Thread {
 
 	private ServerSocket serverSocket;
 
-	private int puerto;
+	private int port;
 
 	private List<ClientThread> clients;
 
-	private int numPlayers;
+	private int numHumanPlayers;
+	private int numAutomaticPlayers;
 
-	public Server(int puerto, int numPlayers) {
+	public Server(int numHumanPlayers, int numAutomaticPlayers, String strategy1, String strategy2, int port) {
 		this.game = new Game(this);
-		this.puerto = puerto;
+		this.port = port;
 		this.clients = new ArrayList<ClientThread>();
-		this.numPlayers = numPlayers;
+		this.numHumanPlayers = numHumanPlayers;
+		this.numAutomaticPlayers = numAutomaticPlayers;
 		
 		try {
 			GameLoader.newGame(this.game);
@@ -40,6 +42,11 @@ public class Server extends Thread {
 			e.printStackTrace();
 			System.exit(0);
 		}
+		
+		if(strategy1 != null)
+			this.game.addAutomaticPlayer(strategy1);
+		if(strategy2 != null)
+			this.game.addAutomaticPlayer(strategy2);
 	}
 
 	public void doGameAction(JSONObject jo) {
@@ -62,9 +69,9 @@ public class Server extends Thread {
 	public void run() {
 
 		try {
-			this.serverSocket = new ServerSocket(this.puerto);
+			this.serverSocket = new ServerSocket(this.port);
 			
-			while (this.clients.size() < this.numPlayers) {
+			while (this.clients.size() < this.numHumanPlayers) {
 				
 				Socket socket;
 
@@ -89,7 +96,11 @@ public class Server extends Thread {
 		}
 	}
 
-	public int getNumPlayers() {
-		return this.numPlayers;
+	public int getNumHumanPlayers() {
+		return this.numHumanPlayers;
+	}
+	
+	public int getNumAutomaticPlayers() {
+		return this.numAutomaticPlayers;
 	}
 }

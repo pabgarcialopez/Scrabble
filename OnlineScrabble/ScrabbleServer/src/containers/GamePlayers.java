@@ -9,7 +9,10 @@ import org.json.JSONObject;
 import logic.Game;
 import simulatedObjects.Player;
 import simulatedObjects.Tile;
+import strategies.EasyStrategy;
+import strategies.HardStrategy;
 import strategies.HumanStrategy;
+import strategies.MediumStrategy;
 import strategies.Strategy;
 import utils.Pair;
 import wordCheckers.WordChecker;
@@ -194,7 +197,20 @@ public class GamePlayers {
 		}
 	}
 
-	public void addnewPlayer(String name) {
+	public void addNewHumanPlayer(String name) {
 		this.players.add(new Player(name, 0, new ArrayList<Tile>(), new HumanStrategy()));
-	}	
+	}
+	
+	public void addNewAutomaticPlayer(String strategyType) {
+		
+		Strategy strategy = null;
+		if(strategyType.equalsIgnoreCase("easy"))
+			strategy = new EasyStrategy();
+		else if(strategyType.equals("medium"))
+			strategy = new MediumStrategy();
+		else
+			strategy = new HardStrategy();
+		
+		this.players.add(new Player("CPU " + this.getNumPlayers(), 0, new ArrayList<Tile>(), strategy));
+	}
 }

@@ -134,7 +134,8 @@ public class Game {
 	 * Delega en la clase GamePlayers la acción de jugar un turno.
 	 */
 	public void playTurn() {
-		this.players.playTurn(this, wordChecker);
+		if(this.currentNumOfUpdates == 0)
+			this.players.playTurn(this, wordChecker);
 	}
 	
 	/* Método writeAWord:
@@ -225,6 +226,8 @@ public class Game {
 		for(int i = 1; i < this.getNumPlayers(); ++i)
 			if (lettersObtained.get(i).compareTo(lettersObtained.get(this.currentTurn)) < 0) 
 				this.currentTurn = i;
+		
+		initPlayerTiles();
 		
 		this.server.sendViewAction(GameSerializer.serializeFirstTurnDecided(lettersObtained, players, getNumPlayers(), currentTurn, _gameInitiated));
 	}
@@ -369,7 +372,7 @@ public class Game {
 	 */
 	public void update() {
 		
-		this.currentNumOfUpdates = (this.currentNumOfUpdates + 1) % this.server.getNumPlayers();
+		this.currentNumOfUpdates = (this.currentNumOfUpdates + 1) % this.server.getNumHumanPlayers();
 		
 		if(this.currentNumOfUpdates == 0) {
 			
@@ -598,8 +601,7 @@ public class Game {
 	 * para continuar la partida.
 	 */
 	public void movementNeeded() {
-		if(this.currentNumOfUpdates == 0)
-			this.server.sendViewAction(GameSerializer.serializeOnMovementNeeded(currentTurn));
+		this.server.sendViewAction(GameSerializer.serializeOnMovementNeeded(currentTurn));
 	}
 	
 	// Getters
@@ -702,11 +704,14 @@ public class Game {
 		return jo;
 	}
 
-	public void addNewPlayer(String name) {
-		this.players.addnewPlayer(name);
-		players.drawTiles(this, getNumPlayers() - 1);
-		if(players.getNumPlayers() == this.server.getNumPlayers())
+	public void addNewHumanPlayer(String name) {
+		this.players.addNewHumanPlayer(name);
+		if(players.getNumPlayers() == (this.server.getNumHumanPlayers() + this.server.getNumAutomaticPlayers()))
 			_gameInitiated = true;
+	}
+	
+	public void addAutomaticPlayer(String strategy) {
+		this.players.addNewAutomaticPlayer(strategy);
 	}
 
 	public void register() {

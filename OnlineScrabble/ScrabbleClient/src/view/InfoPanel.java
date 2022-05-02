@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import containers.Board;
 import containers.GamePlayers;
 import control.Controller;
-import utils.StringUtils;
 
 public class InfoPanel extends JPanel implements ScrabbleObserver {
 
@@ -153,10 +152,10 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 		
 		for(int i = 0; i < numPlayers; i++) {
 			buffer.append(gamePlayers.getPlayerName(i)).append(" ha cogido una ")
-				  .append(lettersObtained.get(i)).append(StringUtils.LINE_SEPARATOR);
+				  .append(lettersObtained.get(i)).append(System.lineSeparator());
 		}
 		
-		buffer.append(StringUtils.LINE_SEPARATOR).append("El orden de juego es: ");
+		buffer.append(System.lineSeparator()).append("El orden de juego es: ");
 		
 		for(int i = 0; i < numPlayers; i++) {
 			buffer.append(gamePlayers.getPlayerName((i + currentTurn) % numPlayers));
@@ -165,7 +164,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 		}
 			
 		
-		buffer.append(StringUtils.LINE_SEPARATOR);
+		buffer.append(System.lineSeparator());
 		
 		JOptionPane.showMessageDialog(parent, buffer.toString(), "Elección de Turnos", JOptionPane.INFORMATION_MESSAGE);
 	}

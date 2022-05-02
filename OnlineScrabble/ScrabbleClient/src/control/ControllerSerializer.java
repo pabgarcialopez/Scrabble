@@ -57,45 +57,6 @@ public class ControllerSerializer {
 		
 		return jo;
 	}
-
-	public static JSONObject serializeNewGame() {
-		
-		JSONObject jo = new JSONObject();
-		
-		jo.put("type", "new_game");
-		
-		return jo;
-	}
-
-	public static JSONObject serializeLoadGame(String file) {
-		
-		JSONObject jo = new JSONObject();
-		
-		jo.put("type", "load_game");
-		
-		JSONObject data = new JSONObject();
-		
-		data.put("file", file);
-		
-		jo.put("data", data);
-		
-		return jo;
-	}
-
-	public static JSONObject serializeSaveGame(String file) {
-		
-		JSONObject jo = new JSONObject();
-		
-		jo.put("type", "save_game");
-		
-		JSONObject data = new JSONObject();
-		
-		data.put("file", file);
-		
-		jo.put("data", data);
-		
-		return jo;
-	}
 	
 	public static JSONObject serializeRegister(String name) {
 		

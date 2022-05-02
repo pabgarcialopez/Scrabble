@@ -31,7 +31,7 @@ public class RegisterAction extends GameAction {
 
 	@Override
 	public void executeAction(Game game) throws FileNotFoundException {
-		game.addNewPlayer(name);
+		game.addNewHumanPlayer(name);
 		game.register();
 	}
 }

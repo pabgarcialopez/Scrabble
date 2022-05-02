@@ -1,7 +1,5 @@
 package simulatedObjects;
 
-import org.json.JSONObject;
-
 /* APUNTES GENERALES:
 
 	La clase Box representa una casilla del tablero.
@@ -30,22 +28,5 @@ public class Box {
 
 	public Tile getTile() {
 		return this.tile;
-	}
-
-	public boolean isCentre() {
-		return SpecialEffects.CENTRE.equals(this.specialEffect);
-	}
-	
-	public JSONObject report() {
-		
-		JSONObject jo = new JSONObject();
-		
-		if(this.specialEffect != null)
-			jo.put("special_effect", this.specialEffect.toString());
-		
-		if(this.tile != null)
-			jo.put("tile", this.tile.report());
-		
-		return jo;
 	}
 }
