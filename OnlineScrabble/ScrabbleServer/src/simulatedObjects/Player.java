@@ -128,7 +128,6 @@ public class Player {
 	public void givePoints(int points) {
 		this.totalPoints += points;
 	}
-	
 
 	// Getters
 	
