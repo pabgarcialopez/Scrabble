@@ -53,7 +53,7 @@ public class OnRegister {
 		boolean gameInitiated = data.getBoolean("game_initiated");
 		
 		if(!alreadyRegistered)
-			client.initGUI(numPlayers);
+			client.initGUI(numPlayers - 1);
 		
 		for(int i = 0; i < observers.size(); ++i)
 			observers.get(i).onRegister(board, numPlayers, gamePlayers, currentTurn, gameInitiated);

@@ -591,7 +591,7 @@ public class Game {
 	 * para continuar la partida.
 	 */
 	public void movementNeeded() {
-		this.server.sendViewAction(GameSerializer.serializeOnMovementNeeded());
+		this.server.sendViewAction(GameSerializer.serializeOnMovementNeeded(currentTurn));
 	}
 	
 	// Getters

@@ -124,11 +124,17 @@ public class GameSerializer {
 		return jo;
 	}
 	
-	public static final JSONObject serializeOnMovementNeeded() {
+	public static final JSONObject serializeOnMovementNeeded(int currentTurn) {
 		
 		JSONObject jo = new JSONObject();
 		
 		jo.put("type", "movement_needed");
+		
+		JSONObject data = new JSONObject();
+		
+		data.put("current_turn", currentTurn);
+		
+		jo.put("data", data);
 		
 		return jo;
 	}

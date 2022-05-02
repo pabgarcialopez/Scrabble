@@ -44,20 +44,6 @@ public class Board {
 		return null;
 	}
 
-	/* Método add:
-	 * Añade al tablero una fila de casillas
-	 */
-	public void add(List<Box> row) {
-		board.add(row);
-	}
-	
-	/* Método assignTile:
-	 * Asigna en una posición dada del tablero una ficha recibida por parámetro.
-	 */
-	public void assignTile(Tile tile, int posX, int posY) {
-		board.get(posX).get(posY).assignTile(tile);
-	}
-	
 	// Getters
 
 	public int getBoardSize() {
@@ -73,20 +59,12 @@ public class Board {
 		return board.get(posX).get(posY).getTile();
 	}
 
-	public int getPoints(int posX, int posY) {
-		return board.get(posX).get(posY).getPoints();
-	}
-
 	public boolean isCenter(int posX, int posY) {
 		return board.get(posX).get(posY).isCentre();
 	}
 
 	public Box getBoxAt(int posX, int posY) {
 		return board.get(posX).get(posY);
-	}
-
-	public int getWordMultiplier(int posX, int posY) {
-		return this.board.get(posX).get(posY).getWordMultiplier();
 	}
 	
 	public Pair<Integer, Integer> getCenter() {
