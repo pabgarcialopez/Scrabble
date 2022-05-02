@@ -71,6 +71,8 @@ public class Game {
 	
 	private WordChecker wordChecker;
 	
+	private int currentNumOfUpdates;
+	
 	private Server server;
 
 	public Game(Server server) {
@@ -93,6 +95,8 @@ public class Game {
 		this.wordChecker = new WordChecker(this);
 		
 		this.server = server;
+		
+		this.currentNumOfUpdates = 0;
 	}
 	
 	/* Método reset:
@@ -122,8 +126,6 @@ public class Game {
 		_gameFinished = gameFinished;
 		
 		this.usedWords = usedWords;
-		
-		_gameInitiated = true;
 		
 		this.server.sendViewAction(GameSerializer.serializeReset(board, this.getNumPlayers(), getNumPlayers() == 0 || this.currentTurn < 0 ? null : this.players.getPlayerName(this.currentTurn), this.getRemainingTiles(), this.players, this.currentTurn, _gameInitiated));
 	}
@@ -367,29 +369,34 @@ public class Game {
 	 */
 	public void update() {
 		
-		if(_gameInitiated) {
-			// Si no quedan fichas en el saco, y el jugador actual no tiene fichas
-			if(this.getRemainingTiles() == 0 && 
-					this.players.getNumPlayerTiles((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers()) == 0) {
-				_gameFinished = true;
+		this.currentNumOfUpdates = (this.currentNumOfUpdates + 1) % this.server.getNumPlayers();
+		
+		if(this.currentNumOfUpdates == 0) {
+			
+			if(_gameInitiated) {
+				// Si no quedan fichas en el saco, y el jugador actual no tiene fichas
+				if(this.getRemainingTiles() == 0 && 
+						this.players.getNumPlayerTiles((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers()) == 0) {
+					_gameFinished = true;
+					
+					gameFinishedCause = "La partida ha finalizado: no quedan fichas para robar y el jugador " 
+					+ this.players.getPlayerName((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers())
+					+ " se ha quedado sin fichas."+ StringUtils.DOUBLE_LINE_SEPARATOR;
+				}
 				
-				gameFinishedCause = "La partida ha finalizado: no quedan fichas para robar y el jugador " 
-				+ this.players.getPlayerName((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers())
-				+ " se ha quedado sin fichas."+ StringUtils.DOUBLE_LINE_SEPARATOR;
+				if(this.numConsecutivePassedTurns == this.getNumPlayers() * PASSED_TURNS_TO_END_GAME) {
+					_gameFinished = true;
+					gameFinishedCause = "La partida ha finalizado: todos los jugadores han pasado " 
+							+ PASSED_TURNS_TO_END_GAME + " turnos." + StringUtils.LINE_SEPARATOR;
+				}
 			}
 			
-			if(this.numConsecutivePassedTurns == this.getNumPlayers() * PASSED_TURNS_TO_END_GAME) {
-				_gameFinished = true;
-				gameFinishedCause = "La partida ha finalizado: todos los jugadores han pasado " 
-						+ PASSED_TURNS_TO_END_GAME + " turnos." + StringUtils.LINE_SEPARATOR;
-			}
+			if(getGameIsFinished())			
+				this.server.sendViewAction(GameSerializer.serializeEnd(gameFinishedCause + getWinnerName()));
+			
+			else
+				this.server.sendViewAction(GameSerializer.serializeUpdate(getGameIsFinished(), this.getNumPlayers(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn, _gameInitiated));
 		}
-		
-		if(getGameIsFinished())			
-			this.server.sendViewAction(GameSerializer.serializeEnd(gameFinishedCause + getWinnerName()));
-		
-		else
-			this.server.sendViewAction(GameSerializer.serializeUpdate(getGameIsFinished(), this.getNumPlayers(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn, _gameInitiated));
 	}
 	
 	/* Método getNewFormedWords:
@@ -591,7 +598,8 @@ public class Game {
 	 * para continuar la partida.
 	 */
 	public void movementNeeded() {
-		this.server.sendViewAction(GameSerializer.serializeOnMovementNeeded(currentTurn));
+		if(this.currentNumOfUpdates == 0)
+			this.server.sendViewAction(GameSerializer.serializeOnMovementNeeded(currentTurn));
 	}
 	
 	// Getters
@@ -697,6 +705,8 @@ public class Game {
 	public void addNewPlayer(String name) {
 		this.players.addnewPlayer(name);
 		players.drawTiles(this, getNumPlayers() - 1);
+		if(players.getNumPlayers() == this.server.getNumPlayers())
+			_gameInitiated = true;
 	}
 
 	public void register() {

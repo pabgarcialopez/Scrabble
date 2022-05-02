@@ -104,6 +104,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
+						continueButton.setEnabled(false);
 						controller.playTurn();
 					}
 				});

@@ -3,6 +3,8 @@ package observersActions;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.json.JSONObject;
 
 import client.Client;
@@ -55,7 +57,14 @@ public class OnRegister {
 		if(!alreadyRegistered)
 			client.initGUI(numPlayers - 1);
 		
-		for(int i = 0; i < observers.size(); ++i)
-			observers.get(i).onRegister(board, numPlayers, gamePlayers, currentTurn, gameInitiated);
-	}
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				for(int i = 0; i < observers.size(); ++i)
+					observers.get(i).onRegister(board, numPlayers, gamePlayers, currentTurn, gameInitiated);
+			}
+			
+		});
+		}
 }

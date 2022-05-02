@@ -76,7 +76,6 @@ public class Server extends Thread {
 			}
 			
 			SwingUtilities.invokeLater(new Runnable() {
-
 				@Override
 				public void run() {
 					game.decideFirstTurn();
@@ -88,5 +87,9 @@ public class Server extends Thread {
 			e.printStackTrace();
 			System.exit(0);
 		}
+	}
+
+	public int getNumPlayers() {
+		return this.numPlayers;
 	}
 }

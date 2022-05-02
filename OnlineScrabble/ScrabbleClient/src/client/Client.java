@@ -73,8 +73,15 @@ public class Client extends Thread {
 		if(jo.getString("type").contentEquals("register"))
 			this.onRegister.register(jo, this, observers, this.alreadyRegistered);
 		else {
+			
 			OnObserverAction observerAction = OnObserverAction.getAction(jo);
-			observerAction.executeAction(observers);
+			
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					observerAction.executeAction(observers);
+				}
+			});
 		}	
 	}
 
