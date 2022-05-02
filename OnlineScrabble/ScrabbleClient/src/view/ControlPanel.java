@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,6 @@ import javax.swing.SwingUtilities;
 import containers.Board;
 import containers.GamePlayers;
 import control.Controller;
-import logic.Game;
 
 public class ControlPanel extends JPanel implements ScrabbleObserver {
 
@@ -38,8 +36,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	
 	private JButton continueButton;
 	
-	private AddPlayersDialog addPlayersDialog;
-	
 	private JFileChooser fc;
 	
 	
@@ -51,9 +47,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		this.buttonsToBlockCPUTurn = new ArrayList<JButton>();
 		
 		this.buttonsToBlockGameNotInitiated = new ArrayList<JButton>();
-		
-		this.addPlayersDialog = new AddPlayersDialog(parent);
-		
+	
 		this.fc = new JFileChooser();
 		
 		this.fc.setCurrentDirectory(new File("resources/existingGames"));
@@ -69,109 +63,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		this.add(bar);
 		this.bar.setPreferredSize(new Dimension(1100, 50));
 		
-		JButton newGameButton = new JButton();
-		newGameButton.setToolTipText("Iniciar una partida nueva");
-		newGameButton.setIcon(new ImageIcon("resources/icons/control_panel/new_game.png"));
-		newGameButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.newGame();
-			}
-		});
-		
-		bar.add(newGameButton);
-		bar.add(Box.createRigidArea(new Dimension(5, 1)));
-		
-		JButton loadButton = new JButton();
-		loadButton.setToolTipText("Cargar una partida de fichero");
-		loadButton.setIcon(new ImageIcon("resources/icons/control_panel/open.png"));
-		loadButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				int ret = fc.showOpenDialog(ControlPanel.this);
-				if (ret == JFileChooser.APPROVE_OPTION) {
-					try {
-						controller.loadGame(fc.getSelectedFile().getAbsolutePath());
-					} catch (Exception exc) {
-						JOptionPane.showMessageDialog(ControlPanel.this, "El fichero seleccionado no es válido", "ERROR", JOptionPane.ERROR_MESSAGE);
-					}
-				}
-			}
-		});
-		bar.add(loadButton);
-		bar.add(Box.createRigidArea(new Dimension(5, 1)));
-		
-		JButton saveButton = new JButton();
-		saveButton.setToolTipText("Guardar la partida actual en un fichero");
-		saveButton.setIcon(new ImageIcon("resources/icons/control_panel/save.png"));
-		saveButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				int ret = fc.showSaveDialog(ControlPanel.this);
-				if (ret == JFileChooser.APPROVE_OPTION) {
-					try {
-						controller.saveGame(fc.getSelectedFile().getName());
-						JOptionPane.showMessageDialog(ControlPanel.this, "La partida ha sido guardada con éxito", "GUARDAR", JOptionPane.INFORMATION_MESSAGE);
-					} catch (FileNotFoundException | IllegalArgumentException exc) {
-						JOptionPane.showMessageDialog(ControlPanel.this, exc.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-					}
-				}
-			}
-		});
-		bar.add(saveButton);
-		this.buttonsToBlockGameNotInitiated.add(saveButton);
-		
-		bar.addSeparator();
-		
-		JButton resetButton = new JButton();
-		resetButton.setToolTipText("Resetear el juego");
-		resetButton.setIcon(new ImageIcon("resources/icons/control_panel/reset.png"));
-		resetButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					String seedString = JOptionPane.showInputDialog(ControlPanel.this, "Introduce una semilla (actual: " + Game.getSeed() + ")", "Reset", JOptionPane.PLAIN_MESSAGE);
-					
-					if(seedString != null) {
-						try {
-							Game.setSeed(Integer.parseInt(seedString));
-							controller.reset();
-						}
-						
-						catch(NumberFormatException nfe) {
-							JOptionPane.showMessageDialog(ControlPanel.this, "La semilla debe ser un número", "ERROR", JOptionPane.ERROR_MESSAGE);
-						}
-					}
-				}
-				catch (FileNotFoundException fnfe) {
-					JOptionPane.showMessageDialog(ControlPanel.this, "El fichero de reseteo no es válido", "ERROR", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
-		bar.add(resetButton);
-		this.buttonsToBlockGameNotInitiated.add(resetButton);
-		
-		bar.add(Box.createRigidArea(new Dimension(5, 1)));
-		
-		JButton addPlayersButton = new JButton();
-		addPlayersButton.setToolTipText("Añadir o cambiar jugadores a la partida");
-		addPlayersButton.setIcon(new ImageIcon("resources/icons/control_panel/player.png"));
-		addPlayersButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int status = addPlayersDialog.open();
-				if(status == 1) {
-					controller.addOrChangePlayers(addPlayersDialog.createPlayers());
-					controller.update();
-				}
-			}
-		});
-		bar.add(addPlayersButton);
-		bar.add(Box.createRigidArea(new Dimension(5, 1)));
-		this.buttonsToBlockGameNotInitiated.add(addPlayersButton);
 		
 		JButton passButton = new JButton();
 		passButton.setToolTipText("Pasar de turno");

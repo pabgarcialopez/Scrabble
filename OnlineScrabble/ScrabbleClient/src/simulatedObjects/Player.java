@@ -6,10 +6,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import logic.Game;
 import strategies.Strategy;
-import utils.StringUtils;
-import wordCheckers.WordChecker;
 
 /* APUNTES GENERALES:
    
@@ -40,96 +37,7 @@ public class Player {
 		this.totalPoints = totalPoints;
 		this.strategy = strategy;
 	}
-
-	/* Método addTile:
-	 * Añade al array de tipo Tile la ficha recibida por parámetro.
-	 */
-	public void addTile(Tile tile) {
-		this.tiles.add(tile);
-	}
 	
-	/* Método removeTile:
-	 * Elimina del array de tipo Tile la ficha situada en el índice recibido por parámetro.
-	 */
-	public void removeTile(int tile) {
-		this.tiles.remove(tile);		
-	}
-	
-	/* Método removeTile:
-	 * Elimina del array de tipo Tile la ficha recibida por parámetro.
-	 */
-	public void removeTile(Tile tile) {
-		this.tiles.remove(tile);
-	}
-	
-	/* Método play:
-	 * Llama al método play de su estrategia correspondiente.
-	 */
-	public void play(Game game, WordChecker wordChecker) {
-		this.strategy.play(game, wordChecker, tiles);
-	}
-	
-	/* Método getStatus:
-	 * Devuelve un String con la información del jugador:
-	 * - Nombre.
-	 * - Puntos totales.
-	 * - Fichas y sus puntos asociados.
-	 */
-	public String getStatus() {
-		StringBuilder buffer = new StringBuilder();
-		
-		buffer.append(StringUtils.LINE_SEPARATOR).append("Turno de ")
-		      .append(this.name).append(":")
-			  .append(StringUtils.LINE_SEPARATOR);
-		
-		buffer.append("Puntos totales: ").append(totalPoints).append(StringUtils.LINE_SEPARATOR);
-	
-		buffer.append("Fichas (letra y puntos asociados a ella):").append(StringUtils.LINE_SEPARATOR);
-		for(int i = 0; i < tiles.size(); i++) {
-			buffer.append(tiles.get(i));
-			if(i != tiles.size() - 1)
-				buffer.append(" || ");
-		}
-		
-		buffer.append(StringUtils.LINE_SEPARATOR);
-		return buffer.toString();
-	}
-
-	/* Método hasLetter:
-	 * Devuelve un booleano indicando si un jugador tiene en sus fichas
-	 * la letra recibida por parámetro.
-	 */
-	public boolean hasLetter(String letter) {
-		
-		for(int i = 0; i < this.tiles.size(); ++i)
-			if(this.tiles.get(i).getLetter().equalsIgnoreCase(letter))
-				return true;
-		
-		return false;
-	}
-
-	/* Método numberOfTilesOf:
-	 * Devuelve el número de fichas con la letra recibida 
-	 * por parámetro que tiene el jugador
-	 */
-	public int numberOfTilesOf(String letter) {
-		
-		int numberOfTiles = 0;
-		for (int i = 0; i < this.tiles.size(); ++i)
-			if (this.tiles.get(i).getLetter().equalsIgnoreCase(letter)) 
-				++numberOfTiles;
-		
-		return numberOfTiles;
-	}
-
-	/* Método givePoints:
-	 * Suma a la cantidad actual de puntos, los recibidos por parámetro.
-	 */
-	public void givePoints(int points) {
-		this.totalPoints += points;
-	}
-	
-
 	// Getters
 	
 	public String getName() {
@@ -177,6 +85,7 @@ public class Player {
 		
 		JSONObject strategy = new JSONObject();
 		strategy.put("strategy_type", this.strategy.toString());
+		
 		jo.put("strategy", strategy);
 		
 		return jo;
