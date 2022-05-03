@@ -132,7 +132,11 @@ public class PlayerPanel extends JPanel implements ScrabbleObserver {
 	@Override
 	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
 		if(gameInitiated && this.numJugador < numPlayers) {
-			this.nameLabel.setText("Jugador: " + gamePlayers.getPlayerName(this.numJugador));
+			if(this.numJugador == this.clientNumPlayer)
+				this.nameLabel.setText("Tú: " + gamePlayers.getPlayerName(this.numJugador));
+			else
+				this.nameLabel.setText("Jugador: " + gamePlayers.getPlayerName(this.numJugador));
+			
 			this.pointsLabel.setText("Puntos totales: " + gamePlayers.getPlayerPoints(this.numJugador));
 			createTiles(gamePlayers, numPlayers);
 		}
@@ -146,7 +150,11 @@ public class PlayerPanel extends JPanel implements ScrabbleObserver {
 	@Override
 	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
 		if(gameInitiated && this.numJugador < numPlayers) {
-			this.nameLabel.setText("Jugador: " + gamePlayers.getPlayerName(this.numJugador));
+			if(this.numJugador == this.clientNumPlayer)
+				this.nameLabel.setText("Tú: " + gamePlayers.getPlayerName(this.numJugador));
+			else
+				this.nameLabel.setText("Jugador: " + gamePlayers.getPlayerName(this.numJugador));
+			
 			this.pointsLabel.setText("Puntos totales: " + gamePlayers.getPlayerPoints(this.numJugador));
 			createTiles(gamePlayers, numPlayers);
 		}

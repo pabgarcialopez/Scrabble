@@ -179,6 +179,6 @@ public class GamePlayers {
 		else
 			strategy = new HardStrategy();
 		
-		this.players.add(new Player("CPU " + this.getNumPlayers(), 0, new ArrayList<Tile>(), strategy));
+		this.players.add(new Player("CPU " + (this.getNumPlayers() + 1), 0, new ArrayList<Tile>(), strategy));
 	}
 }

@@ -135,10 +135,9 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 				String help = String.format("Posibles acciones:%n%n"
 						+ "• Colocar palabra: hacer click en la casilla "
 						+ "donde se quiere que empiece y escribir la palabra y su dirección.%n"
-						+ "• Nueva partida: pulsar el botón situado en primera posición desde la izquierda.%n"
-						+ "• Pasar de turno: pulsar el botón situado en segunda posición desde la izquierda.%n"
-						+ "• Intercambiar una ficha: pulsar el botón situado en tercera posición desde la izquierda.%n"
-						+ "• Continuar ejecución: pulsar el botón situado en cuarta posición desde la izquierda%n"
+						+ "• Pasar de turno: pulsar el botón situado en primera posición desde la izquierda.%n"
+						+ "• Intercambiar una ficha: pulsar el botón situado en segunda posición desde la izquierda.%n"
+						+ "• Continuar ejecución: pulsar el botón situado en tercera posición desde la izquierda%n"
 						+ "• Salir del juego: pulsar el botón situado en la primera posición desde la derecha.%n%n"
 						+ "Proyecto Scrabble ©");
 				
