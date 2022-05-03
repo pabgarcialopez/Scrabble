@@ -260,12 +260,10 @@ public class ConsoleView implements ScrabbleObserver {
 			showBoard(board);
 		}
 		else {
-			
 			executeCommand();
 		}
 		
 		controller.update();
-		
 	}
 
 	@Override
@@ -280,7 +278,6 @@ public class ConsoleView implements ScrabbleObserver {
 				controller.playTurn();
 			}
 		}
-		
 		else {
 			executeCommand();
 		}

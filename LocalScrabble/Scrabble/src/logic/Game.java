@@ -380,7 +380,7 @@ public class Game {
 	 */
 	public void update() {
 		
-		if(_gameInitiated) {
+		if(_gameInitiated && getNumPlayers() != 0) {
 			// Si no quedan fichas en el saco, y el jugador actual no tiene fichas
 			if(this.getRemainingTiles() == 0 && 
 					this.players.getNumPlayerTiles((this.currentTurn + this.getNumPlayers() - 1) % this.getNumPlayers()) == 0) {
@@ -404,8 +404,8 @@ public class Game {
 		}
 		
 		else {
-				for(ScrabbleObserver o : this.observers)
-					o.onUpdate(getGameIsFinished(), this.getNumPlayers(), this.getStatus(), this.getRemainingTiles(), this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn);
+			for(ScrabbleObserver o : this.observers)
+				o.onUpdate(getGameIsFinished(), this.getNumPlayers(), _gameInitiated && getNumPlayers() != 0 ? this.getStatus() : null, this.getRemainingTiles(), getNumPlayers() == 0 ? null : this.players.getPlayerName(this.currentTurn), this.players, this.currentTurn);
 		}
 		
 	}
