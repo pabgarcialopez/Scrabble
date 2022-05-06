@@ -6,6 +6,7 @@ import java.util.Scanner;
 import exceptions.CommandParseException;
 import scrabble.Controller;
 
+// Ver apuntes de la clase padre Command.
 public class WriteWordCommand extends Command {
 
 	private static final String NAME = "palabra";
@@ -28,12 +29,20 @@ public class WriteWordCommand extends Command {
 		super(NAME, SHORTCUT, DETAILS, HELP);
 	}
 	
+	/* Sobrescritura del método execute:
+	 * Delega en la clase Controller la acción de escribir una palabra.
+	 */
 	@Override
 	public void execute(Controller controller, Scanner in, PrintStream out) {
 		
 		controller.writeAWord(word, posX, posY, direction);
 	}
 	
+	/* Sobrescritura del método parse:
+	 * En este caso, se debe comprobar que los argumentos recibidos por parámetro
+	 * contiene exactamente 5 argumentos (nombre o shortcut del comando, palabra 
+	 * introducida, posiciones en el tablero, y dirección).
+	 */
 	@Override
 	protected Command parse(String[] words) throws CommandParseException {
 		

@@ -5,13 +5,13 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
+/* APUNTES GENERALES
+ * En función de si la dirección es vertical u horizontal, comprueba que la palabra introducida coincida
+ * con la que se forma en total en el tablero. En caso contrario, se lanza una excepción.
+ */
 public class WordUnionChecker implements Checker {
 	
-	/* Clase checkWordUnion:
-	 * En función de si la dirección es vertical u horizontal, comprueba que la palabra introducida coincida
-	 * con la que se forma en total en el tablero. En caso contrario, se lanza una excepción.
-	 */
-	
+	// Sobreescritura del método check
 	@Override
 	public void check(Game game, String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded)
 			throws CommandExecuteException {

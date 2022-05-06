@@ -10,8 +10,7 @@ public class BoxBuilder {
 		this.tileBuilder = tileBuilder;
 	}
 	
-	/* Sobrescritura del método createTheInstance:
-	 * 
+	/* Método createBox:
 	 * Este método construye un objeto de la clase Box, es decir,
 	 * una casilla del tablero. La casilla tiene la posibilidad de
 	 * tener asociados un efecto especial y una letra, las cuales vienen

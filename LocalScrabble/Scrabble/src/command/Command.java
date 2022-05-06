@@ -125,14 +125,29 @@ public abstract class Command {
 		return command;
 	}
 
+	/* Método gameInitiated:
+	 * Este método es empleado para añadir nuevos comandos disponibles al
+	 * usuario en función de si el juego ha sido iniciado.
+	 * 
+	 * Si el juego ha sido iniciado, se elimina el comando de añadir jugadores.
+	 * En caso contrario, se añade (si no lo tuviera ya).
+	 */
 	public static void gameInitiated(boolean gameInitiated) {
 		if(gameInitiated) {
 			if (!AVAILABLE_COMMANDS.contains(addPlayersCommand))
 				AVAILABLE_COMMANDS.add(addPlayersCommand);
 		}
+		
 		else AVAILABLE_COMMANDS.remove(addPlayersCommand);
 	}
 	
+	/* Método playersAdded:
+	 * Este método añade o quita los comandos asociados a una partida en la que
+	 * los jugadores han sido añadidos.
+	 * 
+	 * Si los jugadores han sido añadidos, se añaden (si nos lo contienen ya).
+	 * En caso contrario, se eliminan.
+	 */
 	public static void playersAdded(boolean playersAdded) {
 		
 		if(playersAdded) {

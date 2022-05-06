@@ -5,12 +5,14 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
+/* APUNTES GENERALES
+   Dado el mapa de las letras necesitadas, se comprueba si el jugador tiene todas ellas.
+   En caso contrario, se lanza una excepción.
+*/
+
 public class EnoughLettersChecker implements Checker {
 	
-	/* Clase checkEnoughLetters:
-	 * Dado el mapa de las letras necesitadas, se comprueba si el jugador tiene todas ellas.
-	 * En caso contrario, se lanza una excepción.
-	 */
+	// Sobreescritura del método check
 	@Override
 	public void check(Game game, String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded)
 			throws CommandExecuteException {

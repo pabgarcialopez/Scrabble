@@ -13,6 +13,7 @@ import storage.GameLoader;
 import utils.StringUtils;
 import view.ConsoleView;
 
+// Ver apuntes de la clase padre Command.
 public class AddPlayersCommand extends Command {
 	
 	private static final String NAME = "jugadores";
@@ -28,7 +29,7 @@ public class AddPlayersCommand extends Command {
 	}
 	
 	/* Sobrescritura del método execute:
-	 * Provoca la terminación del juego.
+	 * Delega en la clase Controller el añadido o modificado de jugadores.
 	 */
 
 	@Override
@@ -36,6 +37,10 @@ public class AddPlayersCommand extends Command {
 		controller.addOrChangePlayers(createPlayers(in, out));
 	}
 	
+	/* Método createPlayers:
+	 * Este método es usado exclusivamente en el modo consola para solicitar
+	 * al usuario la información de los juagadores de una partida.
+	 */
 	private GamePlayers createPlayers(Scanner in, PrintStream out) {
 		
 		int numPlayers = selectNumPlayers(in, out);
@@ -93,6 +98,10 @@ public class AddPlayersCommand extends Command {
 		return GameLoader.createPlayers(data);
 	}
 		
+	/* Método selectNumPlayers:
+	 * Este método es empleado sencillamente para permitir al usuario decidir,
+	 * en modo consola, el número de jugadores que van a jugar la partida.
+	 */
 	private int selectNumPlayers(Scanner in, PrintStream out) {
 			
 		int numPlayers = 0;
@@ -134,6 +143,10 @@ public class AddPlayersCommand extends Command {
 		return numPlayers;
 	}
 
+	/* Método checkPlayerNames:
+	 * Este método se emplea para verificar que, cada vez que se introduce un
+	 * nombre de un jugador, dicho nombre no haya sido usado para un jugador previo.
+	 */
 	private static boolean checkPlayerNames(String name, JSONArray players) {
 		
 		int i = 0;
@@ -146,6 +159,10 @@ public class AddPlayersCommand extends Command {
 		return true;
 	}
 	
+	/* Método takeType:
+	 * Este método auxiliar es empleado para traducir el tipo de estrategia introducido por el
+	 * usuario sobre un jugador, al "id" necesario para construir el JSON correspondiente.
+	 */
 	private static String takeType(String type) {
 
 		type = StringUtils.removeAccents(type);

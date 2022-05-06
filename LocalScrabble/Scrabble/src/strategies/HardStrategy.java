@@ -6,8 +6,15 @@ import logic.Game;
 import simulatedObjects.Tile;
 import wordCheckers.WordChecker;
 
+// Ver apuntes de la interfaz Strategy.
 public class HardStrategy implements Strategy {
 	
+	/* Sobreescritura del método play:
+	 * La estrategia difícil consiste en que el jugador forme palabras de tamaño máximo.
+	 * 
+	 * En caso de no haber escrito ninguna palabra, intenta
+	 * intercambiar ficha, y si no puede, pasa de turno.
+	 */
 	@Override
 	public void play(Game game, WordChecker wordChecker, List<Tile> tilesForWord) {
 		boolean wordWritten = false;

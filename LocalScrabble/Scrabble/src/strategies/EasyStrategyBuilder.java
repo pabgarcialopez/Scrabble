@@ -2,6 +2,7 @@ package strategies;
 
 import org.json.JSONObject;
 
+// Ver apuntes de la clase padre StrategyBuilder.
 public class EasyStrategyBuilder extends StrategyBuilder {
 	
 	public EasyStrategyBuilder() {

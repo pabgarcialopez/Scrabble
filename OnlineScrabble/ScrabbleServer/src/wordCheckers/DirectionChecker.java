@@ -5,13 +5,14 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
+/* APUNTES GENERALES
+   Esta clase comprueba que la dirección introducida sea vertical u horizontal.
+   En caso contrario, se lanza una excepción.
+ */
 public class DirectionChecker implements Checker {
 
-	/* Clase CheckerDirection:
-	 * Comprueba que la dirección introducida sea vertical u horizontal.
-	 * En caso contrario, se lanza una excepción
-	 */
 	
+	// Sobreescritura del método check
 	@Override
 	public void check(Game game, String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded)
 			throws CommandExecuteException {

@@ -5,13 +5,13 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
+/* APUNTES GENERALES
+   Comprueba que la posición de la palabra introducida se encuentre en el rango permitido.
+   En caso contrario, se lanza una excepción.
+*/
 public class PosInRangeChecker implements Checker{
 	
-	/* Clase checkPosInRange:
-	 * Comprueba que la posición de la palabra introducida se encuentre en el rango permitido.
-	 * En caso contrario, se lanza una excepción.
-	 */
-	
+	// Sobreescritura del método check
 	@Override
 	public void check(Game game, String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded)
 			throws CommandExecuteException {

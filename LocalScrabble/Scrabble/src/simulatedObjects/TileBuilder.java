@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 public class TileBuilder {
 
-	/* Sobrescritura del método createTheInstance:
+	/* Método createTile:
 	 * 
 	 * Construye y devuelve una instancia de la clase Tile,
 	 * obteniendo la información necesaria del JSONObject recibido por parámetro.

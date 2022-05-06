@@ -157,6 +157,4 @@ public class Controller {
 	public void removeObserver(ScrabbleObserver o) {
 		this.game.removeObserver(o);
 	}
-	
-	
 }

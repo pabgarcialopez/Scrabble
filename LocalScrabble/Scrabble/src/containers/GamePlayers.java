@@ -9,8 +9,6 @@ import org.json.JSONObject;
 import logic.Game;
 import simulatedObjects.Player;
 import simulatedObjects.Tile;
-import strategies.Strategy;
-import utils.Pair;
 import wordCheckers.WordChecker;
 
 /* APUNTES GENERALES
@@ -159,6 +157,10 @@ public class GamePlayers {
 	public Player getPlayer(int currentTurn) {
 		return players.get(currentTurn);
 	}
+	
+	public List<Tile> getTiles(int player) {
+		return this.players.get(player).getTiles();
+	}
 
 	public JSONObject report() {
 		
@@ -172,19 +174,4 @@ public class GamePlayers {
 		
 		return jo;
 	}
-
-	public List<Tile> getTiles(int player) {
-		
-		return this.players.get(player).getTiles();
-	}
-
-	public void changeStrategies(List<Pair<Integer, Strategy>> is) {
-		for(int i = 0; i < is.size(); ++i) {
-			this.players.get(is.get(i).getFirst()).setStrategy(is.get(i).getSecond());
-		}
-	}
-
-	
-
-	
 }

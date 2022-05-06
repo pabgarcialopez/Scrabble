@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import simulatedObjects.Box;
 import simulatedObjects.BoxBuilder;
 
-//Ver apuntes de la clase padre Builder.
 public class BoardBuilder {
 
 	private BoxBuilder boxBuilder;

@@ -34,6 +34,13 @@ public class GameTiles {
 		tiles.remove(tile);
 	}
 	
+	/* Método addAll:
+	 * Añade a la lista de fichas del juego las recibidas por parámetro.
+	 */
+	public void addAll(List<Tile> tiles) {
+		this.tiles.addAll(tiles);
+	}
+	
 	// Getters
 	
 	public int getNumTiles() {
@@ -60,9 +67,5 @@ public class GameTiles {
 		jo.put("tiles", tiles);
 		
 		return jo;
-	}
-
-	public void addAll(List<Tile> tiles) {
-		this.tiles.addAll(tiles);
 	}
 }

@@ -5,10 +5,13 @@ import java.util.Map;
 import exceptions.CommandExecuteException;
 import logic.Game;
 
+/* APUNTES GENERALES:
+   Ver funcionalidad en los métodos de la clase.
+*/
+
 public class WordInPosAndDirectionChecker implements Checker {
 	
-	
-	
+	// Sobreescritura del método check
 	@Override
 	public void check(Game game, String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded)
 			throws CommandExecuteException {
@@ -24,7 +27,7 @@ public class WordInPosAndDirectionChecker implements Checker {
 	 * Comprueba que las posiciones introducidas se ajusten al rango permitido;
 	 * que en caso de solapamiento de fichas, la letra recibida por parámetro y la 
 	 * letra de la ficha en el tablero coincidan; que en caso de que la casilla esté 
-	 * vacá, el jugador tenga la letra correspondiente.
+	 * vacía, el jugador tenga la letra correspondiente.
 	 * 
 	 * Además, si la casilla contiene una ficha se resta una ocurrencia al 
 	 * mapa de letras necesitadas para formar una palabra.

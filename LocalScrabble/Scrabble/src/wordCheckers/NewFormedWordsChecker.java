@@ -9,13 +9,13 @@ import exceptions.CommandExecuteException;
 import logic.Game;
 import utils.StringUtils;
 
+/* APUNTES GENERALES
+   Comprueba que las palabras extras (obtenidas mediante el método getWordFormed), 
+   que se hayan podido formar al colocar una palabra en tablero sean válidas.
+   En caso contrario, se lanza una excepción.
+*/
 public class NewFormedWordsChecker implements Checker {
 	
-	/* Clase CheckerNewFormedWords:
-	 * Comprueba que las palabras extras (obtenidas mediante el método getWordFormed), 
-	 * que se hayan podido formar al colocar una palabra en tablero sean válidas.
-	 * En caso contrario, se lanza una excepción.
-	 */
 	
 	private WordExistsChecker checkerWordExists;
 	private WordNotUsedChecker checkerWordNotUsed;
@@ -25,6 +25,7 @@ public class NewFormedWordsChecker implements Checker {
 		this.checkerWordNotUsed = checkerWordNotUsed;
 	}
 
+	// Sobreescritura del método check
 	@Override
 	public void check(Game game, String word, int posX, int posY, String direction, Map<String, Integer> lettersNeeded)
 			throws CommandExecuteException {

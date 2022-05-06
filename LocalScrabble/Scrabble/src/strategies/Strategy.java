@@ -10,8 +10,13 @@ import simulatedObjects.Tile;
 import utils.Pair;
 import wordCheckers.WordChecker;
 
+/* APUNTES GENERALES
+
+   Esta interfaz asocia el comportamiento de estrategia, para cualquier clase que la implemente.
+   El método a sobreescribir es play. El resto de métodos implementados son comunes a toda estrategia. 
+ */
+
 public interface Strategy {
-	
 	
 	static final List<Pair<Integer, Integer>> movingBoxes = 
 			Collections.unmodifiableList(

@@ -213,6 +213,8 @@ public class Main {
 
 	}
 	
+	// Getters
+	
 	public static String getOutFileName() {
 		return outFileTxt;
 	}

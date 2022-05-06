@@ -8,8 +8,9 @@ import org.json.JSONObject;
 
 public class WordsBuilder {
 
-	/* Sobrescritura del método createTheInstance:
-	 * Construye y devuelve la lista que contiene las palabras usadas del juego.
+	/* Método createWords:
+	 * Construye y devuelve una lista de palabras (ya sean las válidas o las usadas),
+	 * a partir del objeto JSON recibido por parámetro.
 	 */
 
 	public List<String> createWords(JSONObject data) {

@@ -2,6 +2,10 @@ package strategies;
 
 import org.json.JSONObject;
 
+/* APUNTES GENERALES
+  
+   Esta clase reune la funcionalidad común de cualquier Builder de strategias.
+ */
 public abstract class StrategyBuilder {
 	
 	protected String _type;

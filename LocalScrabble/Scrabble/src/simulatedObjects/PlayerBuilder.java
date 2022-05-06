@@ -31,22 +31,24 @@ public class PlayerBuilder {
 		this.strategyBuilders = strategyBuilders;
 	}
 	
-	/* Sobrescritura del método createTheInstance:
+	/* Método createPlayer:
 	 * 
-	 * El método construye un objecto polimórfico de tipo estático Player,
-	 * y de tipo dinámico HumanPlayer, EasyPlayer, MediumPlayer o HardPlayer,
-	 * y lo devuelve.
+	 * El método construye un objecto de tipo Player.
 	 * 
-	 * En el JSONObject recibido por parámetro, se pueden dar algunas alternativas:
+	 * Por un lado, el parámetro k sirve para enumerar a los jugadores automáticos.
+	 * 
+	 * Por otro lado, en el JSONObject recibido por parámetro, se pueden dar algunas alternativas:
 	 * 
 	 * - Si el tipo del JSONObject no coincide con el tipo del jugador actual, se devuelve null
 	 *   (esto se usa en la clase GamePlayersBuilder para distinguir cuando el fichero .json
 	 *   podría tener un error).
 	 *   
 	 * - Si el jugador tiene una clave "name", se asocia el nombre del jugador a este.
-	 *   En caso contrario, se trata de un jugador automático sin nombre, y se le asigna "CPU".
+	 *   En caso contrario, se trata de un jugador automático sin nombre, y se le asigna AUTOMATIC_PLAYER_NAME.
 	 *   
 	 * - Si el jugador tiene fichas asociadas, se crea el correspondiente array de objetos Tile.
+	 * 
+	 * - También se construye su estrategia a partir de la especificada en el JSON recibido por parámetro.
 	 */
 
 	public Player createPlayer(JSONObject data, int k) {

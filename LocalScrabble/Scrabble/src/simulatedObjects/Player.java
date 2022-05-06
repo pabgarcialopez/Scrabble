@@ -20,12 +20,8 @@ import wordCheckers.WordChecker;
    - Nombre: así será identificado el jugador.
    - Lista de fichas: son las fichas con las que el jugador puede formar palabras.
    - Puntos totales: acumulación de puntos obtenidos de colocar palabras.
-   - Objeto de la clase Random: se emplea para establecer una posición de palabra
-     aleatoria en los jugadores automáticos.
-     
-   El atributo final y constante "movingBoxes" es empleado por los jugadores automáticos
-   para recorrer las posiciones del tablero de forma ordenada.
-   
+   - Estrategia: objeto de la clase Strategy que define la estrategia del jugador.
+        
  */
 public class Player {
 	
@@ -180,9 +176,5 @@ public class Player {
 		jo.put("strategy", strategy);
 		
 		return jo;
-	}
-
-	public void setStrategy(Strategy strategy) {
-		this.strategy = strategy;
 	}
 }

@@ -25,18 +25,6 @@ import wordCheckers.WordChecker;
 /* APUNTES GENERALES
 
 La clase Game encapsula toda la lógica principal de juego.
-
-Para ello, se necesita:
-
-- Saber si el juego ha sido inicializado, y si ya se ha colocado alguna palabra en el tablero.
-- Contenedores de tipo Board, GamePlayers, GameTiles.
-- El turno del jugador actual y el número consecutivo de turnos saltados.
-- Conocer si se han puesto palabras en el tablero, si el juego ha terminado, y la causa de ello.
-- Listas de las palabras usadas, y todas las palabras válidas.
-- Un comprobador de palabras.
-- Un objeto Random para establecer aleatoriedad.
-- Lista de observadores para actualizar las vistas en función del modelo.
-
 */
 
 public class Game {
@@ -729,6 +717,4 @@ public class Game {
 
 		return jo;
 	}
-
-	
 }

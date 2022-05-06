@@ -7,7 +7,16 @@ import logic.Game;
 import simulatedObjects.Tile;
 import wordCheckers.WordChecker;
 
+// Ver apuntes de la interfaz Strategy.
 public class MediumStrategy implements Strategy {
+	
+	/* Sobreescritura del método play:
+	 * La estrategia media consiste en que el jugador forme palabras de tamaño
+	 * aleatorio, pero no repitiendo ninguno.
+	 * 
+	 * En caso de no haber escrito ninguna palabra, tiene un 50% de probabilidad de
+	 * intercambiar ficha. En caso de no poder, pasa de turno.
+	 */
 	
 	@Override
 	public void play(Game game, WordChecker wordChecker, List<Tile> tilesForWord) {
