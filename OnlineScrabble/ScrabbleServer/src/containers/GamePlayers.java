@@ -9,8 +9,11 @@ import org.json.JSONObject;
 import logic.Game;
 import simulatedObjects.Player;
 import simulatedObjects.Tile;
+import strategies.EasyStrategy;
+import strategies.HardStrategy;
+import strategies.HumanStrategy;
+import strategies.MediumStrategy;
 import strategies.Strategy;
-import utils.Pair;
 import wordCheckers.WordChecker;
 
 /* APUNTES GENERALES
@@ -90,14 +93,6 @@ public class GamePlayers {
 		return this.players.get(player).hasLetter(letter);
 	}
 	
-	/* Método automaticPlay:
-	 * Delega el juego automático del jugador recibido por parámetro
-	 * a la función play de la clase Player (método abstracto).
-	 */
-	public void automaticPlay(int player, Game game, WordChecker wordChecker) {
-		this.players.get(player).play(game, wordChecker);
-	}
-	
 	/* Método getWinners:
 	 * Devuelve la lista de todos los jugadores que hayan ganado
 	 * (son posibles los empates).
@@ -126,23 +121,10 @@ public class GamePlayers {
 		return winners;
 	}
 
-	/* Método reset:
-	 * Delega la acción de resetear al método reset de la clase Player (método abstracto).
-	 */
-//	public void reset() {
-//		for(Player p: players) {
-//			p.reset();
-//		}
-//	}
-	
 	// Getters
 	
 	public int getNumPlayers() {
 		return players.size();
-	}
-
-	public String getPlayerStatus(int i) {
-		return players.get(i).getStatus();
 	}
 
 	public String getPlayerName(int i) {
@@ -160,17 +142,9 @@ public class GamePlayers {
 	public Tile getPlayerTile(int player, String letter) {
 		return this.players.get(player).getTile(letter);
 	}
-	
-//	public boolean humanIsPlaying(int currentTurn) {
-//		return players.get(currentTurn).isHuman();
-//	}
 
 	public int getPlayerPoints(int player) {
 		return this.players.get(player).getPoints();
-	}
-	
-	public Player getPlayer(int currentTurn) {
-		return players.get(currentTurn);
 	}
 
 	public JSONObject report() {
@@ -191,13 +165,20 @@ public class GamePlayers {
 		return this.players.get(player).getTiles();
 	}
 
-	public void changeStrategies(List<Pair<Integer, Strategy>> is) {
-		for(int i = 0; i < is.size(); ++i) {
-			this.players.get(is.get(i).getFirst()).setStrategy(is.get(i).getSecond());
-		}
+	public void addNewHumanPlayer(String name) {
+		this.players.add(new Player(name, 0, new ArrayList<Tile>(), new HumanStrategy()));
 	}
-
 	
-
-	
+	public void addNewAutomaticPlayer(String strategyType) {
+		
+		Strategy strategy = null;
+		if(strategyType.equalsIgnoreCase("easy"))
+			strategy = new EasyStrategy();
+		else if(strategyType.equals("medium"))
+			strategy = new MediumStrategy();
+		else
+			strategy = new HardStrategy();
+		
+		this.players.add(new Player("CPU " + (this.getNumPlayers() + 1), 0, new ArrayList<Tile>(), strategy));
+	}
 }

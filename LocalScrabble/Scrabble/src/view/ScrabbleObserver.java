@@ -57,5 +57,8 @@ public interface ScrabbleObserver {
 	 */
 	void onFirstTurnDecided(String[] lettersObtained, GamePlayers gamePlayers, Board board, int numPlayers, int currentTurn);
 	
+	/* Método onMovementNeeded:
+	 * Es llamado cuando se la partida requiere de una acción para seguir avanzando.
+	 */
 	void onMovementNeeded();
 }

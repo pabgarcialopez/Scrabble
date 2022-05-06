@@ -3,8 +3,11 @@ package observersActions;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.json.JSONObject;
 
+import client.Client;
 import containers.Board;
 import containers.BoardBuilder;
 import containers.GamePlayers;
@@ -41,7 +44,7 @@ public class OnRegister {
 	}
 
 
-	public void register(JSONObject jo, ScrabbleObserver o) {
+	public void register(JSONObject jo, Client client, List<ScrabbleObserver> observers, boolean alreadyRegistered) {
 		
 		JSONObject data = jo.getJSONObject("data");
 		
@@ -49,8 +52,19 @@ public class OnRegister {
 		int numPlayers = data.getInt("num_players");
 		GamePlayers gamePlayers = data.has("game_players") ? this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players")) : null;
 		int currentTurn = data.getInt("current_turn");
+		boolean gameInitiated = data.getBoolean("game_initiated");
 		
+		if(!alreadyRegistered)
+			client.initGUI(numPlayers - 1);
 		
-		o.onRegister(board, numPlayers, gamePlayers, currentTurn);
-	}
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				for(int i = 0; i < observers.size(); ++i)
+					observers.get(i).onRegister(board, numPlayers, gamePlayers, currentTurn, gameInitiated);
+			}
+			
+		});
+		}
 }

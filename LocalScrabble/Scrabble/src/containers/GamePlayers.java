@@ -125,15 +125,6 @@ public class GamePlayers {
 		
 		return winners;
 	}
-
-	/* Método reset:
-	 * Delega la acción de resetear al método reset de la clase Player (método abstracto).
-	 */
-//	public void reset() {
-//		for(Player p: players) {
-//			p.reset();
-//		}
-//	}
 	
 	// Getters
 	

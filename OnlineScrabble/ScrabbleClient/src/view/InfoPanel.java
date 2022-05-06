@@ -13,14 +13,20 @@ import javax.swing.JPanel;
 import containers.Board;
 import containers.GamePlayers;
 import control.Controller;
-import logic.Game;
-import utils.StringUtils;
+
+/* APUNTES GENERALES:
+
+   La clase InfoPanel se trata de la zona situada sobre el tablero, y cuya función es informar al usuario a lo largo
+   de una partida de los distintos eventos que ocurren. Por ejemplo, de quién es el turno actual, el comienzo de una
+   partida o la acción tomada por un determinado jugador.
+*/
 
 public class InfoPanel extends JPanel implements ScrabbleObserver {
 
 	private static final long serialVersionUID = 1L;
 	
 	private String currentTurnName;
+	private int clientNumPlayer;
 	
 	private JLabel currentTurnLabel;
 	private JLabel remainingTilesLabel;
@@ -29,8 +35,9 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	
 	private Component parent;
 
-	InfoPanel(Controller controller, Component parent) {
+	InfoPanel(Controller controller, Component parent, int clientNumPlayer) {
 		
+		this.clientNumPlayer = clientNumPlayer;
 		this.parent = parent;
 		initGUI();
 		controller.addObserver(this);
@@ -70,7 +77,7 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board) {
+	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board, boolean gameInitiated) {
 		infoLabel.setText(String.format("%s escribe la palabra \"%s\" en la posición (%s, %s) y dirección \"%s\"", this.currentTurnName, word.toUpperCase(), posX, posY, direction.toUpperCase()));
 		
 		String pointsString = String.format("¡Gana %s puntos!", points);
@@ -80,29 +87,33 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onPassed(int numPlayers, String currentPlayerName) {
+	public void onPassed(int numPlayers, String currentPlayerName, boolean gameInitiated) {
 		infoLabel.setText(String.format("%s pasa de turno", this.currentTurnName));
 	}
 
 	@Override
-	public void onSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn) {
+	public void onSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
 		infoLabel.setText(String.format("%s intercambia una ficha", this.currentTurnName));
 	}
 
 	@Override
-	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {}
+	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {}
 
 	@Override
-	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
-		if (Game.getGameInitiated() && numPlayers != 0) {
+	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
+		if (gameInitiated && numPlayers != 0) {
 			infoLabel.setText("Partida iniciada");
-			this.currentTurnName = gamePlayers.getPlayerName(currentTurn);
+			if(currentTurn < 0)
+				this.currentTurnName = "";
+			else
+				this.currentTurnName = gamePlayers.getPlayerName(currentTurn);
+			
 			currentTurnLabel.setText("Turno de: " + this.currentTurnName);
 			remainingTilesLabel.setText("Fichas restantes: " + remainingTiles);
 			pointsLabel.setText("");
 		}
 		
-		else if(Game.getGameInitiated()) {
+		else if(gameInitiated) {
 			currentTurnLabel.setText("");
 			remainingTilesLabel.setText("Fichas restantes: " + remainingTiles);
 			infoLabel.setText("Nueva partida iniciada, pero... ¡hay que añadir jugadores!");
@@ -110,12 +121,13 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onError(String error) {
-		JOptionPane.showMessageDialog(parent, error, "ERROR", JOptionPane.ERROR_MESSAGE);
+	public void onError(String error, int currentTurn) {
+		if(currentTurn == this.clientNumPlayer)
+			JOptionPane.showMessageDialog(parent, error, "ERROR", JOptionPane.ERROR_MESSAGE);
 	}
 
 	@Override
-	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn) {
+	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
 		
 		if(!gameFinished) {
 			this.currentTurnName = gamePlayers.getPlayerName(currentTurn);
@@ -141,16 +153,16 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 	}
 
 	@Override
-	public void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn) {
+	public void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn, boolean gameInitiated) {
 		
 		StringBuilder buffer = new StringBuilder();
 		
 		for(int i = 0; i < numPlayers; i++) {
 			buffer.append(gamePlayers.getPlayerName(i)).append(" ha cogido una ")
-				  .append(lettersObtained.get(i)).append(StringUtils.LINE_SEPARATOR);
+				  .append(lettersObtained.get(i)).append(System.lineSeparator());
 		}
 		
-		buffer.append(StringUtils.LINE_SEPARATOR).append("El orden de juego es: ");
+		buffer.append(System.lineSeparator()).append("El orden de juego es: ");
 		
 		for(int i = 0; i < numPlayers; i++) {
 			buffer.append(gamePlayers.getPlayerName((i + currentTurn) % numPlayers));
@@ -159,13 +171,14 @@ public class InfoPanel extends JPanel implements ScrabbleObserver {
 		}
 			
 		
-		buffer.append(StringUtils.LINE_SEPARATOR);
+		buffer.append(System.lineSeparator());
 		
 		JOptionPane.showMessageDialog(parent, buffer.toString(), "Elección de Turnos", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	@Override
-	public void onMovementNeeded() {
-		this.infoLabel.setText("Elige tu siguiente movimiento");
+	public void onMovementNeeded(int currentTurn) {
+		if(currentTurn == clientNumPlayer)
+			this.infoLabel.setText("Elige tu siguiente movimiento");
 	}
 }

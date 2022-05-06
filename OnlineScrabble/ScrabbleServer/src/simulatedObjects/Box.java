@@ -85,10 +85,6 @@ public class Box {
 	}
 	
 	// Getters
-	
-	public SpecialEffects getSpecialEffect() {
-		return this.specialEffect;
-	}
 
 	public Tile getTile() {
 		return this.tile;

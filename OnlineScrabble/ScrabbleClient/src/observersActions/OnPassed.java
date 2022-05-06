@@ -9,8 +9,8 @@ import view.ScrabbleObserver;
 public class OnPassed  extends OnObserverAction {
 
 	private int numPlayers;
-	
 	private String currentPlayerName;
+	private boolean gameInitiated;
 	
 	OnPassed() {
 		super("passed");
@@ -25,6 +25,7 @@ public class OnPassed  extends OnObserverAction {
 			
 			this.numPlayers = data.getInt("num_players");
 			this.currentPlayerName = data.getString("current_player_name");
+			this.gameInitiated = data.getBoolean("game_initiated");
 			
 			return this;
 		}
@@ -36,7 +37,7 @@ public class OnPassed  extends OnObserverAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 
 		for(ScrabbleObserver o : observers)
-			o.onPassed(numPlayers, currentPlayerName);
+			o.onPassed(numPlayers, currentPlayerName, gameInitiated);
 	}
 
 }

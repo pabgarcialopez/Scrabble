@@ -15,6 +15,13 @@ import logic.Game;
 import scrabble.Controller;
 import utils.StringUtils;
 
+/* APUNTES GENERALES:
+
+   La clase InfoPanel se trata de la zona situada sobre el tablero, y cuya función es informar al usuario a lo largo
+   de una partida de los distintos eventos que ocurren. Por ejemplo, de quién es el turno actual, el comienzo de una
+   partida o la acción tomada por un determinado jugador.
+*/
+
 public class InfoPanel extends JPanel implements ScrabbleObserver {
 
 	private static final long serialVersionUID = 1L;

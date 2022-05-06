@@ -17,12 +17,25 @@ import simulatedObjects.Box;
 import simulatedObjects.SpecialEffects;
 import utils.StringUtils;
 
+/* APUNTES GENERALES:
+
+   La clase ConsoleView es la empleada para mostrar el transcurso de la partida,
+   incluyendo el tablero (con las posibles palabras que pueda contener), el estado
+   del jugador cuyo turno es el actual (nombre, puntos totales y fichas), así como
+   la semilla con la que se está jugando la partida. Además también muestra la solicitud
+   de información: elecciones de usuario (como número de jugadores, sus nombres, etc) y comandos.
+	
+   Cabe destacar que el método showBoard() ha sido generalizado, de manera que para cualquier
+   tamaño, se producirá un tablero regular y ordenado.
+*/
+
 public class ConsoleView implements ScrabbleObserver {
 	
 	// Para no estar creando un new Scanner(System.in) cada vez que compruebo.
 	public static boolean isInputFromConsole;
 	
 	private static final String PROMPT = "Comando ([h]elp) > ";
+	
 	private static final String CENTRE_SYMBOL = "*";
 	private static final String DOUBLE_LETTER_SYMBOL = "•";
 	private static final String DOUBLE_WORD_SYMBOL = "░";
@@ -247,12 +260,10 @@ public class ConsoleView implements ScrabbleObserver {
 			showBoard(board);
 		}
 		else {
-			
 			executeCommand();
 		}
 		
 		controller.update();
-		
 	}
 
 	@Override
@@ -267,7 +278,6 @@ public class ConsoleView implements ScrabbleObserver {
 				controller.playTurn();
 			}
 		}
-		
 		else {
 			executeCommand();
 		}
@@ -320,27 +330,14 @@ public class ConsoleView implements ScrabbleObserver {
 		
 		try {
 			controller.executeCommand(askCommand(), in , out);
-			
 		}
 		
 		catch(CommandParseException | CommandExecuteException e) {
 			this.out.println(e.getMessage());
 		}
-//		
-//		Command command = askCommand();
-//		
-//		if(command != null)
-//			try {
-//				command.execute(this.controller, in, out);
-//				
-//			} catch (CommandExecuteException e) {
-//				this.out.print(e.getMessage() + StringUtils.LINE_SEPARATOR);
-//			}
 	}
 	
 	private String[] askCommand() {
-		
-		//Command command = null;
 		
 		this.out.print(PROMPT);
 		String s = this.in.nextLine();
@@ -351,13 +348,6 @@ public class ConsoleView implements ScrabbleObserver {
 			this.out.print(s + StringUtils.LINE_SEPARATOR);
 
 		String[] parameters = s.toLowerCase().trim().split(" ");
-		
-//		try {
-//			command = Command.getCommand(parameters);
-//		}
-//		catch(CommandParseException cpe) {
-//			this.out.println(cpe.getMessage());
-//		}
 		
 		return parameters;		
 	}

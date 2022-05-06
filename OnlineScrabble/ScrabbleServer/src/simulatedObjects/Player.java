@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import logic.Game;
 import strategies.Strategy;
-import utils.StringUtils;
 import wordCheckers.WordChecker;
 
 /* APUNTES GENERALES:
@@ -49,13 +48,6 @@ public class Player {
 	}
 	
 	/* Método removeTile:
-	 * Elimina del array de tipo Tile la ficha situada en el índice recibido por parámetro.
-	 */
-	public void removeTile(int tile) {
-		this.tiles.remove(tile);		
-	}
-	
-	/* Método removeTile:
 	 * Elimina del array de tipo Tile la ficha recibida por parámetro.
 	 */
 	public void removeTile(Tile tile) {
@@ -69,32 +61,6 @@ public class Player {
 		this.strategy.play(game, wordChecker, tiles);
 	}
 	
-	/* Método getStatus:
-	 * Devuelve un String con la información del jugador:
-	 * - Nombre.
-	 * - Puntos totales.
-	 * - Fichas y sus puntos asociados.
-	 */
-	public String getStatus() {
-		StringBuilder buffer = new StringBuilder();
-		
-		buffer.append(StringUtils.LINE_SEPARATOR).append("Turno de ")
-		      .append(this.name).append(":")
-			  .append(StringUtils.LINE_SEPARATOR);
-		
-		buffer.append("Puntos totales: ").append(totalPoints).append(StringUtils.LINE_SEPARATOR);
-	
-		buffer.append("Fichas (letra y puntos asociados a ella):").append(StringUtils.LINE_SEPARATOR);
-		for(int i = 0; i < tiles.size(); i++) {
-			buffer.append(tiles.get(i));
-			if(i != tiles.size() - 1)
-				buffer.append(" || ");
-		}
-		
-		buffer.append(StringUtils.LINE_SEPARATOR);
-		return buffer.toString();
-	}
-
 	/* Método hasLetter:
 	 * Devuelve un booleano indicando si un jugador tiene en sus fichas
 	 * la letra recibida por parámetro.
@@ -128,7 +94,6 @@ public class Player {
 	public void givePoints(int points) {
 		this.totalPoints += points;
 	}
-	
 
 	// Getters
 	
@@ -165,7 +130,7 @@ public class Player {
 		
 		JSONObject jo = new JSONObject();
 		
-		jo.put("name", name.substring(0, name.indexOf(" (")));
+		jo.put("name", name);
 		
 		jo.put("total_points", this.totalPoints);
 		
@@ -180,9 +145,5 @@ public class Player {
 		jo.put("strategy", strategy);
 		
 		return jo;
-	}
-
-	public void setStrategy(Strategy strategy) {
-		this.strategy = strategy;
 	}
 }

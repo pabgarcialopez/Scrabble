@@ -27,6 +27,18 @@ import containers.GamePlayers;
 import storage.GameLoader;
 import utils.StringUtils;
 
+/* APUNTES GENERALES:
+   
+   La clase AddPlayersDialog es usada para permitir al usuario introducir el número de jugadores
+   de una partida, además de sus estrategias y sus posibles nombres.
+   
+   La elección del número de jugadores se ha llevado acabo mediante un JComboBox (números del 2 al 4).
+   La elección de la estrategia se ha llevado acabo mediante otro JComboBox,
+   y el nombre del jugador mediante un JTextField.
+   
+   Además, cabe remarcar el uso de la clase privada PlayerPanel, en la que el programa solicita al
+   usuario la estrategia y nombre de cada jugador.
+ */
 public class AddPlayersDialog extends JDialog {
 
 private static final long serialVersionUID = 1L;

@@ -3,11 +3,11 @@ package observersActions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import containers.GamePlayers;
 import containers.GamePlayersBuilder;
-import logic.WordsBuilder;
 import simulatedObjects.PlayerBuilder;
 import simulatedObjects.TileBuilder;
 import strategies.EasyStrategyBuilder;
@@ -23,9 +23,9 @@ public class OnFirstTurnDecided extends OnObserverAction {
 	private GamePlayers gamePlayers;
 	private int numPlayers;
 	private int currentTurn;
+	private boolean gameInitiated;
 	
 	private GamePlayersBuilder gamePlayersBuilder;
-	private WordsBuilder wordsBuilder;
 	
 	OnFirstTurnDecided() {
 		
@@ -39,8 +39,6 @@ public class OnFirstTurnDecided extends OnObserverAction {
 		strategyBuilders.add(new HumanStrategyBuilder());
 		
 		this.gamePlayersBuilder = new GamePlayersBuilder(new PlayerBuilder(new TileBuilder(), strategyBuilders));
-		
-		this.wordsBuilder = new WordsBuilder();
 	}
 	
 	@Override
@@ -50,10 +48,17 @@ public class OnFirstTurnDecided extends OnObserverAction {
 			
 			JSONObject data = jo.getJSONObject("data");
 			
-			this.lettersObtained = this.wordsBuilder.createWords(data.getJSONObject("letters_obtained"));
+			JSONArray jsonArrayWords = data.getJSONArray("letters_obtained");
+			
+			this.lettersObtained = new ArrayList<String>();
+			
+			for(int i = 0; i < jsonArrayWords.length(); i++)
+				this.lettersObtained.add(jsonArrayWords.getString(i));
+			
 			this.gamePlayers = this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players"));
 			this.numPlayers = data.getInt("num_players");
 			this.currentTurn = data.getInt("current_turn");
+			this.gameInitiated = data.getBoolean("game_initiated");
 			
 			return this;
 		}
@@ -65,7 +70,7 @@ public class OnFirstTurnDecided extends OnObserverAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 
 		for(ScrabbleObserver o : observers)
-			o.onFirstTurnDecided(lettersObtained, gamePlayers, numPlayers, currentTurn);
+			o.onFirstTurnDecided(lettersObtained, gamePlayers, numPlayers, currentTurn, gameInitiated);
 	}
 	
 

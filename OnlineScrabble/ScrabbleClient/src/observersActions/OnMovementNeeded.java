@@ -8,6 +8,7 @@ import view.ScrabbleObserver;
 
 public class OnMovementNeeded extends OnObserverAction {
 	
+	private int currentTurn;
 
 	OnMovementNeeded() {
 		super("movement_needed");
@@ -16,8 +17,14 @@ public class OnMovementNeeded extends OnObserverAction {
 	@Override
 	OnObserverAction interpret(JSONObject jo) {
 		
-		if(this.type.equals(jo.getString("type")))			
+		if(this.type.equals(jo.getString("type"))) {
+			
+			JSONObject data = jo.getJSONObject("data");
+			
+			this.currentTurn = data.getInt("current_turn");
+			
 			return this;
+		}
 		
 		return null;
 	}
@@ -26,7 +33,7 @@ public class OnMovementNeeded extends OnObserverAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 
 		for(ScrabbleObserver o : observers)
-			o.onMovementNeeded();
+			o.onMovementNeeded(currentTurn);
 	}
 
 }

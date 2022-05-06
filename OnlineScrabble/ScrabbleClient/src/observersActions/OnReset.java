@@ -27,6 +27,7 @@ public class OnReset extends OnObserverAction {
 	private int remainingTiles;
 	private GamePlayers gamePlayers;
 	private int currentTurn;
+	private boolean gameInitiated;
 	
 	private BoardBuilder boardBuilder;
 	private GamePlayersBuilder gamePlayersBuilder;
@@ -62,6 +63,7 @@ public class OnReset extends OnObserverAction {
 			this.remainingTiles = data.getInt("remaining_tiles");
 			this.gamePlayers = data.has("game_players") ? this.gamePlayersBuilder.createGamePlayers(data.getJSONObject("game_players")) : null;
 			this.currentTurn = data.getInt("current_turn");
+			this.gameInitiated = data.getBoolean("game_initiated");
 			
 			return this;
 		}
@@ -73,6 +75,6 @@ public class OnReset extends OnObserverAction {
 	public void executeAction(List<ScrabbleObserver> observers) {
 		
 		for(int i = 0; i < observers.size(); ++i)
-			observers.get(i).onReset(board, numPlayers, currentPlayerName, remainingTiles, gamePlayers, currentTurn);
+			observers.get(i).onReset(board, numPlayers, currentPlayerName, remainingTiles, gamePlayers, currentTurn, gameInitiated);
 	}
 }

@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,13 +20,24 @@ import javax.swing.SwingUtilities;
 import containers.Board;
 import containers.GamePlayers;
 import control.Controller;
-import logic.Game;
+
+/* APUNTES GENERALES:
+
+   Esta clase es la contenedora de todos los botones presentes en el juego (excepto los del tablero).
+
+   La parte visual que representa se sitúa en el norte de la pantalla.
+   Los botones que aloja son: paso de turno, cambio de ficha, paso de turno, ayuda y salir de la partida.
+
+   Nótese que a diferencia de la versión local, la versión en línea tiene un atributo clientNumPlayer,
+   para saber cuando se han de permitir el uso de botones.
+*/
 
 public class ControlPanel extends JPanel implements ScrabbleObserver {
 
 	private static final long serialVersionUID = 1L;
 	
 	private Controller controller;
+	private int clientNumPlayer;
 	
 	private JToolBar bar;
 	
@@ -37,21 +47,18 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	
 	private JButton continueButton;
 	
-	private AddPlayersDialog addPlayersDialog;
-	
 	private JFileChooser fc;
 	
 	
-	ControlPanel(Controller controller, Component parent) {
+	ControlPanel(Controller controller, Component parent, int clientNumPlayer) {
 		
 		this.controller = controller;
+		this.clientNumPlayer = clientNumPlayer;
 		
 		this.buttonsToBlockCPUTurn = new ArrayList<JButton>();
 		
 		this.buttonsToBlockGameNotInitiated = new ArrayList<JButton>();
-		
-		this.addPlayersDialog = new AddPlayersDialog(parent);
-		
+	
 		this.fc = new JFileChooser();
 		
 		this.fc.setCurrentDirectory(new File("resources/existingGames"));
@@ -67,109 +74,6 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		this.add(bar);
 		this.bar.setPreferredSize(new Dimension(1100, 50));
 		
-		JButton newGameButton = new JButton();
-		newGameButton.setToolTipText("Iniciar una partida nueva");
-		newGameButton.setIcon(new ImageIcon("resources/icons/control_panel/new_game.png"));
-		newGameButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.newGame();
-			}
-		});
-		
-		bar.add(newGameButton);
-		bar.add(Box.createRigidArea(new Dimension(5, 1)));
-		
-		JButton loadButton = new JButton();
-		loadButton.setToolTipText("Cargar una partida de fichero");
-		loadButton.setIcon(new ImageIcon("resources/icons/control_panel/open.png"));
-		loadButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				int ret = fc.showOpenDialog(ControlPanel.this);
-				if (ret == JFileChooser.APPROVE_OPTION) {
-					try {
-						controller.loadGame(fc.getSelectedFile().getAbsolutePath());
-					} catch (Exception exc) {
-						JOptionPane.showMessageDialog(ControlPanel.this, "El fichero seleccionado no es válido", "ERROR", JOptionPane.ERROR_MESSAGE);
-					}
-				}
-			}
-		});
-		bar.add(loadButton);
-		bar.add(Box.createRigidArea(new Dimension(5, 1)));
-		
-		JButton saveButton = new JButton();
-		saveButton.setToolTipText("Guardar la partida actual en un fichero");
-		saveButton.setIcon(new ImageIcon("resources/icons/control_panel/save.png"));
-		saveButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				int ret = fc.showSaveDialog(ControlPanel.this);
-				if (ret == JFileChooser.APPROVE_OPTION) {
-					try {
-						controller.saveGame(fc.getSelectedFile().getName());
-						JOptionPane.showMessageDialog(ControlPanel.this, "La partida ha sido guardada con éxito", "GUARDAR", JOptionPane.INFORMATION_MESSAGE);
-					} catch (FileNotFoundException | IllegalArgumentException exc) {
-						JOptionPane.showMessageDialog(ControlPanel.this, exc.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-					}
-				}
-			}
-		});
-		bar.add(saveButton);
-		this.buttonsToBlockGameNotInitiated.add(saveButton);
-		
-		bar.addSeparator();
-		
-		JButton resetButton = new JButton();
-		resetButton.setToolTipText("Resetear el juego");
-		resetButton.setIcon(new ImageIcon("resources/icons/control_panel/reset.png"));
-		resetButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					String seedString = JOptionPane.showInputDialog(ControlPanel.this, "Introduce una semilla (actual: " + Game.getSeed() + ")", "Reset", JOptionPane.PLAIN_MESSAGE);
-					
-					if(seedString != null) {
-						try {
-							Game.setSeed(Integer.parseInt(seedString));
-							controller.reset();
-						}
-						
-						catch(NumberFormatException nfe) {
-							JOptionPane.showMessageDialog(ControlPanel.this, "La semilla debe ser un número", "ERROR", JOptionPane.ERROR_MESSAGE);
-						}
-					}
-				}
-				catch (FileNotFoundException fnfe) {
-					JOptionPane.showMessageDialog(ControlPanel.this, "El fichero de reseteo no es válido", "ERROR", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
-		bar.add(resetButton);
-		this.buttonsToBlockGameNotInitiated.add(resetButton);
-		
-		bar.add(Box.createRigidArea(new Dimension(5, 1)));
-		
-		JButton addPlayersButton = new JButton();
-		addPlayersButton.setToolTipText("Añadir o cambiar jugadores a la partida");
-		addPlayersButton.setIcon(new ImageIcon("resources/icons/control_panel/player.png"));
-		addPlayersButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int status = addPlayersDialog.open();
-				if(status == 1) {
-					controller.addOrChangePlayers(addPlayersDialog.createPlayers());
-					controller.update();
-				}
-			}
-		});
-		bar.add(addPlayersButton);
-		bar.add(Box.createRigidArea(new Dimension(5, 1)));
-		this.buttonsToBlockGameNotInitiated.add(addPlayersButton);
 		
 		JButton passButton = new JButton();
 		passButton.setToolTipText("Pasar de turno");
@@ -207,6 +111,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		continueButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				continueButton.setEnabled(false);
 				controller.update();
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
@@ -222,22 +127,19 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 		bar.add(Box.createGlue());
 		
 		JButton helpButton = new JButton();
-		helpButton.setToolTipText("Ayuda sobre cómo jugar");
+		helpButton.setToolTipText("Información");
 		helpButton.setIcon(new ImageIcon("resources/icons/control_panel/info.png"));
 		helpButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String help = String.format("• Colocar palabra: hacer click en la casilla "
+				String help = String.format("Posibles acciones:%n%n"
+						+ "• Colocar palabra: hacer click en la casilla "
 						+ "donde se quiere que empiece y escribir la palabra y su dirección.%n"
-						+ "• Nueva partida: pulsar el botón situado en primera posición desde la izquierda.%n"
-						+ "• Cargar partida: pulsar el botón situado en segunda posición desde la izquierda.%n"
-						+ "• Guardar partida: pulsar el botón situado en tercera posición desde la izquierda.%n"
-						+ "• Resetar partida: pulsar el botón situado en cuarta posición desde la izquierda.%n"
-						+ "• Añadir o cambiar jugadores: pulsar el botón situado en quinta posición desde la izquierda.%n"
-						+ "• Pasar de turno: pulsar el botón situado en sexta posición desde la izquierda.%n"
-						+ "• Intercambiar una ficha: pulsar el botón situado en séptima posición desde la izquierda.%n"
-						+ "• Continuar ejecución: pulsar el botón situado en octava posición desde la izquierda%n"
-						+ "• Salir del juego: pulsar el botón situado en la primera posición desde la derecha.");
+						+ "• Pasar de turno: pulsar el botón situado en primera posición desde la izquierda.%n"
+						+ "• Intercambiar una ficha: pulsar el botón situado en segunda posición desde la izquierda.%n"
+						+ "• Continuar ejecución: pulsar el botón situado en tercera posición desde la izquierda%n"
+						+ "• Salir del juego: pulsar el botón situado en la primera posición desde la derecha.%n%n"
+						+ "Proyecto Scrabble ©");
 				
 				JOptionPane.showMessageDialog(ControlPanel.this, help, "AYUDA", JOptionPane.INFORMATION_MESSAGE);
 			}
@@ -257,7 +159,7 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 						JOptionPane.QUESTION_MESSAGE, null, options, null);
 				
 				if(n == 1) 
-					System.exit(0);
+					controller.userExits();
 			}
 		});
 		exitButton.setIcon(new ImageIcon("resources/icons/control_panel/exit.png"));
@@ -265,49 +167,49 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 	}
 	
 	@Override
-	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board) {
-		resetEnabledButtons(numPlayers);
+	public void onWordWritten(String word, int posX, int posY, String direction, int points, int extraPoints, int numPlayers, GamePlayers gamePlayers, int currentTurn, Board board, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	}
 
 	@Override
-	public void onPassed(int numPlayers, String currentPlayerName) {
-		resetEnabledButtons(numPlayers);
+	public void onPassed(int numPlayers, String currentPlayerName, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	}
 
 	@Override
-	public void onSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn) {
-		resetEnabledButtons(numPlayers);
+	public void onSwapped(int numPlayers, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	}
 
 	@Override
-	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn) {
-		resetEnabledButtons(numPlayers);
+	public void onRegister(Board board, int numPlayers, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	} 
 
 	@Override
-	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn) {
-		resetEnabledButtons(numPlayers);
+	public void onReset(Board board, int numPlayers, String currentPlayerName, int remainingTiles, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	}
 
 	@Override
-	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn) {
-		resetEnabledButtons(numPlayers);
+	public void onUpdate(boolean gameFinished, int numPlayers, int remainingTiles, String currentPlayerName, GamePlayers gamePlayers, int currentTurn, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	}
 
 	@Override
-	public void onError(String error) {}
+	public void onError(String error, int currentTurn) {}
 
 	@Override
 	public void onEnd(String message) {}
 
 	@Override
-	public void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn) {
-		resetEnabledButtons(numPlayers);
+	public void onFirstTurnDecided(List<String> lettersObtained, GamePlayers gamePlayers, int numPlayers, int currentTurn, boolean gameInitiated) {
+		resetEnabledButtons(numPlayers, gameInitiated);
 	}
 	
 	@Override
-	public void onMovementNeeded() {
-		enableButtons(this.buttonsToBlockCPUTurn, true);
+	public void onMovementNeeded(int currentTurn) {
+		enableButtons(this.buttonsToBlockCPUTurn, currentTurn == clientNumPlayer);
 		this.continueButton.setEnabled(false);
 	}
 	
@@ -316,13 +218,12 @@ public class ControlPanel extends JPanel implements ScrabbleObserver {
 			b.setEnabled(enable);
 	}
 	
-	private void resetEnabledButtons(int numPlayers) {
+	private void resetEnabledButtons(int numPlayers, boolean gameInitiated) {
 		
-		enableButtons(this.buttonsToBlockGameNotInitiated, Game.getGameInitiated());
+		enableButtons(this.buttonsToBlockGameNotInitiated, gameInitiated);
 		
 		enableButtons(this.buttonsToBlockCPUTurn, false);
 		
-		this.continueButton.setEnabled(Game.getGameInitiated() && numPlayers != 0);
-			
+		this.continueButton.setEnabled(gameInitiated && numPlayers != 0);	
 	}
 }

@@ -56,19 +56,6 @@ public class GameLoader {
 		createGame(new FileInputStream(NEW_GAME), game);
 	}
 	
-	/* Método loadGame:
-	 * Delega la creación de la partida al método createGame.
-	 * En este caso, se carga la partida guardada en el fichero recibido por parámetro.
-	 */
-	public static void loadGame(Game game, String file) throws FileNotFoundException {
-		
-		// Puesto en el parse del comando load.
-		//if(!file.endsWith(".json"))
-		//	file += ".json";
-		
-		createGame(new FileInputStream(file), game);
-	}
-	
 	/* Método createGame:
 	 * Recoge en un objeto JSON todos los datos necesarios para crear o cargar una partida.
 	 * Delega la inicialización de los atributos del parámetro recibido de la clase Game, en
@@ -77,10 +64,6 @@ public class GameLoader {
 	private static void createGame(InputStream input, Game game) {
 		
 		JSONObject json = new JSONObject(new JSONTokener(input));
-		
-		if(!Game.getGameInitiated())
-			Game.setSeed(json.has("seed") ? json.getInt("seed") : Game.getSeed());
-		else Game.setSeed(Game.getSeed());
 		
 		int currentTurn = json.getInt("current_turn"); // -1 si es partida nueva
 		int numConsecutivePassedTurns = json.getInt("consecutive_turns_passed");
@@ -98,13 +81,7 @@ public class GameLoader {
 				players, tiles, board, usedWords);
 	}
 		
-	/* Método createPlayers:
-	 * Devuelve una instancia de la clase GamePlayers, creada por el builder de la clase GamePlayersBuilder.
-	 */
-	public static GamePlayers createPlayers(JSONObject data) {
-		return gamePlayersBuilder.createGamePlayers(data);
-	}
-
+	
 	/* Método loadWordList:
 	 * Devuelve, mediante la clase WordsBuilder, la lista formada por todas las palabras válidas del juego.
 	 */
