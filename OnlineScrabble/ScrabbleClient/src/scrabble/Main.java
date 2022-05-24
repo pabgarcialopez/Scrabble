@@ -16,11 +16,11 @@ import client.Client;
    
    La clase Main es la clase donde comienza la ejecución de la aplicación.
   
- */
+*/
 public class Main {
 	
 	private static String name;
-	private static String ID;
+	private static String IP;
 	private static int port;
 	
 	private static Options buildOptions() {
@@ -28,7 +28,7 @@ public class Main {
 		Options cmdLineOptions = new Options();
 
 		cmdLineOptions.addOption(Option.builder("n").longOpt("name").hasArg().desc("Nombre del jugador.").build());
-		cmdLineOptions.addOption(Option.builder("ID").longOpt("serverID").hasArg().desc("ID del servidor.").build());
+		cmdLineOptions.addOption(Option.builder("IP").longOpt("serverIP").hasArg().desc("IP del servidor.").build());
 		cmdLineOptions.addOption(Option.builder("p").longOpt("port").hasArg().desc("Puerto.").build());
 		cmdLineOptions.addOption(Option.builder("a").longOpt("ayuda").desc("Imprime esta ayuda").build());
 		
@@ -52,10 +52,10 @@ public class Main {
 	}
 	
 	private static void parseIDOption(CommandLine line) throws ParseException {
-		if(line.hasOption("ID"))
-			ID = line.getOptionValue("ID");
+		if(line.hasOption("IP"))
+			IP = line.getOptionValue("IP");
 		else
-			throw new ParseException("Se debe introducir el ID del servidor.");
+			throw new ParseException("Se debe introducir la IP del servidor.");
 	}
 	
 	private static void parsePortOption(CommandLine line) throws ParseException {
@@ -108,7 +108,7 @@ public class Main {
 		
 		parseArgs(args);
 
-		Client client = new Client(name, ID, port);
+		Client client = new Client(name, IP, port);
 		client.start();
 	}
 

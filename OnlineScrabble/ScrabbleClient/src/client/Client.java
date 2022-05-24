@@ -24,7 +24,7 @@ public class Client extends Thread {
 	private List<ScrabbleObserver> observers;
 
 	private int puerto;
-	private String IP;
+	private String iP;
 
 	private String name;
 
@@ -40,13 +40,13 @@ public class Client extends Thread {
 
 	public Client(String name, String IP, int puerto) {
 		this.observers = new ArrayList<ScrabbleObserver>();
-		this.puerto = puerto;
-		this.IP = IP;
-		this.name = name;
-		this.listening = true;
-		this.onRegister = new OnRegister();
-		this.alreadyRegistered = false;
-	}
+   		this.puerto = puerto;
+   		this.iP = IP;
+   		this.name = name;
+   		this.listening = true;
+   		this.onRegister = new OnRegister();
+   		this.alreadyRegistered = false;
+   	}
 
 	public void addObserver(ScrabbleObserver o) {
 		if (!observers.contains(o)) {
@@ -102,17 +102,17 @@ public class Client extends Thread {
 	public void run() {
 
 		try {
-			this.socket = new Socket(this.IP, this.puerto);
-			this.dataOutputStream = new DataOutputStream(this.socket.getOutputStream());
-			this.dataOutputStream.flush();
-			this.dataInputStream = new DataInputStream(this.socket.getInputStream());
-			this.sendRegistrationRequest();
-			this.listen();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-	}
+   			this.socket = new Socket(this.iP, this.puerto);
+   			this.dataOutputStream = new DataOutputStream(this.socket.getOutputStream());
+   			this.dataOutputStream.flush();
+   			this.dataInputStream = new DataInputStream(this.socket.getInputStream());
+   			this.sendRegistrationRequest();
+   			this.listen();
+   		} catch (IOException e) {
+   			e.printStackTrace();
+   			System.exit(0);
+   		}
+   	}
 
 	private void sendRegistrationRequest() {
 		try {

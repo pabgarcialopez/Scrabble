@@ -37,7 +37,7 @@ Los argumentos son los siguientes:
    valor aleatorio.
 
 5. Ayuda (-a): este parámetro permite obtener una breve descripción de los anteriores parámetros.
-   Este es parámetro es prioritario sobre el resto, es decir, en caso de ser introducido, solo se
+   Este parámetro es prioritario sobre el resto, es decir, en caso de ser introducido, solo se
    mostrará el mensaje de ayuda, y la ejecución del programa terminará.
 
 Una vez introducidos los parámetros, solo es necesario hacer clic en el botón "Run" de la esquina 

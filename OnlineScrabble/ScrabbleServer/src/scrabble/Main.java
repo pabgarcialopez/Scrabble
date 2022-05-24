@@ -31,8 +31,8 @@ public class Main {
 		
 		Options cmdLineOptions = new Options();
 
-		cmdLineOptions.addOption(Option.builder("hp").longOpt("humanPlayers").hasArg().desc("Numero de jugadores humanos.").build());
-		cmdLineOptions.addOption(Option.builder("ap").longOpt("automaticPlayers").hasArg().desc("Numero de jugadores automaticos.").build());
+		cmdLineOptions.addOption(Option.builder("hp").longOpt("humanPlayers").hasArg().desc("Número de jugadores humanos.").build());
+		cmdLineOptions.addOption(Option.builder("ap").longOpt("automaticPlayers").hasArg().desc("Número de jugadores automáticos.").build());
 		cmdLineOptions.addOption(Option.builder("s1").longOpt("strategy1").hasArg().desc("Estrategia del jugador automático 1.").build());
 		cmdLineOptions.addOption(Option.builder("s2").longOpt("strategy2").hasArg().desc("Estrategia del jugador automático 2.").build());
 		cmdLineOptions.addOption(Option.builder("p").longOpt("port").hasArg().desc("Puerto.").build());
@@ -47,10 +47,10 @@ public class Main {
 			try {
 				numHumanPlayers = Integer.parseInt(line.getOptionValue("hp"));
 				if(numHumanPlayers < 2 || numHumanPlayers > 4)
-					throw new ParseException("El numero de jugadores humanos debe ser un numero entre 2 y 4.");
+					throw new ParseException("El número de jugadores humanos debe ser un número entre 2 y 4.");
 			}
 			catch(NumberFormatException nfe) {
-				throw new ParseException("El numero de jugadores humanos debe ser un numero.");
+				throw new ParseException("El número de jugadores humanos debe ser un número.");
 			}
 		}
 		else
@@ -71,10 +71,10 @@ public class Main {
 			try {
 				numAutomaticPlayers = Integer.parseInt(line.getOptionValue("hp"));
 				if(numAutomaticPlayers < 2 || numAutomaticPlayers > 4)
-					throw new ParseException("El numero de jugadores automaticos debe ser un numero entre 1 y 2.");
+					throw new ParseException("El número de jugadores automaticos debe ser un número entre 1 y 2.");
 			}
 			catch(NumberFormatException nfe) {
-				throw new ParseException("El numero de jugadores automaticos debe ser un numero.");
+				throw new ParseException("El número de jugadores automaticos debe ser un número.");
 			}
 		}
 		else
@@ -87,10 +87,10 @@ public class Main {
 			if(line.hasOption("s1")) {
 				strategy1 = checkStrategy(line.getOptionValue("s1"));
 				if(strategy1 == null)
-					throw new ParseException("La estrategia del jugador automatico 1 no es valida [facil (easy), media(medium), dificil(hard)]");
+					throw new ParseException("La estrategia del jugador automático 1 no es válida [facil (easy), media(medium), dificil(hard)]");
 			}
 			else 
-				throw new ParseException("Se debe introducir la estrategia del jugador automatico 1 [facil (easy), media(medium), dificil(hard)].");
+				throw new ParseException("Se debe introducir la estrategia del jugador automático 1 [facil (easy), media(medium), dificil(hard)].");
 		}
 		
 		if(numAutomaticPlayers == 2) {
