@@ -80,7 +80,8 @@ public class MainTest {
 		expOutFileTxt = expOutDirectory + type + "PlayersExpOut.txt";
 		expOutFileJSON = expOutDirectory + type + "PlayersExpOut.json";
 		
-		String[] args = {"-i", inputDirectory + type + "PlayersIn.txt", "-ot", outFileTxt, "-oj", outFileJSON, "-m", "console", "-s", seed };
+		String[] args = {"-i", inputDirectory + type + "PlayersIn.txt", "-ot", outFileTxt, 
+				"-oj", outFileJSON, "-m", "console", "-s", seed };
 		return args;
 	}
 	

@@ -36,7 +36,7 @@ public class Game {
 	// que incluir saltos de línea en el fichero de entrada.
 	private static final boolean _pausePermitted = false;
 	
-	// Para pribar tests JUnit
+	// Para tests JUnit
 	private static final boolean _testMode = false;
 	
 	private static boolean _gameInitiated;
